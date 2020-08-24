@@ -1,0 +1,275 @@
+<template>
+  <div id="app" class="container">
+    <Header></Header>
+    <Logos></Logos>
+    <transition name="slide-left" mode="out-in">
+      <router-view></router-view>
+    </transition>
+    <Footer></Footer>
+  </div>
+</template>
+
+<script>
+import Header from "./components/common/Header";
+import Footer from "./components/common/Footer";
+import Logos from "./components/common/Logos/Logos";
+import { mapActions, mapGetters } from "vuex";
+
+export default {
+  name: "App",
+  components: {
+    Header,
+    Footer,
+    Logos
+  },
+  data(){
+    return {
+
+    }
+  },
+  methods: {
+    ...mapActions(["fetchLoggedUser", "fetchCurrentRnd"])
+  },
+  computed:{
+    ...mapGetters(["allPlayersData"])
+  },
+  watch:{
+    allPlayersData(nv){
+      console.log(nv);
+    }
+  },
+  async created() {
+    this.fetchLoggedUser();
+    this.fetchCurrentRnd();
+    
+  }
+};
+</script>
+
+<style lang="scss">
+$breakpoints: (
+  phone: 320px,
+  tablet: 768px,
+  desktop: 1024px
+);
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+/* TRANSITION CLASSES */
+
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition-duration: 0.2s;
+  transition-property: height, opacity, transform;
+  transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+  overflow: hidden;
+}
+
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate(2em, 0);
+}
+
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  transform: translate(-2em, 0);
+}
+
+/*------------RESET--------------
+---------------------------------*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: "Montserrat", sans-serif;
+  vertical-align: baseline;
+}
+
+/* remember to define focus styles! */
+:focus {
+  outline: 0;
+}
+
+body {
+  line-height: 1;
+  color: black;
+  background: white;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+caption {
+  text-align: left;
+  font-weight: normal;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+}
+
+blockquote,
+q {
+  quotes: "" "";
+}
+
+/* * 	{
+font-family: 'Source Sans Pro', sans-serif;
+} */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/*************************************
+*****     RESET END   ***************/
+
+.up {
+  text-transform: uppercase;
+}
+
+.sha {
+  -webkit-box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43);
+  -moz-box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43);
+  box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43);
+}
+
+html {
+  font-size: 16px;
+}
+
+/*************** CONTAINER **********/
+
+body {
+  width: 100%;
+  color: #000000;
+  background-color: #c6c6c6;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/***************************************************
+*****************  MAIN   *************************/
+
+main {
+  width: 100%;
+  margin: 20px 0 0 0;
+  background-color: #c6c6c6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.main-container {
+  width: 80%;
+  background: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+</style>

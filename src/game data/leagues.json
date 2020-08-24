@@ -1,0 +1,245 @@
+{
+    "pele": {
+        "teams": [
+            {
+                "email": "test1@test.bg",
+                "teamCode": 1,
+                "userName":"user1",
+                "teamName": "Test 1",
+                "teamLogo": "logo1",
+                "teamNickname": "nick1",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },
+            {
+                "email": "test2@test.bg",
+                "teamCode": 2,
+                "userName":"user2",
+                "teamName": "Test 2",
+                "teamLogo": "logo2",
+                "teamNickname": "nick2",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test3@test.bg",
+                "teamCode": 3,
+                "userName":"user3",
+                "teamName": "Test 3",
+                "teamLogo": "logo3",
+                "teamNickname": "nick3",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test4@test.bg",
+                "teamCode": 4,
+                "userName":"user4",
+                "teamName": "Test 4",
+                "teamLogo": "logo4",
+                "teamNickname": "nick4",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test5@test.bg",
+                "teamCode": 5,
+                "userName":"user5",
+                "teamName": "Test 5",
+                "teamLogo": "logo5",
+                "teamNickname": "nick5",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test6@test.bg",
+                "teamCode": 6,
+                "userName":"user6",
+                "teamName": "Test 6",
+                "teamLogo": "logo6",
+                "teamNickname": "nick6",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test7@test.bg",
+                "teamCode": 7,
+                "userName":"user7",
+                "teamName": "Test 7",
+                "teamLogo": "logo7",
+                "teamNickname": "nick7",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test8@test.bg",
+                "teamCode": 8,
+                "userName":"user8",
+                "teamName": "Test 8",
+                "teamLogo": "logo8",
+                "teamNickname": "nick8",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test9@test.bg",
+                "teamCode": 9,
+                "userName":"user9",
+                "teamName": "Test 9",
+                "teamLogo": "logo9",
+                "teamNickname": "nick9",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },
+            {
+                "email": "test10@test.bg",
+                "teamCode": 10,
+                "userName":"user10",
+                "teamName": "Test 10",
+                "teamLogo": "logo10",
+                "teamNickname": "nick10",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            }
+        ],
+        "name":"pele",
+        "logoSmall": "pele",
+        "logoActive": "pele-active",
+        "logoBig": "pele-big"
+    },
+    "maradona":{
+        "teams": [
+            {
+                "email": "test11@test.bg",
+                "teamCode": 11,
+                "userName":"user11",
+                "teamName": "Test 11",
+                "teamLogo": "logo11",
+                "teamNickname": "nick11",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },
+            {
+                "email": "test12@test.bg",
+                "teamCode": 12,
+                "userName":"user12",
+                "teamName": "Test 12",
+                "teamLogo": "logo12",
+                "teamNickname": "nick12",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test13@test.bg",
+                "teamCode": 13,
+                "userName":"user13",
+                "teamName": "Test 13",
+                "teamLogo": "logo13",
+                "teamNickname": "nick13",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test14@test.bg",
+                "teamCode": 14,
+                "userName":"user14",
+                "teamName": "Test 14",
+                "teamLogo": "logo14",
+                "teamNickname": "nick14",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test15@test.bg",
+                "teamCode": 15,
+                "userName":"user15",
+                "teamName": "Test 15",
+                "teamLogo": "logo15",
+                "teamNickname": "nick15",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test16@test.bg",
+                "teamCode": 16,
+                "userName":"user16",
+                "teamName": "Test 16",
+                "teamLogo": "logo16",
+                "teamNickname": "nick16",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test17@test.bg",
+                "teamCode": 17,
+                "userName":"user17",
+                "teamName": "Test 17",
+                "teamLogo": "logo17",
+                "teamNickname": "nick17",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },{
+                "email": "test18@test.bg",
+                "teamCode": 18,
+                "userName":"user18",
+                "teamName": "Test 18",
+                "teamLogo": "logo18",
+                "teamNickname": "nick18",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },
+            {
+                "email": "test19@test.bg",
+                "teamCode": 19,
+                "userName":"user19",
+                "teamName": "Test 19",
+                "teamLogo": "logo19",
+                "teamNickname": "nick19",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            },
+            {
+                "email": "test20@test.bg",
+                "teamCode": 20,
+                "userName":"user20",
+                "teamName": "Test 20",
+                "teamLogo": "logo20",
+                "teamNickname": "nick20",
+                "age": "33",
+                "location": "location",
+                "ocupation": "ocupation",
+                "favTeam": "favteam"
+            }
+        ],
+        "name":"maradona",
+        "logoSmall": "maradona",
+        "logoActive": "maradona-active",
+        "logoBig": "maradona-big"
+    }
+}
