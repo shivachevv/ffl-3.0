@@ -1,6 +1,6 @@
 import getAllPlayersRaw from './getAllPlayersRaw'
 import makeNewPlayer from '../models/Player'
-import common from '../common'
+import { DATA_URL } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 
 const uploadAllPlayers = async () => {
@@ -21,7 +21,7 @@ const uploadAllPlayers = async () => {
 
     });
 
-    fetch(`${common.DATA_URL}players/.json`, {
+    fetch(`${DATA_URL}players/.json`, {
         method: 'PATCH',
         mode: 'cors',
         headers: {

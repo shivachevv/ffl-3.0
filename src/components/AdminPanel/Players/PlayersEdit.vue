@@ -38,56 +38,58 @@
       </div>
       <div class="players-details-edit" v-if="playerSelected">
         <form @submit.prevent="editPlayerFormHandler">
-          <!-- <template v-if="$v.email.$error">
-            <span class="error-msg" v-if="!$v.email.required">Email is required!</span>
-            <span class="error-msg" v-else-if="!$v.email.email">Email is not valid!</span>
-          </template>-->
           <label>
             Country:
-            <input
-              type="text"
-              :placeholder="playerSelected.country"
+            <vs-select
+              :label="playerSelected.country"
               v-model="playerEdited.country"
-            />
+              icon
+              @change="playerEdited.club = ''"
+            >
+              <vs-select-item :key="l" :value="l" :text="l" v-for="l in Object.keys(players)" />
+            </vs-select>
           </label>
           <label>
             Club:
-            <input type="text" :placeholder="playerSelected.club" v-model="playerEdited.club" />
+            <vs-select
+              v-if="players[playerEdited.country]"
+              :label="playerSelected.club"
+              v-model="playerEdited.club"
+              icon
+            >
+              <vs-select-item
+                :key="l"
+                :value="l"
+                :text="l"
+                v-for="l in Object.keys(players[playerEdited.country])"
+              />
+            </vs-select>
+
+            <vs-select v-else :label="playerSelected.club" v-model="playerEdited.club" icon>
+              <vs-select-item
+                :key="l"
+                :value="l"
+                :text="l"
+                v-for="l in Object.keys(players[leagueSelected])"
+              />
+            </vs-select>
           </label>
           <label>
             Name:
-            <input type="text" :placeholder="playerSelected.name" v-model="playerEdited.name" />
-          </label>
-          <label>
-            Shirt Code:
-            <input
-              type="text"
-              :placeholder="playerSelected.shirt"
-              v-model="playerEdited.shirt"
+            <vs-input
+              :label-placeholder="playerSelected.name"
+              v-model="playerEdited.name"
+              color="dark"
             />
           </label>
           <label>
             Position:
-            <input
-              type="text"
-              :placeholder="playerSelected.position"
-              v-model="playerEdited.position"
-            />
+            <vs-select :label="playerSelected.position" v-model="playerEdited.position" icon>
+              <vs-select-item :key="pos" :value="pos" :text="pos" v-for="pos in positions" />
+            </vs-select>
           </label>
-          <!-- 
-          country:"Serie A"
-            club:"Atalanta BC"
-          name:"T. Castagne"
-          position:"DR"
-          shirt:43-->
-          <!-- <template v-if="$v.password.$error">
-            <span class="error-msg" v-if="!$v.password.required">Password is required!</span>
-            <span
-              class="error-msg"
-              v-else-if="!$v.password.minLength"
-            >Password should be minimum 6 characters!</span>
-          </template>-->
-          <button type="submit">Edit Player</button>
+
+          <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Team</vs-button>
         </form>
       </div>
     </div>
@@ -96,6 +98,7 @@
 
 <script>
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
+import { teamCodes, DATA_URL } from "../../../common";
 
 export default {
   name: "PlayersEdit",
@@ -113,7 +116,8 @@ export default {
         name: "",
         position: "",
         shirt: ""
-      }
+      },
+      positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"]
     };
   },
   methods: {
@@ -132,7 +136,67 @@ export default {
       return (this.teamSelected = t);
     },
     selectPlayerHandler(p) {
+      this.playerEdited = {
+        club: "",
+        country: "",
+        id: "",
+        name: "",
+        position: "",
+        shirt: ""
+      };
       return (this.playerSelected = p);
+    },
+    mergePlayers(_new, _old) {
+      let result = {};
+      Object.keys(_old).forEach(atttr => {
+        if (_new[atttr]) {
+          result[atttr] = _new[atttr];
+        } else {
+          result[atttr] = _old[atttr];
+        }
+      });
+      if (_new["club"]) {
+        result["shirt"] = teamCodes[_new["club"]];
+      }
+      return result;
+    },
+    showSuccessMsg({ club, country, name, position }) {
+      return `You are about to edit ${name}!\nLeague: ${country},\nClub: ${club},\nName: ${name},\nPosition: ${position}`;
+    },
+    fetchPlayer(payload) {
+      return fetch(`${DATA_URL}players/${payload.id}.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Success:", data);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    },
+    editPlayerFormHandler() {
+      const payload = this.mergePlayers(this.playerEdited, this.playerSelected);
+
+      if (this.players[payload.country][payload.club]) {
+        this.$vs.dialog({
+          color: "success",
+          title: "Confirm Edit",
+          text: this.showSuccessMsg(payload),
+          accept: () => this.fetchPlayer(payload)
+        });
+      } else {
+        this.$vs.dialog({
+          color: "warning",
+          title: "Incorrect Edit",
+          text: "There is no such club in this league!"
+        });
+      }
     }
   },
   computed: {},
@@ -298,19 +362,17 @@ export default {
         align-items: flex-start;
 
         label {
-          width: 26%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 5px 0;
+          width: 30%;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          margin: 15px 0;
 
-        input {
-          padding: 5px;
-    border-radius: 4px;
-    border: none;
-    font-weight: bold;
-        }
+          & > div {
+            font-weight: bold;
+            margin: 0px;
+          }
         }
       }
     }
