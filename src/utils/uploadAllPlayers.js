@@ -1,5 +1,5 @@
 import getAllPlayersRaw from './getAllPlayersRaw'
-import makeNewPlayer from '../models/Player'
+import { makeNewPlayer } from '../models/Player'
 import { DATA_URL } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 

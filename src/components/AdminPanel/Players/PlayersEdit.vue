@@ -173,7 +173,7 @@ export default {
     showSuccessMsg({ club, country, name, position }) {
       return `You are about to edit ${name}!\nLeague: ${country},\nClub: ${club},\nName: ${name},\nPosition: ${position}`;
     },
-    fetchPlayer(payload) {
+    fetchDataToPlayer(payload) {
       return fetch(`${DATA_URL}players/${payload.id}.json`, {
         method: "PATCH",
         mode: "cors",
@@ -199,7 +199,7 @@ export default {
           color: "success",
           title: "Confirm Edit",
           text: this.showSuccessMsg(payload),
-          accept: () => this.fetchPlayer(payload)
+          accept: () => this.fetchDataToPlayer(payload)
         });
       } else {
         this.$vs.dialog({

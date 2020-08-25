@@ -3,6 +3,7 @@
     <div class="admin-menu">
       <h1 class="admin-menu-header">ADMIN MENU</h1>
       <div class="admin-menu-items">
+        <a href class="menu-item-link" @click.prevent="switchComponent">Rounds</a>
 
         <a href class="menu-item-link" @click.prevent="showPlayersHandler">Players</a>
         <div class="admin-menu-item" v-if="showPlayers">
@@ -37,11 +38,13 @@
 <script>
 import PlayersEdit from "./Players/PlayersEdit";
 import PlayersPoints from "./Players/PlayersPoints";
+import Rounds from "./Rounds/Rounds";
 import Users from "./Users";
 
 export default {
   name: "AdminPanel",
   components: {
+    Rounds,
     PlayersEdit,
     PlayersPoints,
     Users
@@ -56,8 +59,8 @@ export default {
     switchComponent(e) {
       return (this.chosenComponent = e.target.innerText);
     },
-    showPlayersHandler(){
-        this.showPlayers = !this.showPlayers
+    showPlayersHandler() {
+      this.showPlayers = !this.showPlayers;
     }
   },
   computed: {},
