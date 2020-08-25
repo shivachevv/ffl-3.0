@@ -36,6 +36,8 @@
           :class="{selected: playerSelected === p}"
         >{{p.name}}</a>
       </div>
+
+      <!-- EDIT FORM -->
       <div class="players-details-edit" v-if="playerSelected">
         <form @submit.prevent="editPlayerFormHandler">
           <label>
@@ -89,8 +91,15 @@
             </vs-select>
           </label>
 
-          <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Team</vs-button>
+          <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Player</vs-button>
         </form>
+
+        <vs-alert
+          v-if="success"
+          title="Update finished!"
+          active="true"
+          color="success"
+        >Player succesfully updated!</vs-alert>
       </div>
     </div>
   </div>
@@ -117,7 +126,8 @@ export default {
         position: "",
         shirt: ""
       },
-      positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"]
+      positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
+      success: false
     };
   },
   methods: {
@@ -175,6 +185,7 @@ export default {
         .then(response => response.json())
         .then(data => {
           console.log("Success:", data);
+          this.success = true
         })
         .catch(error => {
           console.error("Error:", error);
@@ -204,6 +215,13 @@ export default {
     players(nv) {
       if (nv) {
         this.$vs.loading.close();
+      }
+    },
+    success(nv) {
+      if (nv === true) {
+        setTimeout(() => {
+          this.success = false;
+        }, 2000);
       }
     }
   },
@@ -361,19 +379,34 @@ export default {
         justify-content: flex-start;
         align-items: flex-start;
 
-        label {
+        & > label {
           width: 30%;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
-          margin: 15px 0;
+          margin: 15px 0 0 0;
+          border-bottom: 1px solid #7c7c7c;
+          padding: 0 0 10px 0;
+
+          &:last-child {
+            border: none;
+          }
 
           & > div {
             font-weight: bold;
             margin: 0px;
           }
         }
+        button {
+          margin: 15px 0 0 0;
+        }
+      }
+
+      .con-vs-alert-success {
+        background: #46c93a80;
+        color: white;
+        margin: 15px 0 0 0;
       }
     }
   }
