@@ -3,15 +3,33 @@
     <div class="rounds">
       <span>Current Round: {{currentRound}}</span>
       <div class="round-buttons">
-        <button @click.prevent="deleteRndHandler">Delete Round</button>
-        <button @click.prevent="addRndHandler">Add Round</button>
+        <!-- <button @click.prevent="deleteRndHandler">Delete Round</button> -->
+        <vs-button
+          color="#59A95D"
+          button="submit"
+          type="relief"
+          size="normal"
+          @click.prevent="addRndHandler"
+        >Add Round</vs-button>
       </div>
     </div>
+    <vs-alert
+      v-if="success"
+      title="Update finished!"
+      active="true"
+      color="success"
+    >Successfully added new round: {{currentRound}}</vs-alert>
+    <vs-alert
+      v-if="error"
+      title="An Error occured!"
+      active="true"
+      color="danger"
+    >There was an error: {{errorMsg}}</vs-alert>
   </div>
 </template>
 
 <script>
-import getCurrentRound from "../../../utils/getCurrentRound";
+import { getCurrentRound, setNewRound } from "../../../utils/getCurrentRound";
 import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 import { DATA_URL } from "../../../common";
 import { addPlayerPts } from "../../../models/Player";
@@ -23,28 +41,44 @@ export default {
     return {
       currentRound: undefined,
       players: undefined,
-      counter:0
+      success: false,
+      error: false,
+      errorMsg: ""
     };
   },
   methods: {
-    deleteRndHandler() {},
+    // deleteRndHandler() {},
     addRndHandler() {
       Object.keys(this.players).forEach(id => {
-        // let result = {};
-        // result[this.currentRound] = addPlayerPts(10)
-          let result = this.players[id];
-          if (result["points"]) {
-            result["points"][`r${this.currentRound}`] = addPlayerPts(10);
-          } else {
-            result["points"] = {};
-            result["points"][`r${this.currentRound}`] = addPlayerPts(10);
-          }
-
-          this.fetchDataToPlayer(id, result);
+        if (this.players[id]["points"]) {
+          this.players[id]["points"][
+            `r${this.currentRound + 1}`
+          ] = addPlayerPts("");
+        } else {
+          this.players[id]["points"] = {};
+          this.players[id]["points"][
+            `r${this.currentRound + 1}`
+          ] = addPlayerPts("");
+        }
+      });
+      this.$vs.dialog({
+        color: "success",
+        title: "Confirm New Round!",
+        text: `Are you sure you want to add new round ${this.currentRound +
+          1}?`,
+        accept: () => this.fetchDataToPlayer(this.players)
       });
     },
-    fetchDataToPlayer(id, payload) {
-      return fetch(`${DATA_URL}testplayers/${id}.json`, {
+    async fetchDataToPlayer(payload) {
+      try {
+        this.currentRound = await setNewRound(this.currentRound + 1);
+      } catch (error) {
+        this.error = true;
+        this.errorMsg = error;
+      }
+      this.$vs.loading();
+
+      return fetch(`${DATA_URL}testplayers.json`, {
         method: "PATCH",
         mode: "cors",
         headers: {
@@ -53,12 +87,16 @@ export default {
         body: JSON.stringify(payload)
       })
         .then(response => response.json())
-        .then(data => {
-          console.log("Success:", data);
-          this.counter++
+        .then(() => {
+          // console.log("Success:", data);
+          this.success = true;
+          this.$vs.loading.close();
         })
         .catch(error => {
           console.error("Error:", error);
+          this.error = true;
+          this.$vs.loading.close();
+          this.errorMsg = error;
         });
     }
   },
@@ -73,7 +111,21 @@ export default {
       if (nv && this.players) {
         this.$vs.loading.close();
       }
+    },
+    success(nv) {
+      if (nv === true) {
+        setTimeout(() => {
+          this.success = false;
+        }, 3000);
+      }
     }
+    // error(nv) {
+    //   if (nv === true) {
+    //     setTimeout(() => {
+    //       this.error = false;
+    //     }, 3000);
+    //   }
+    // }
   },
   async created() {
     this.$vs.loading();
@@ -84,6 +136,36 @@ export default {
 </script>
 
 <style lang="scss">
+$btn-color: #5ac683;
+
 .rounds-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  .rounds {
+    width: 40%;
+    border-radius: 5px;
+    margin: 20px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 1.4rem;
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.75);
+
+    & > span {
+      margin: 0 0 20px 0;
+    }
+  }
+
+  .con-vs-alert-success {
+    background: #46c93a80;
+    color: white;
+    margin: 15px 0 0 0;
+  }
 }
 </style>

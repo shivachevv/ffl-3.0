@@ -43,7 +43,7 @@
 
 <script>
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
-import getCurrentRound from "../../../utils/getCurrentRound";
+import { getCurrentRound } from "../../../utils/getCurrentRound";
 
 export default {
   name: "PlayersPoints",
@@ -54,7 +54,7 @@ export default {
       players: undefined,
       leagueSelected: "",
       teamSelected: "",
-      playerSelected: "",
+      playerSelected: ""
     };
   },
   methods: {
@@ -73,7 +73,7 @@ export default {
       return (this.teamSelected = t);
     },
     selectPlayerHandler(p) {
-      return this.playerSelected = p
+      return (this.playerSelected = p);
     }
   },
   computed: {},
