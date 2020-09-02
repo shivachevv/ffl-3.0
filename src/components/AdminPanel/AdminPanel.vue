@@ -3,12 +3,12 @@
     <div class="admin-menu">
       <h1 class="admin-menu-header">ADMIN MENU</h1>
       <div class="admin-menu-items">
-        <a href class="menu-item-link" @click.prevent="switchComponent">Rounds</a>
+        <button href class="menu-item-link" @click.prevent="switchComponent">Rounds</button>
 
         <a href class="menu-item-link" @click.prevent="showPlayersHandler">Players</a>
         <div class="admin-menu-item" v-if="showPlayers">
-          <button @click.prevent="switchComponent">PlayersEdit</button>
-          <button @click.prevent="switchComponent">PlayersPoints</button>
+          <button class="menu-item-link" @click.prevent="switchComponent">PlayersEdit</button>
+          <button class="menu-item-link" @click.prevent="switchComponent">PlayersPoints</button>
         </div>
 
         <a href class="menu-item-link">Users</a>
@@ -95,9 +95,24 @@ export default {
       justify-content: flex-start;
       align-items: center;
 
-      a {
+      .admin-menu-item {
+        width: 100%;
+      }
+
+      .menu-item-link {
         padding: 10px 0;
         color: #fbffff;
+        width: 100%;
+        text-align: center;
+        transition: all 0.3s;
+        background-color: #3b454b;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darkorange;
+        }
       }
     }
   }

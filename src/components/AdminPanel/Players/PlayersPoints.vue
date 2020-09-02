@@ -29,13 +29,43 @@
     <!-- PLAYERS -->
     <div class="players-container" v-if="players && leagueSelected && teamSelected">
       <div class="players-names">
-        <a
+        <div
           v-for="p in Object.values(players[leagueSelected][teamSelected])"
           :key="p.id"
-          @click.prevent="selectPlayerHandler(p)"
           class="edit-player-menu-item"
           :class="{selected: playerSelected === p}"
-        >{{p.name}}</a>
+        >
+          <a>{{p.name}}</a>
+          <a
+            v-for="(rnd,i) in Object.values(p.points)"
+            :key="i"
+            @click.prevent="selectPlayerRoundHandler(p, rnd, i + 1)"
+          >{{rnd.roundPts}}player pts</a>
+        </div>
+
+        <vs-popup
+          v-if="playerSelected && roundSelected"
+          class="holamundo"
+          :title="'Edit stats of ' + playerSelected.name + ' for round ' + roundSelected.round + '!'"
+          :active.sync="showPopup"
+        >
+          <h2>Points: {{selectedPlayerPts}}</h2>
+          <form @submit.prevent="submitPlayerRoundStatsHandler">
+            <label
+              v-for="stat in Object.entries(roundSelected.roundData.roundStats)"
+              :key="stat[0]"
+            >
+              {{stat[0]}}:
+              <vs-input
+                :label-placeholder="stat[1]"
+                type="number"
+                v-model="playerSelectedStats[stat[0]]"
+                color="dark"
+              />
+            </label>
+            <vs-button color="#59A95D" button="submit" type="relief" size="large">Update Stats</vs-button>
+          </form>
+        </vs-popup>
       </div>
     </div>
   </div>
@@ -44,6 +74,8 @@
 <script>
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
+import pointsCalculator from "../../../utils/pointsCalculator";
+import { DATA_URL } from "../../../common";
 
 export default {
   name: "PlayersPoints",
@@ -54,7 +86,10 @@ export default {
       players: undefined,
       leagueSelected: "",
       teamSelected: "",
-      playerSelected: ""
+      playerSelected: "",
+      roundSelected: "",
+      showPopup: false,
+      playerSelectedStats: {}
     };
   },
   methods: {
@@ -72,11 +107,71 @@ export default {
       this.playerSelected = "";
       return (this.teamSelected = t);
     },
-    selectPlayerHandler(p) {
-      return (this.playerSelected = p);
+    mergeStats(_new, _old) {
+      let result = {};
+      Object.keys(_old).forEach(stat => {
+        if (_new[stat]) {
+          result[stat] = _new[stat];
+        } else {
+          result[stat] = _old[stat];
+        }
+      });
+
+      return result;
+    },
+    selectPlayerRoundHandler(p, rnd, rndCount) {
+      this.playerSelected = p;
+      this.roundSelected = {
+        round: rndCount,
+        roundData: rnd
+      };
+      return (this.showPopup = true);
+    },
+    submitPlayerRoundStatsHandler() {
+      const merged = this.mergeStats(
+        this.playerSelectedStats,
+        this.roundSelected.roundData.roundStats
+      );
+      const payload = {
+        roundPts: this.selectedPlayerPts,
+        roundStats: merged
+      };
+      console.log(payload);
+      return fetch(
+        `${DATA_URL}players/${this.playerSelected.id}/points/r${this.roundSelected.round}.json`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
+      )
+        .then(response => response.json())
+        .then(data => {
+          console.log("Success:", data);
+          this.success = true;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
     }
   },
-  computed: {},
+  computed: {
+    selectedPlayerPts() {
+      if (this.playerSelected && this.roundSelected) {
+        const merged = this.mergeStats(
+          this.playerSelectedStats,
+          this.roundSelected.roundData.roundStats
+        );
+        const arr = Object.values(merged);
+        return pointsCalculator(this.playerSelected.position, ...arr);
+      } else {
+        return "";
+      }
+    }
+  },
   watch: {
     players(nv) {
       if (nv && this.currentRound) {
@@ -86,6 +181,13 @@ export default {
     currentRound(nv) {
       if (nv && this.players) {
         this.$vs.loading.close();
+      }
+    },
+    showPopup(nv) {
+      if (!nv) {
+        this.playerSelected = "";
+        this.roundSelected = "";
+        this.playerSelectedStats = {};
       }
     }
   },

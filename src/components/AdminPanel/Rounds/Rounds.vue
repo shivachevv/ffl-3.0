@@ -52,33 +52,74 @@ export default {
       Object.keys(this.players).forEach(id => {
         if (this.players[id]["points"]) {
           this.players[id]["points"][
-            `r${this.currentRound + 1}`
-          ] = addPlayerPts("");
+            `r${this.currentRound}`
+          ] = addPlayerPts(
+            "",
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          );
         } else {
           this.players[id]["points"] = {};
-          this.players[id]["points"][
-            `r${this.currentRound + 1}`
-          ] = addPlayerPts("");
+          this.players[id]["points"][`r${this.currentRound}`] = addPlayerPts(
+            "",
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          );
         }
       });
       this.$vs.dialog({
         color: "success",
         title: "Confirm New Round!",
-        text: `Are you sure you want to add new round ${this.currentRound +
-          1}?`,
+        text: `Are you sure you want to add new round ${this.currentRound}?`,
         accept: () => this.fetchDataToPlayer(this.players)
       });
     },
     async fetchDataToPlayer(payload) {
       try {
-        this.currentRound = await setNewRound(this.currentRound + 1);
+        this.currentRound = await setNewRound(this.currentRound);
       } catch (error) {
         this.error = true;
         this.errorMsg = error;
       }
       this.$vs.loading();
 
-      return fetch(`${DATA_URL}testplayers.json`, {
+      return fetch(`${DATA_URL}players.json`, {
         method: "PATCH",
         mode: "cors",
         headers: {
