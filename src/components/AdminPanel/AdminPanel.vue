@@ -28,9 +28,9 @@
       </div>
     </div>
     <div class="admin-details">
-      <keep-alive>
+      <!-- <keep-alive> -->
         <component v-bind:is="chosenComponent" />
-      </keep-alive>
+      <!-- </keep-alive> -->
     </div>
   </div>
 </template>

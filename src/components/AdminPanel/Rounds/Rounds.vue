@@ -52,7 +52,7 @@ export default {
       Object.keys(this.players).forEach(id => {
         if (this.players[id]["points"]) {
           this.players[id]["points"][
-            `r${this.currentRound}`
+            `r${this.currentRound + 1}`
           ] = addPlayerPts(
             "",
             2,
@@ -78,7 +78,7 @@ export default {
           );
         } else {
           this.players[id]["points"] = {};
-          this.players[id]["points"][`r${this.currentRound}`] = addPlayerPts(
+          this.players[id]["points"][`r${this.urrentRound + 1}`] = addPlayerPts(
             "",
             2,
             2,
@@ -106,13 +106,13 @@ export default {
       this.$vs.dialog({
         color: "success",
         title: "Confirm New Round!",
-        text: `Are you sure you want to add new round ${this.currentRound}?`,
+        text: `Are you sure you want to add new round ${this.currentRound + 1}?`,
         accept: () => this.fetchDataToPlayer(this.players)
       });
     },
     async fetchDataToPlayer(payload) {
       try {
-        this.currentRound = await setNewRound(this.currentRound);
+        this.currentRound = await setNewRound(this.currentRound + 1);
       } catch (error) {
         this.error = true;
         this.errorMsg = error;
@@ -129,7 +129,6 @@ export default {
       })
         .then(response => response.json())
         .then(() => {
-          // console.log("Success:", data);
           this.success = true;
           this.$vs.loading.close();
         })

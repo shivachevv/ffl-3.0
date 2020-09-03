@@ -29,18 +29,30 @@
     <!-- PLAYERS -->
     <div class="players-container" v-if="players && leagueSelected && teamSelected">
       <div class="players-names">
+        <vs-alert
+          v-if="success"
+          title="Update finished!"
+          active="true"
+          color="success"
+        >Player succesfully updated!</vs-alert>
+
+        <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+
+        <div class="edit-player-menu-header">
+          <span>Players</span>
+          <span v-for="i in currentRound" :key="i">{{i}}</span>
+        </div>
         <div
           v-for="p in Object.values(players[leagueSelected][teamSelected])"
           :key="p.id"
           class="edit-player-menu-item"
-          :class="{selected: playerSelected === p}"
         >
-          <a>{{p.name}}</a>
+          <a>{{p.name}} - {{p.position}}</a>
           <a
             v-for="(rnd,i) in Object.values(p.points)"
             :key="i"
             @click.prevent="selectPlayerRoundHandler(p, rnd, i + 1)"
-          >{{rnd.roundPts}}player pts</a>
+          >{{rnd.roundPts}} pts</a>
         </div>
 
         <vs-popup
@@ -49,7 +61,7 @@
           :title="'Edit stats of ' + playerSelected.name + ' for round ' + roundSelected.round + '!'"
           :active.sync="showPopup"
         >
-          <h2>Points: {{selectedPlayerPts}}</h2>
+          <h2 class="popup-header">Points: {{selectedPlayerPts}}</h2>
           <form @submit.prevent="submitPlayerRoundStatsHandler">
             <label
               v-for="stat in Object.entries(roundSelected.roundData.roundStats)"
@@ -89,7 +101,10 @@ export default {
       playerSelected: "",
       roundSelected: "",
       showPopup: false,
-      playerSelectedStats: {}
+      playerSelectedStats: {},
+      success: false,
+      error: false,
+      errorMsg: ""
     };
   },
   methods: {
@@ -136,7 +151,7 @@ export default {
         roundPts: this.selectedPlayerPts,
         roundStats: merged
       };
-      console.log(payload);
+
       return fetch(
         `${DATA_URL}players/${this.playerSelected.id}/points/r${this.roundSelected.round}.json`,
         {
@@ -149,12 +164,14 @@ export default {
         }
       )
         .then(response => response.json())
-        .then(data => {
-          console.log("Success:", data);
+        .then(() => {
+          // console.log("Success:", data);
           this.success = true;
         })
         .catch(error => {
           console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
         });
     }
   },
@@ -188,6 +205,13 @@ export default {
         this.playerSelected = "";
         this.roundSelected = "";
         this.playerSelectedStats = {};
+      }
+    },
+    success(nv) {
+      if (nv === true) {
+        setTimeout(() => {
+          this.success = false;
+        }, 2000);
       }
     }
   },
@@ -290,7 +314,7 @@ export default {
     margin: 20px 0 0 0;
 
     .players-names {
-      width: 15%;
+      width: 97%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -298,83 +322,98 @@ export default {
       margin: 0 0 0 20px;
       background-color: #b4b4b4;
       border-radius: 5px;
-      padding: 5px 10px;
-
-      a.points-player-menu-item {
-        padding: 0 5px;
-        width: 100%;
-        transition: all 0.3s;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 4px;
-        border-radius: 5px;
-        text-align: center;
-
-        &:hover {
-          cursor: pointer;
-          background-color: #71b171;
-        }
-        &:active {
-          background-color: #71b171;
-        }
-        &.selected {
-          background-color: #59a959;
-        }
-        img {
-          width: 60%;
-        }
-      }
-    }
-
-    .players-details-points {
-      width: 80%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      margin: 0 0 0 20px;
-      background-color: #b4b4b4;
-      border-radius: 5px;
-      padding: 20px 20px;
-
-      form {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-
-        & > label {
-          width: 30%;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          margin: 15px 0 0 0;
-          border-bottom: 1px solid #7c7c7c;
-          padding: 0 0 10px 0;
-
-          &:last-child {
-            border: none;
-          }
-
-          & > div {
-            font-weight: bold;
-            margin: 0px;
-          }
-        }
-        button {
-          margin: 15px 0 0 0;
-        }
-      }
+      overflow: hidden;
 
       .con-vs-alert-success {
         background: #46c93a80;
         color: white;
-        margin: 15px 0 0 0;
+        margin: 15px;
+        width: 97%;
       }
+
+      .con-vs-alert-primary {
+        width: 98%;
+        margin: 10px;
+        background-color: #e5000059;
+        color: white;
+
+        .con-vs-alert-primary .con-x {
+          background-color: #3b454b;
+          color: #fff;
+        }
+      }
+
+      .edit-player-menu-header {
+        width: 100%;
+        padding: 5px 5px 5px 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        transition: all 0.3s;
+        background-color: #3b454b;
+        color: #c6c6c6;
+        font-weight: bold;
+
+        span:not(:first-child) {
+          display: inline-block;
+          width: 3%;
+          text-align: center;
+        }
+
+        span:first-child {
+          width: 20%;
+          display: inline-block;
+        }
+      }
+
+      .edit-player-menu-item {
+        width: 100%;
+        padding: 5px 5px 5px 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: darken($color: #b4b4b4, $amount: 10);
+        }
+
+        a:not(:first-child) {
+          display: inline-block;
+          width: 3%;
+          cursor: pointer;
+          text-align: center;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        a:first-child {
+          width: 20%;
+          display: inline-block;
+          cursor: default;
+        }
+      }
+    }
+  }
+}
+
+.vs-popup--content {
+  .popup-header {
+    padding: 10px 0;
+    font-weight: bold;
+    border-bottom: 1px solid #23292d;
+  }
+
+  form {
+    padding: 10px 0;
+
+    label {
+      text-transform: capitalize;
+      margin: 10px;
     }
   }
 }
