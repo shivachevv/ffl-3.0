@@ -6,46 +6,58 @@
 
     <h3 v-if="lastUpdate">Points last uploaded: {{lastUpdate}}</h3>
     <div class="sync-section">
-      <img
-        :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.upload ? 'check' : 'uncheck'}.png`)"
-        alt="flag"
-      />
-      <form @submit.prevent="uploadDialog" class="download">
-        <label>
-          <span>League</span>
-          <select name="league" v-model="form.league">
-            <option value>All leagues</option>
-            <option value="2">England-Premier-League</option>
-            <option value="22">France-Ligue-1</option>
-            <option value="3">Germany-Bundesliga</option>
-            <option value="5">Italy-Serie-A</option>
-            <option value="13">Netherlands-Eredivisie</option>
-            <option value="21">Portugal-Liga-NOS</option>
-            <option value="4">Spain-LaLiga</option>
-            <option value="17">Turkey-Super-Lig</option>
-          </select>
-        </label>
-        <label>
-          <span>Date from:</span>
-          <input name="from" type="date" v-model="form.from" required />
-        </label>
-        <label>
-          <span>Date till:</span>
-          <input name="till" type="date" v-model="form.to" required />
-        </label>
-        <label>
-          <span>Format:</span>
-          <select name="format" v-model="form.format">
-            <option value="json">json</option>
-            <option value="csv">csv</option>
-          </select>
-        </label>
-        <label>
-          <span>Target:</span>
-          <input type="text" name="target" v-model="form.target" />
-        </label>
-        <vs-button color="#59A95D" button="submit" type="relief" size="normal">1. UPLOAD POINTS</vs-button>
-      </form>
+      <p>Select round:</p>
+      <div class="rounds">
+        <a
+          href
+          v-for="rnd of Object.keys(roundDates)"
+          :key="rnd"
+          @click.prevent="selectRoundDates(rnd)"
+          :class="{selected: form.from === roundDates[rnd].from && form.to === roundDates[rnd].to}"
+        >{{rnd}}</a>
+      </div>
+      <div class="form-container">
+        <img
+          :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.upload ? 'check' : 'uncheck'}.png`)"
+          alt="flag"
+        />
+        <form @submit.prevent="uploadDialog" class="download">
+          <label>
+            <span>League</span>
+            <select name="league" v-model="form.league">
+              <option value>All leagues</option>
+              <option value="2">England-Premier-League</option>
+              <option value="22">France-Ligue-1</option>
+              <option value="3">Germany-Bundesliga</option>
+              <option value="5">Italy-Serie-A</option>
+              <option value="13">Netherlands-Eredivisie</option>
+              <option value="21">Portugal-Liga-NOS</option>
+              <option value="4">Spain-LaLiga</option>
+              <option value="17">Turkey-Super-Lig</option>
+            </select>
+          </label>
+          <label>
+            <span>Date from:</span>
+            <input name="from" type="date" v-model="form.from" required />
+          </label>
+          <label>
+            <span>Date till:</span>
+            <input name="till" type="date" v-model="form.to" required />
+          </label>
+          <label>
+            <span>Format:</span>
+            <select name="format" v-model="form.format">
+              <option value="json">json</option>
+              <option value="csv">csv</option>
+            </select>
+          </label>
+          <label>
+            <span>Target:</span>
+            <input type="text" name="target" v-model="form.target" />
+          </label>
+          <vs-button color="#59A95D" button="submit" type="relief" size="normal">1. UPLOAD POINTS</vs-button>
+        </form>
+      </div>
     </div>
 
     <div class="sync-section">
@@ -82,17 +94,15 @@ import { getPointsFromTool } from "../../../utils/getPointsFromTool";
 import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 import syncPointsHelper from "../../../utils/syncPointsHelper";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
-// import pointsCalculator from "../../../utils/pointsCalculator";
-import { DATA_URL } from "../../../common";
-// import { playersMapped } from "../../../common";
+import { DATA_URL, roundDates } from "../../../common";
 
 export default {
   name: "SyncPoints",
   components: {},
   data() {
     return {
+      roundDates: roundDates,
       points: undefined,
-      //   targetValue: "https://ffl-3-new.firebaseio.com/pointsSync/points.json",
       lastUpdate: "",
       lastSync: "",
       form: {
@@ -122,15 +132,8 @@ export default {
         "4": "Spain-LaLiga",
         "17": "Turkey-Super-Lig"
       },
-        currentRound: undefined,
+      currentRound: undefined,
       players: undefined,
-      //   leagueSelected: "",
-      //   teamSelected: "",
-      //   playerSelected: "",
-      //   roundSelected: "",
-      //   showPopup: false,
-      //   playerSelectedStats: {},
-      //   success: false,
       error: false,
       errorMsg: ""
     };
@@ -256,7 +259,7 @@ export default {
         });
     },
     async uploadNewUpdateDate() {
-      const date = new Date();
+      const date = new Date(new Date().getTime());
       const response = await fetch(`${DATA_URL}pointsSync.json`, {
         method: "PATCH",
         mode: "cors",
@@ -271,7 +274,7 @@ export default {
       return result.lastUpdate;
     },
     async uploadNewSyncDate() {
-      const date = new Date();
+      const date = new Date(new Date().getTime());
       const response = await fetch(`${DATA_URL}pointsSync.json`, {
         method: "PATCH",
         mode: "cors",
@@ -287,91 +290,21 @@ export default {
     },
     async getLastUpdate() {
       const response = await fetch(this.lastUpdateUrl);
-      return await response.json();
+      const date = await response.json();
+      return date.split('T').join(' ').split('.').shift()
     },
     async getLastSync() {
       const response = await fetch(this.lastSyncUrl);
-      return await response.json();
+      const date = await response.json();
+      return date.split('T').join(' ').split('.').shift()
+    },
+    selectRoundDates(rnd) {
+      const round = this.roundDates[rnd];
+      this.form.from = round.from;
+      this.form.to = round.to;
     }
-    // makeLeagueToImg(v) {
-    //   return v
-    //     .toLowerCase()
-    //     .split(" ")
-    //     .join("_");
-    // },
-    // selectLeagueHandler(l) {
-    //   this.teamSelected = "";
-    //   return (this.leagueSelected = l);
-    // },
-    // selectTeamHandler(t) {
-    //   this.playerSelected = "";
-    //   return (this.teamSelected = t);
-    // },
-    // mergeStats(_new, _old) {
-    //   let result = {};
-    //   Object.keys(_old).forEach(stat => {
-    //     if (_new[stat]) {
-    //       result[stat] = _new[stat];
-    //     } else {
-    //       result[stat] = _old[stat];
-    //     }
-    //   });
-    //   return result;
-    // },
-    // selectPlayerRoundHandler(p, rnd, rndCount) {
-    //   this.playerSelected = p;
-    //   this.roundSelected = {
-    //     round: rndCount,
-    //     roundData: rnd
-    //   };
-    //   return (this.showPopup = true);
-    // },
-    // submitPlayerRoundStatsHandler() {
-    //   const merged = this.mergeStats(
-    //     this.playerSelectedStats,
-    //     this.roundSelected.roundData.roundStats
-    //   );
-    //   const payload = {
-    //     roundPts: this.selectedPlayerPts,
-    //     roundStats: merged
-    //   };
-    //   return fetch(
-    //     `${DATA_URL}players/${this.playerSelected.id}/points/r${this.roundSelected.round}.json`,
-    //     {
-    //       method: "PATCH",
-    //       mode: "cors",
-    //       headers: {
-    //         "Content-Type": "application/json"
-    //       },
-    //       body: JSON.stringify(payload)
-    //     }
-    //   )
-    //     .then(response => response.json())
-    //     .then(() => {
-    //       // console.log("Success:", data);
-    //       this.success = true;
-    //     })
-    //     .catch(error => {
-    //       console.error("Error:", error);
-    //       this.error = true;
-    //       this.errorMsg = error;
-    //     });
-    // }
   },
-  computed: {
-    // selectedPlayerPts() {
-    //   if (this.playerSelected && this.roundSelected) {
-    //     const merged = this.mergeStats(
-    //       this.playerSelectedStats,
-    //       this.roundSelected.roundData.roundStats
-    //     );
-    //     const arr = Object.values(merged);
-    //     return pointsCalculator(this.playerSelected.position, ...arr);
-    //   } else {
-    //     return "";
-    //   }
-    // }
-  },
+  computed: {},
   watch: {
     points(nv) {
       if (nv) {
@@ -383,25 +316,6 @@ export default {
         this.$vs.loading.close();
       }
     }
-    // currentRound(nv) {
-    //   if (nv && this.players) {
-    //     this.$vs.loading.close();
-    //   }
-    // },
-    // showPopup(nv) {
-    //   if (!nv) {
-    //     this.playerSelected = "";
-    //     this.roundSelected = "";
-    //     this.playerSelectedStats = {};
-    //   }
-    // },
-    // success(nv) {
-    //   if (nv === true) {
-    //     setTimeout(() => {
-    //       this.success = false;
-    //     }, 2000);
-    //   }
-    // }
   },
   async created() {
     this.$vs.loading();
@@ -452,32 +366,69 @@ export default {
     border-radius: 10px;
     padding: 10px;
 
-    .download {
-      //   padding: 32px;
-      width: 50%;
+    &:nth-child(3) {
+      flex-direction: column;
+    }
 
-      input[name="target"] {
-        width: 100%;
-      }
+    p {
+      font-weight: bold;
+    }
 
-      label {
-        display: flex;
-        margin: 16px 0;
-        justify-content: flex-start;
-        align-items: center;
+    .rounds {
+      padding: 0 0 10px 0;
+      border-bottom: 1px solid #3c474d;
+      a {
+        display: inline-block;
+        padding: 5px;
+        transition: all 0.3s;
+        color: black;
+        border-radius: 3px;
 
-        span {
-          flex: 0 0 100px;
+        &:hover {
+          background-color: #59a95d;
         }
 
-        select,
-        input {
-          border-radius: 4px;
-          border: 1px solid #dcdcdc;
-          padding: 0.3em;
-          background: white;
-          font-family: "PT Sans", sans-serif;
-          font-size: large;
+        &.selected {
+          background-color: #356538;
+          color: white;
+        }
+      }
+    }
+
+    .form-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: row;
+
+      .download {
+        //   padding: 32px;
+        width: 50%;
+
+        input[name="target"] {
+          width: 100%;
+        }
+
+        label {
+          display: flex;
+          margin: 16px 0;
+          justify-content: flex-start;
+          align-items: center;
+
+          span {
+            flex: 0 0 100px;
+          }
+
+          select,
+          input {
+            border-radius: 4px;
+            border: 1px solid #dcdcdc;
+            padding: 0.3em;
+            background: white;
+            font-family: "PT Sans", sans-serif;
+            font-size: large;
+          }
         }
       }
     }
