@@ -9,6 +9,7 @@
         <div class="admin-menu-item" v-if="showPlayers">
           <button class="menu-item-link" @click.prevent="switchComponent">PlayersEdit</button>
           <button class="menu-item-link" @click.prevent="switchComponent">PlayersPoints</button>
+          <button class="menu-item-link" @click.prevent="switchComponent">SyncPoints</button>
         </div>
 
         <a href class="menu-item-link">Users</a>
@@ -29,7 +30,7 @@
     </div>
     <div class="admin-details">
       <!-- <keep-alive> -->
-        <component v-bind:is="chosenComponent" />
+      <component v-bind:is="chosenComponent" />
       <!-- </keep-alive> -->
     </div>
   </div>
@@ -38,6 +39,7 @@
 <script>
 import PlayersEdit from "./Players/PlayersEdit";
 import PlayersPoints from "./Players/PlayersPoints";
+import SyncPoints from "./Players/SyncPoints";
 import Rounds from "./Rounds/Rounds";
 import Users from "./Users";
 
@@ -47,6 +49,7 @@ export default {
     Rounds,
     PlayersEdit,
     PlayersPoints,
+    SyncPoints,
     Users
   },
   data() {
@@ -119,6 +122,14 @@ export default {
 
   .admin-details {
     width: 85%;
+
+    .section-header {
+      margin: 20px 0 0 0;
+      font-size: 1.3rem;
+      text-decoration: underline;
+      width: 100%;
+      text-align: center;
+    }
   }
 }
 </style>

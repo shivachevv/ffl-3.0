@@ -1,5 +1,7 @@
 <template>
   <div class="players-points-container">
+        <h1 class="section-header">Edit Players Points Section</h1>
+
     <!-- LEAGUES -->
     <div class="leagues-container" v-if="players">
       <a
@@ -414,6 +416,10 @@ export default {
     label {
       text-transform: capitalize;
       margin: 10px;
+    }
+
+    button {
+      margin: 20px;
     }
   }
 }

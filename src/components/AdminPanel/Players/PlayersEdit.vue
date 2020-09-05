@@ -1,5 +1,6 @@
 <template>
   <div class="players-edit-container">
+    <h1 class="section-header">Edit Players personal details section</h1>
     <!-- LEAGUES -->
     <div class="leagues-container" v-if="players">
       <a

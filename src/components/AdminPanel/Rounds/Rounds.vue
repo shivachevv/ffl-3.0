@@ -1,5 +1,6 @@
 <template>
   <div class="rounds-container" v-if="currentRound && players">
+    <h1 class="section-header">Rounds section</h1>
     <div class="rounds">
       <span>Current Round: {{currentRound}}</span>
       <div class="round-buttons">
@@ -49,64 +50,22 @@ export default {
   methods: {
     // deleteRndHandler() {},
     addRndHandler() {
+      const playerStatsEmptyValues = Array(20).fill('')
       Object.keys(this.players).forEach(id => {
         if (this.players[id]["points"]) {
           this.players[id]["points"][
             `r${this.currentRound + 1}`
-          ] = addPlayerPts(
-            "",
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2
-          );
+          ] = addPlayerPts(0,...playerStatsEmptyValues);
         } else {
           this.players[id]["points"] = {};
-          this.players[id]["points"][`r${this.urrentRound + 1}`] = addPlayerPts(
-            "",
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2,
-            2
-          );
+          this.players[id]["points"][`r${this.urrentRound + 1}`] = addPlayerPts(0,...playerStatsEmptyValues);
         }
       });
       this.$vs.dialog({
         color: "success",
         title: "Confirm New Round!",
-        text: `Are you sure you want to add new round ${this.currentRound + 1}?`,
+        text: `Are you sure you want to add new round ${this.currentRound +
+          1}?`,
         accept: () => this.fetchDataToPlayer(this.players)
       });
     },
@@ -184,6 +143,8 @@ $btn-color: #5ac683;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+
+  
 
   .rounds {
     width: 40%;
