@@ -1,6 +1,19 @@
 <template>
   <div class="players-edit-container">
     <h1 class="section-header">Edit Players personal details section</h1>
+    <!-- CREATE NEW PLAYER BUTTON and POPUP -->
+    <vs-popup class="holamundo" title="Create new player!" :active.sync="showPopup" v-if="players">
+      <AddPlayerForm :players="players" @updatedPlayers="players = $event" />
+    </vs-popup>
+    <vs-button
+      class="add-player"
+      color="#59A95D"
+      button="button"
+      type="relief"
+      size="large"
+      @click.prevent="openAddPlayerPopup"
+    >Add New Player</vs-button>
+
     <!-- LEAGUES -->
     <div class="leagues-container" v-if="players">
       <a
@@ -35,7 +48,7 @@
           @click.prevent="selectPlayerHandler(p)"
           class="edit-player-menu-item"
           :class="{selected: playerSelected === p}"
-        >{{p.name}}</a>
+        >{{p.name}} - {{p.position}}</a>
       </div>
 
       <!-- EDIT FORM -->
@@ -109,12 +122,16 @@
 <script>
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { teamCodes, DATA_URL } from "../../../common";
+import AddPlayerForm from "./AddPlayerForm";
 
 export default {
   name: "PlayersEdit",
-  components: {},
+  components: {
+    AddPlayerForm
+  },
   data() {
     return {
+      showPopup: false,
       players: undefined,
       leagueSelected: "",
       teamSelected: "",
@@ -186,7 +203,7 @@ export default {
         .then(response => response.json())
         .then(data => {
           console.log("Success:", data);
-          this.success = true
+          this.success = true;
         })
         .catch(error => {
           console.error("Error:", error);
@@ -209,6 +226,9 @@ export default {
           text: "There is no such club in this league!"
         });
       }
+    },
+    openAddPlayerPopup() {
+      return (this.showPopup = true);
     }
   },
   computed: {},
@@ -240,6 +260,10 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+
+  .add-player {
+    margin: 10px;
+  }
 
   .leagues-container {
     width: 100%;
