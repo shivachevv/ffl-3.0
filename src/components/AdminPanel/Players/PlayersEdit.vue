@@ -106,6 +106,13 @@
           </label>
 
           <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Player</vs-button>
+          <vs-button
+            color="danger"
+            button="button"
+            type="relief"
+            size="large"
+            @click.prevent="deletePlayerHandler(playerSelected.id)"
+          >Delete Player</vs-button>
         </form>
 
         <vs-alert
@@ -229,6 +236,37 @@ export default {
     },
     openAddPlayerPopup() {
       return (this.showPopup = true);
+    },
+    deletePlayerHandler(id) {
+      this.$vs.dialog({
+        color: "success",
+        title: "Confirm Delete",
+        text: `Are you sure you want to delete ${
+          this.players[this.leagueSelected][this.teamSelected][id].name
+        }?`,
+        accept: () => deletePlayer(id)
+      });
+
+      const deletePlayer = (id) => {
+        return fetch(`${DATA_URL}players/${id}.json`, {
+          method: "DELETE",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then(response => response.json())
+          .then(async () => {
+            this.playerSelected = "";
+            this.$vs.loading();
+            this.players = await getAllPlayersDataCathegorized();
+            this.$vs.loading.close();
+            this.success = true;
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          });
+      };
     }
   },
   computed: {},

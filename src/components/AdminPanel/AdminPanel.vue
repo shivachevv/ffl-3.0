@@ -12,9 +12,9 @@
           <button class="menu-item-link" @click.prevent="switchComponent">SyncPoints</button>
         </div>
 
-        <a href class="menu-item-link">Users</a>
-        <div class="admin-menu-item">
-          <button @click.prevent="switchComponent">Users</button>
+        <a href class="menu-item-link" @click.prevent="showUsersHandler">Users</a>
+        <div class="admin-menu-item" v-if="showUsers">
+          <button @click.prevent="switchComponent" class="menu-item-link">Users</button>
         </div>
 
         <a href class="menu-item-link">Leagues</a>
@@ -55,7 +55,8 @@ export default {
   data() {
     return {
       chosenComponent: "PlayersEdit",
-      showPlayers: false
+      showPlayers: false,
+      showUsers: false,
     };
   },
   methods: {
@@ -64,6 +65,9 @@ export default {
     },
     showPlayersHandler() {
       this.showPlayers = !this.showPlayers;
+    },
+    showUsersHandler() {
+      this.showUsers = !this.showUsers;
     }
   },
   computed: {},

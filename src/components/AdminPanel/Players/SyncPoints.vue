@@ -1,6 +1,6 @@
 <template>
   <div class="sync-points-container" v-if="players && currentRound">
-    <h1 class="section-header">Sync Player Points Section for round {{currentRound}}</h1>
+    <h1 class="section-header">Sync Player Points Section. Current round is: {{currentRound}}</h1>
 
     <vs-alert :active.sync="error" closable close-icon="close" color="danger">{{errorMsg}}</vs-alert>
 
@@ -13,7 +13,8 @@
           v-for="rnd of Object.keys(roundDates)"
           :key="rnd"
           @click.prevent="selectRoundDates(rnd)"
-          :class="{selected: form.from === roundDates[rnd].from && form.to === roundDates[rnd].to}"
+          :class="{selected: form.from === roundDates[rnd].from && form.to === roundDates[rnd].to,
+                     unavailable: rnd > currentRound}"
         >{{rnd}}</a>
       </div>
       <div class="form-container">
@@ -75,16 +76,28 @@
 
     <h3 v-if="lastSync">Points last synced: {{lastSync}}</h3>
     <div class="sync-section">
-      <img
-        :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.sync ? 'check' : 'uncheck'}.png`)"
-        alt="flag"
-      />
-      <vs-button
-        color="#59A95D"
-        type="relief"
-        size="normal"
-        @click="syncDialog"
-      >3. SYNC POINTS WITH PLAYERS</vs-button>
+      <p>Select which round to sync points for:</p>
+      <div class="rounds">
+        <a
+          href
+          v-for="rnd of Object.keys(roundDates)"
+          :key="rnd"
+          @click.prevent="selectSyncRoundHandler(rnd)"
+          :class="{selected: rnd === selectedSyncRound, unavailable: rnd > currentRound}"
+        >{{rnd}}</a>
+      </div>
+      <div class="sync-container">
+        <img
+          :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.sync ? 'check' : 'uncheck'}.png`)"
+          alt="flag"
+        />
+        <vs-button
+          color="#59A95D"
+          type="relief"
+          size="normal"
+          @click="syncDialog"
+        >3. SYNC POINTS WITH PLAYERS</vs-button>
+      </div>
     </div>
   </div>
 </template>
@@ -133,6 +146,7 @@ export default {
         "17": "Turkey-Super-Lig"
       },
       currentRound: undefined,
+      selectedSyncRound: undefined,
       players: undefined,
       error: false,
       errorMsg: ""
@@ -175,9 +189,11 @@ export default {
         this.$vs.dialog({
           color: "success",
           title: `Sync points for ROUND ${this.currentRound}!`,
-          text: `Are you sure you want to sync points for ${
+          text: `Are you sure you want points for ${
             league ? this.leaguesNames[league] : "All leagues"
-          } from ${from} to ${to}?`,
+          } from ${from} to ${to} to be added to round ${
+            this.selectedSyncRound ? this.selectedSyncRound : this.currentRound
+          }?`,
           accept: () => this.syncPointsHandler()
         });
       } else {
@@ -235,7 +251,10 @@ export default {
     },
     async syncPointsHandler() {
       this.$vs.loading();
-      const payload = await syncPointsHelper(this.points, this.players);
+      const round = this.selectedSyncRound
+        ? this.selectedSyncRound
+        : this.currentRound;
+      const payload = await syncPointsHelper(this.points, this.players, round);
       return fetch(`${DATA_URL}players.json`, {
         method: "PATCH",
         mode: "cors",
@@ -291,17 +310,28 @@ export default {
     async getLastUpdate() {
       const response = await fetch(this.lastUpdateUrl);
       const date = await response.json();
-      return date.split('T').join(' ').split('.').shift()
+      return date
+        .split("T")
+        .join(" ")
+        .split(".")
+        .shift();
     },
     async getLastSync() {
       const response = await fetch(this.lastSyncUrl);
       const date = await response.json();
-      return date.split('T').join(' ').split('.').shift()
+      return date
+        .split("T")
+        .join(" ")
+        .split(".")
+        .shift();
     },
     selectRoundDates(rnd) {
       const round = this.roundDates[rnd];
       this.form.from = round.from;
       this.form.to = round.to;
+    },
+    selectSyncRoundHandler(rnd) {
+      return (this.selectedSyncRound = rnd);
     }
   },
   computed: {},
@@ -360,14 +390,14 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    flex-direction: row;
+    flex-direction: column;
     margin: 20px 0 0 0;
     background-color: #afafaf;
     border-radius: 10px;
     padding: 10px;
 
-    &:nth-child(3) {
-      flex-direction: column;
+    &:nth-child(4) {
+      flex-direction: row;
     }
 
     p {
@@ -383,6 +413,7 @@ export default {
         transition: all 0.3s;
         color: black;
         border-radius: 3px;
+        margin: 0 1px 0 1px;
 
         &:hover {
           background-color: #59a95d;
@@ -391,6 +422,10 @@ export default {
         &.selected {
           background-color: #356538;
           color: white;
+        }
+        &.unavailable {
+          background-color: #9d9d9d;
+          cursor: not-allowed;
         }
       }
     }
@@ -436,6 +471,15 @@ export default {
     img {
       margin: 0 40px 0 25%;
       width: 50px;
+    }
+
+    .sync-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: row;
+      margin: 20px 0 0 0;
     }
   }
 

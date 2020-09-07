@@ -2,8 +2,8 @@ import { playersMapped } from "../common";
 import { getCurrentRound } from "../utils/getCurrentRound";
 import pointsCalculator from '../utils/pointsCalculator'
 
-const syncPointsHelper = async (pts, players) => {
-    const currentRound = await getCurrentRound()
+const syncPointsHelper = async (pts, players, id) => {
+    const round = id ? id : await getCurrentRound()
 
     Object.keys(pts).forEach(id => {
         if (playersMapped[id]) {
@@ -37,7 +37,7 @@ const syncPointsHelper = async (pts, players) => {
                 ...Object.values(playerStats)
             )
 
-            players[mappedID].points[`r${currentRound}`] = {
+            players[mappedID].points[`r${round}`] = {
                 roundPts,
                 roundStats: playerStats
             }
