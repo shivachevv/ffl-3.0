@@ -14,7 +14,7 @@
 
         <a href class="menu-item-link" @click.prevent="showUsersHandler">Users</a>
         <div class="admin-menu-item" v-if="showUsers">
-          <button @click.prevent="switchComponent" class="menu-item-link">Users</button>
+          <button @click.prevent="switchComponent" class="menu-item-link">UsersPersonal</button>
         </div>
 
         <a href class="menu-item-link">Leagues</a>
@@ -41,7 +41,7 @@ import PlayersEdit from "./Players/PlayersEdit";
 import PlayersPoints from "./Players/PlayersPoints";
 import SyncPoints from "./Players/SyncPoints";
 import Rounds from "./Rounds/Rounds";
-import Users from "./Users";
+import UsersPersonal from "./Users/UsersPersonal";
 
 export default {
   name: "AdminPanel",
@@ -50,7 +50,7 @@ export default {
     PlayersEdit,
     PlayersPoints,
     SyncPoints,
-    Users
+    UsersPersonal
   },
   data() {
     return {

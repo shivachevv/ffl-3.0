@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../components/Home/Home.vue";
 import Login from "../components/Login/Login";
+import Register from "../components/Register/Register";
 import UserPage from "../components/UserPage/UserPage";
 // import UserTransfers from "../components/UserPage/UserTransfers/UserTransfers";
 import GetAllPlayers from "../components/GetAllPlayers";
@@ -34,6 +35,21 @@ const routes = [{
         }
       });
     }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register,
+    props: true,
+    // beforeEnter(to, from, next) {
+    //   firebase.auth().onAuthStateChanged(user => {
+    //     if (user) {
+    //       next('/')
+    //     } else {
+    //       next()
+    //     }
+    //   });
+    // }
   },
   {
     path: '/team-details/:id',
