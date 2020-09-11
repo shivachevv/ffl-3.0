@@ -3,26 +3,27 @@
     <div class="admin-menu">
       <h1 class="admin-menu-header">ADMIN MENU</h1>
       <div class="admin-menu-items">
-        <button href class="menu-item-link" @click.prevent="switchComponent">Rounds</button>
+        <button href class="menu-item-section" @click.prevent="switchComponent">Rounds</button>
 
-        <a href class="menu-item-link" @click.prevent="showPlayersHandler">Players</a>
+        <a href class="menu-item-section" @click.prevent="showPlayersHandler">Players</a>
         <div class="admin-menu-item" v-if="showPlayers">
           <button class="menu-item-link" @click.prevent="switchComponent">PlayersEdit</button>
           <button class="menu-item-link" @click.prevent="switchComponent">PlayersPoints</button>
           <button class="menu-item-link" @click.prevent="switchComponent">SyncPoints</button>
         </div>
 
-        <a href class="menu-item-link" @click.prevent="showUsersHandler">Users</a>
+        <a href class="menu-item-section" @click.prevent="showUsersHandler">Users</a>
         <div class="admin-menu-item" v-if="showUsers">
           <button @click.prevent="switchComponent" class="menu-item-link">UsersPersonal</button>
+          <button @click.prevent="switchComponent" class="menu-item-link">UsersTeams</button>
         </div>
 
-        <a href class="menu-item-link">Leagues</a>
+        <a href class="menu-item-section">Leagues</a>
         <div class="admin-menu-item">
           <button @click.prevent="switchComponent">Leagues</button>
         </div>
 
-        <a href class="menu-item-link">Players</a>
+        <a href class="menu-item-section">Players</a>
         <div class="admin-menu-item">
           <button @click.prevent="switchComponent">Transfers</button>
         </div>
@@ -42,6 +43,7 @@ import PlayersPoints from "./Players/PlayersPoints";
 import SyncPoints from "./Players/SyncPoints";
 import Rounds from "./Rounds/Rounds";
 import UsersPersonal from "./Users/UsersPersonal";
+import UsersTeams from "./Users/UsersTeams";
 
 export default {
   name: "AdminPanel",
@@ -50,13 +52,14 @@ export default {
     PlayersEdit,
     PlayersPoints,
     SyncPoints,
-    UsersPersonal
+    UsersPersonal,
+    UsersTeams
   },
   data() {
     return {
       chosenComponent: "PlayersEdit",
       showPlayers: false,
-      showUsers: false,
+      showUsers: false
     };
   },
   methods: {
@@ -102,11 +105,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
 
-      .admin-menu-item {
-        width: 100%;
-      }
-
-      .menu-item-link {
+      .menu-item-section {
         padding: 10px 0;
         color: #fbffff;
         width: 100%;
@@ -119,6 +118,26 @@ export default {
 
         &:hover {
           background-color: darkorange;
+        }
+      }
+
+      .admin-menu-item {
+        width: 100%;
+
+        .menu-item-link {
+          padding: 10px 0;
+          color: #3b454b;
+          width: 100%;
+          text-align: center;
+          transition: all 0.3s;
+          background-color: #b7b7b7;
+          border: none;
+          font-size: 1rem;
+          cursor: pointer;
+
+          &:hover {
+            background-color: darkorange;
+          }
         }
       }
     }

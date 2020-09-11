@@ -90,7 +90,7 @@ import { makeNewUser } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
 
 export default {
-  name: "Users",
+  name: "UsersPersonal",
   components: {},
   data() {
     return {
