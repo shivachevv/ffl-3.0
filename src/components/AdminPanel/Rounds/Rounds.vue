@@ -18,7 +18,7 @@
         button="submit"
         type="relief"
         size="normal"
-        @click.prevent="fetchNewRndDataToUsers"
+        @click.prevent="createUpdatedPlayersObject"
       >TEST</vs-button>
     </div>
     <vs-alert
@@ -43,6 +43,7 @@ import { DATA_URL } from "../../../common";
 import { addPlayerPts } from "../../../models/Player";
 import { addUserRound } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
+import pointsCalculator from "../../../utils/pointsCalculator";
 
 export default {
   name: "Rounds",
@@ -191,20 +192,52 @@ export default {
       const playerStatsEmptyValues = Array(20).fill("");
 
       Object.keys(copy).forEach(id => {
-        if (copy[id]["points"]) {
-          copy[id]["points"][`r${this.currentRound + 1}`] = addPlayerPts(
+        const player = copy[id];
+        if (player["points"]) {
+          player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
             0,
             ...playerStatsEmptyValues
           );
+          const stats = player["points"][`r${this.currentRound}`].roundStats;
+          const currentTotalPts = this.currentPlayerTotalPts(player.position, stats);
+          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts
         } else {
-          copy[id]["points"] = {};
-          copy[id]["points"][`r${this.currentRound + 1}`] = addPlayerPts(
+          player["points"] = {};
+          player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
             0,
             ...playerStatsEmptyValues
           );
+          const stats = player["points"][`r${this.currentRound}`].roundStats;
+          const currentTotalPts = this.currentPlayerTotalPts(player.position, stats);
+          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts
         }
       });
       return copy;
+    },
+    currentPlayerTotalPts(position, stats) {
+      return pointsCalculator(
+        position,
+        stats.assists,
+        stats.cleanSheet,
+        stats.clearanceOffLine,
+        stats.errorLeadToGoal,
+        stats.goals,
+        stats.lastManTackle,
+        stats.manOfTheMatch,
+        stats.ownGoals,
+        stats.penaltyGoals,
+        stats.penaltyMissed,
+        stats.penaltySaved,
+        stats.ratingOver85,
+        stats.redCards,
+        stats.saves,
+        stats.shotsOnPost,
+        stats.starter,
+        stats.sub,
+        stats.teamVictory,
+        stats.threeAllowed,
+        stats.yellowCards
+      );
     }
   },
   computed: {},

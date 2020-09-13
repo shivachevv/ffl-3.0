@@ -37,10 +37,45 @@
       </div>
 
       <div v-if="selectedRound && selectedUserTeam">
-        <h3>{{selectedUser.email}} team for round: {{selectedRound}}</h3>
         <div>
+          <h3>{{selectedUser.email}} team for round: {{selectedRound}}</h3>
           <div v-for="player in selectedUserTeam" :key="player">
-            {{players[player].name}} : {{players[player].position}}
+            <div>
+              <span>{{players[player].position}}</span>
+              <span>{{players[player].name}}</span>
+              <span>{{players[player].points[`r${selectedRound}`].roundPts}}</span>
+
+              <span v-if="selectedUser.rounds[`r${selectedRound}`].cpt === player">C</span>
+              <span v-if="selectedUser.rounds[`r${selectedRound}`].viceCpt === player">VC</span>
+            </div>
+          </div>
+          <div>
+            <div>Total Round Points: {{roundTotal}}</div>
+            <form @submit.prevent="changeCaptainsHandler">
+              <label>
+                Change Captain for the round
+                <vs-select label="New captain" v-model="newCpt" icon>
+                  <vs-select-item
+                    v-for="player in selectedUserTeam"
+                    :key="player"
+                    :value="player"
+                    :text="`${players[player].name} - ${players[player].position}`"
+                  />
+                </vs-select>
+              </label>
+              <label>
+                Change Vice-Captain for the round
+                <vs-select label="New Vice-Captain" v-model="newViceCpt" icon>
+                  <vs-select-item
+                    v-for="player in selectedUserTeam"
+                    :key="player"
+                    :value="player"
+                    :text="`${players[player].name} - ${players[player].position}`"
+                  />
+                </vs-select>
+              </label>
+              <vs-button color="#59A95D" button="submit" type="relief" size="normal">Update Captains</vs-button>
+            </form>
           </div>
         </div>
       </div>
@@ -91,16 +126,17 @@
         <div class="buttons">
           <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit User Team</vs-button>
         </div>
-      </form> -->
+      </form>-->
     </div>
   </div>
 </template>
 
 <script>
-import { getAllPlayersDataNormal } from '../../../utils/getAllPlayersData';
-// import { DATA_URL } from "../../../common";
+import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
+import { DATA_URL } from "../../../common";
 import getAllUsers from "../../../utils/getAllUsers";
-import { getCurrentRound } from '../../../utils/getCurrentRound';
+import { getCurrentRound } from "../../../utils/getCurrentRound";
+import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
   name: "UsersTeams",
@@ -111,25 +147,87 @@ export default {
       players: undefined,
       selectedUser: undefined,
       selectedRound: undefined,
-      selectedUserTeam:undefined,
+      selectedUserTeam: undefined,
       userEdited: {},
       success: false,
       error: false,
       errorMsg: "",
+      newCpt: "",
+      newViceCpt: "",
+      roundTotal: 0
     };
   },
   methods: {
-    editUserTeamFormHandler() {
-      return;
-    },
-    selectRoundHandler(r) {
-      this.selectedRound = r
-      if (this.selectedUser.rounds[`r${r}`]){
+    // editUserTeamFormHandler() {
+    //   return;
+    // },
+    async selectRoundHandler(r) {
+      this.selectedRound = r;
+
+      if (this.selectedUser.rounds[`r${r}`]) {
         if (this.selectedUser.rounds[`r${r}`].team) {
-          this.selectedUserTeam = this.selectedUser.rounds[`r${r}`].team
+          this.selectedUserTeam = this.selectedUser.rounds[`r${r}`].team;
+          await this.calcRoundTotalPts();
+        } else {
+          this.selectedUserTeam = undefined;
         }
+      } else {
+        this.selectedUserTeam = undefined;
       }
-    }
+    },
+    changeCaptainsHandler() {
+      const oldCpt = this.selectedUser.rounds[`r${this.selectedRound}`].cpt;
+      const oldViceCpt = this.selectedUser.rounds[`r${this.selectedRound}`]
+        .viceCpt;
+      const updatedCpt = this.newCpt ? this.newCpt : oldCpt;
+      const updatedVCpt = this.newViceCpt ? this.newViceCpt : oldViceCpt;
+
+      if (updatedCpt === updatedVCpt) {
+        return this.$vs.dialog({
+          color: "danger",
+          title: "Please change Captain and ViceCaptain!",
+          text: "Captain and ViceCaptain should not be the same!",
+        });
+      } else {
+        return this.$vs.dialog({
+          color: "success",
+          title: "Confirm Edit",
+          text: this.showSuccessMsg(updatedCpt, updatedVCpt),
+          accept: () => this.fetchEditedCaptains(updatedCpt, updatedVCpt)
+        });
+      }
+    },
+    fetchEditedCaptains(newC, newVC) {
+      const { uid } = this.selectedUser;
+      const payload = {
+        cpt: newC,
+        viceCpt: newVC
+      };
+      return fetch(
+        `${DATA_URL}users/${uid}/rounds/r${this.selectedRound}.json`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
+      )
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          this.success = true;
+          this.deselectUser();
+          this.$vs.loading();
+          this.users = await getAllUsers();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
+    },
     // editUserFormHandler() {
     //   const merged = this.mergeUsers(this.userEdited, this.selectedUser);
     //   const {
@@ -160,18 +258,11 @@ export default {
     //     accept: () => this.fetchEditedUser(newUser)
     //   });
     // },
-    // showSuccessMsg(user) {
-    //   return `Edited User:
-    //       age:${user.age}
-    //       email:${user.email}
-    //       favTeam:${user.favTeam}
-    //       isAdmin:${user.isAdmin}
-    //       location:${user.location}
-    //       motto:${user.motto}
-    //       ocupation:${user.ocupation}
-    //       userTeam:${user.userTeam}
-    //       `;
-    // },
+    showSuccessMsg(C, VC) {
+      return `Are you sure you want to change
+              Captain to: ${this.players[C].name}
+              and Vice Captain to ${this.players[VC].name}?`;
+    },
     // mergeUsers(_new, _old) {
     //   let result = {};
     //   Object.keys(_old).forEach(atttr => {
@@ -207,10 +298,17 @@ export default {
     //       this.errorMsg = error;
     //     });
     // },
-    // deselectUsers() {
-    //   this.userEdited = {};
-    //   this.selectedUser = "";
-    // }
+    deselectUser() {
+      this.selectedUser = "";
+    },
+    async calcRoundTotalPts() {
+      this.roundTotal = "...";
+      const total = await roundPointsCalculator(
+        this.selectedUser.rounds[`r${this.selectedRound}`],
+        this.selectedRound
+      );
+      return (this.roundTotal = total);
+    }
   },
   computed: {},
   watch: {
@@ -234,9 +332,9 @@ export default {
   },
   async created() {
     this.$vs.loading();
-    this.players = await getAllPlayersDataNormal()
+    this.players = await getAllPlayersDataNormal();
     this.users = await getAllUsers();
-    this.currentRound = await getCurrentRound()
+    this.currentRound = await getCurrentRound();
   }
 };
 </script>

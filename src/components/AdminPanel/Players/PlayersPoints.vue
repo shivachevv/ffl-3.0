@@ -1,6 +1,6 @@
 <template>
   <div class="players-points-container">
-        <h1 class="section-header">Edit Players Points Section</h1>
+    <h1 class="section-header">Edit Players Points Section</h1>
 
     <!-- LEAGUES -->
     <div class="leagues-container" v-if="players">
@@ -51,10 +51,10 @@
         >
           <a>{{p.name}} - {{p.position}}</a>
           <a
-            v-for="(rnd,i) in Object.values(p.points)"
+            v-for="(rnd,i) in sortedRounds(Object.entries(p.points))"
             :key="i"
-            @click.prevent="selectPlayerRoundHandler(p, rnd, i + 1)"
-          >{{rnd.roundPts}} pts</a>
+            @click.prevent="selectPlayerRoundHandler(p, rnd[1], i + 1)"
+          >{{rnd[1].roundPts}} pts</a>
         </div>
 
         <vs-popup
@@ -166,8 +166,9 @@ export default {
         }
       )
         .then(response => response.json())
-        .then(() => {
-          // console.log("Success:", data);
+        .then(async () => {
+          this.$vs.loading();
+          this.players = await getAllPlayersDataCathegorized();
           this.success = true;
         })
         .catch(error => {
@@ -175,6 +176,14 @@ export default {
           this.error = true;
           this.errorMsg = error;
         });
+    },
+    sortedRounds(arr) {
+      const sorted = arr.sort((x, y) => {
+        const rnd1 = Number(x[0].substring(1, 3));
+        const rnd2 = Number(y[0].substring(1, 3));
+        return rnd1 - rnd2;
+      });
+      return sorted;
     }
   },
   computed: {

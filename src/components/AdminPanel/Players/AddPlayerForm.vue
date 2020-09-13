@@ -27,7 +27,7 @@
         />
       </vs-select>
       <vs-input label="Name" placeholder="Insert player name" v-model="newPlayer.name" />
-     
+
       <vs-select label="Position" v-model="newPlayer.position" icon placeholder="Select position">
         <vs-select-item :key="pos" :value="pos" :text="pos" v-for="pos in positions" />
       </vs-select>
@@ -39,9 +39,10 @@
 
 <script>
 import { teamCodes, DATA_URL } from "../../../common";
-import { makeNewPlayer } from "../../../models/Player";
+import { addPlayerPts, makeNewPlayer } from "../../../models/Player";
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { v4 as uuidv4 } from "uuid";
+import { getCurrentRound } from "../../../utils/getCurrentRound";
 
 export default {
   name: "AddPlayerForm",
@@ -67,8 +68,17 @@ export default {
         const { country, club, name, position, shirt } = this.newPlayer;
         const id = uuidv4();
         const player = makeNewPlayer(name, position, club, shirt, id, country);
+        player["points"] = this.createPlayerPointsObj(this.currentRound)
         this.uploadNewPlayer(player);
       }
+    },
+    createPlayerPointsObj(rnd) {
+      const playerStatsEmptyValues = Array(20).fill("");
+      let result = {};
+      for (let i = 0; i < rnd; i++) {
+        result[`r${i + 1}`] = addPlayerPts(0, ...playerStatsEmptyValues);
+      }
+      return result
     },
     isNewPlayerOK() {
       const { country, club, name, position } = this.newPlayer;
@@ -99,8 +109,8 @@ export default {
         .then(async data => {
           console.log("Success:", data);
           this.success = true;
-            const updatedPlayers = await getAllPlayersDataCathegorized();
-            this.$emit("updatedPlayers", updatedPlayers);
+          const updatedPlayers = await getAllPlayersDataCathegorized();
+          this.$emit("updatedPlayers", updatedPlayers);
         })
         .catch(err => {
           console.error("Error:", err);
@@ -125,6 +135,7 @@ export default {
     }
   },
   async created() {
+    this.currentRound = await getCurrentRound();
   }
 };
 </script>
