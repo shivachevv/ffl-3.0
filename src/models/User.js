@@ -31,14 +31,20 @@ export const makeNewUser = (
     }
 }
 
-export const addUserRound = (team, transfersAvail) => {
+export const addUserRound = (team, transfersAvail, cpt, viceCpt, superCpt) => {
     return {
-        superCpt: false,
+        superCpt,
         wildCard: false,
-        cpt: '',
-        viceCpt: "",
+        cpt,
+        viceCpt,
         team,
         transfersAvail,
-        transfersMade: 0
+        transfersMade: 0,
+        nextRndInfo: {
+            team: {},
+            cpt: "",
+            viceCpt: "",
+            superCpt: ""
+        }
     }
 }

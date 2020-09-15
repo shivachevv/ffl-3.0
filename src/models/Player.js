@@ -7,7 +7,8 @@ export const makeNewPlayer = (
         club,
         shirt,
         id,
-        country
+        country,
+        available:true
     }
 }
 

@@ -18,7 +18,7 @@
         button="submit"
         type="relief"
         size="normal"
-        @click.prevent="createUpdatedPlayersObject"
+        @click.prevent="createUpdatedUsersObject"
       >TEST</vs-button>
     </div>
     <vs-alert
@@ -153,14 +153,11 @@ export default {
       // };
 
       Object.keys(copy).forEach(id => {
-        const current = copy[id]["rounds"][`r${this.currentRound}`].team;
-        const next = copy[id]["rounds"][`r${this.currentRound}`].teamForNextRnd;
-        const team = next ? next : current;
-
-        const avail =
-          copy[id]["rounds"][`r${this.currentRound}`].transfersAvail;
-        const made = copy[id]["rounds"][`r${this.currentRound}`].transfersMade;
-        const transfers = avail - made === 0 ? 1 : 2;
+        const team = this.createNextRndTeam(copy[id]);
+        const transfers = this.createNextRndTransfers(copy[id]);
+        const cpt = this.createNextRndCaptains(copy[id], "cpt");
+        const viceCpt = this.createNextRndCaptains(copy[id], "viceCpt");
+        const superCpt = this.createNextRndSuperCpt(copy[id]);
 
         // if (Object.prototype.hasOwnProperty.call(copy[id], "rounds")) {
         //   console.log(1);
@@ -175,13 +172,19 @@ export default {
         if (copy[id]["rounds"]) {
           copy[id]["rounds"][`r${this.currentRound + 1}`] = addUserRound(
             team,
-            transfers
+            transfers,
+            cpt,
+            viceCpt,
+            superCpt
           );
         } else {
           copy[id]["rounds"] = {};
           copy[id]["rounds"][`r${this.currentRound + 1}`] = addUserRound(
             team,
-            transfers
+            transfers,
+            cpt,
+            viceCpt,
+            superCpt
           );
         }
       });
@@ -189,8 +192,8 @@ export default {
     },
     createUpdatedPlayersObject() {
       let copy = JSON.parse(JSON.stringify(this.players));
-      const playerStatsEmptyValues = Array(20).fill("");
 
+      const playerStatsEmptyValues = Array(20).fill("");
       Object.keys(copy).forEach(id => {
         const player = copy[id];
         if (player["points"]) {
@@ -199,8 +202,11 @@ export default {
             ...playerStatsEmptyValues
           );
           const stats = player["points"][`r${this.currentRound}`].roundStats;
-          const currentTotalPts = this.currentPlayerTotalPts(player.position, stats);
-          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts
+          const currentTotalPts = this.currentPlayerTotalPts(
+            player.position,
+            stats
+          );
+          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts;
         } else {
           player["points"] = {};
           player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
@@ -208,11 +214,33 @@ export default {
             ...playerStatsEmptyValues
           );
           const stats = player["points"][`r${this.currentRound}`].roundStats;
-          const currentTotalPts = this.currentPlayerTotalPts(player.position, stats);
-          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts
+          const currentTotalPts = this.currentPlayerTotalPts(
+            player.position,
+            stats
+          );
+          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts;
         }
       });
+
       return copy;
+    },
+    createNextRndTeam(user) {
+      const current = user["rounds"][`r${this.currentRound}`].team;
+      const next = user["rounds"][`r${this.currentRound}`].nextRndInfo.team;
+      return next ? next : current;
+    },
+    createNextRndTransfers(user) {
+      const avail = user["rounds"][`r${this.currentRound}`].transfersAvail;
+      const made = user["rounds"][`r${this.currentRound}`].transfersMade;
+      return avail - made === 0 ? 1 : 2;
+    },
+    createNextRndCaptains(user, rank) {
+      const current = user["rounds"][`r${this.currentRound}`][rank];
+      const next = user["rounds"][`r${this.currentRound}`].nextRndInfo[rank];
+      return next ? next : current;
+    },
+    createNextRndSuperCpt(user) {
+      return user["rounds"][`r${this.currentRound}`].nextRndInfo.superCpt;
     },
     currentPlayerTotalPts(position, stats) {
       return pointsCalculator(
@@ -274,9 +302,9 @@ export default {
   },
   async created() {
     this.$vs.loading();
-    this.currentRound = await getCurrentRound();
-    this.players = await getAllPlayersDataNormal();
-    this.users = await getAllUsers();
+    getCurrentRound().then(data => (this.currentRound = data));
+    getAllPlayersDataNormal().then(data => (this.players = data));
+    getAllUsers().then(data => (this.users = data));
   }
 };
 </script>
