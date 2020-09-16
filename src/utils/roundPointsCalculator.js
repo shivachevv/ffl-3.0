@@ -1,12 +1,12 @@
 import { getAllPlayersDataNormal } from './getAllPlayersData'
 
 const roundPointsCalculator = async (round, rndNum) => {
-    console.log(round, rndNum);
+
     const players = await getAllPlayersDataNormal()
     const { cpt, viceCpt, superCpt } = round
     const roundIDs = round.team
     let total = 0
-    let hasCptPlayed = players[cpt].points[`r${rndNum}`].roundStats.starter && players[cpt].points[`r${rndNum}`].roundStats.sub
+    let hasCptPlayed = !!players[cpt].points[`r${rndNum}`].roundStats.starter || !!players[cpt].points[`r${rndNum}`].roundStats.sub
     const cptMultiplier = superCpt ? 3 : 2
     Object.keys(roundIDs).forEach(pos => {
         const id = roundIDs[pos]

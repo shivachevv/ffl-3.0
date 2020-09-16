@@ -36,47 +36,43 @@
         >{{rnd}}</a>
       </div>
 
-      <div v-if="selectedRound && selectedUserTeam">
-        <div>
-          <h3>{{selectedUser.email}} team for round: {{selectedRound}}</h3>
-          <div v-for="player in selectedUserTeam" :key="player">
-            <div>
-              <span>{{players[player].position}}</span>
-              <span>{{players[player].name}}</span>
-              <span>{{players[player].points[`r${selectedRound}`].roundPts}}</span>
+      <div class="players-container" v-if="selectedRound && selectedUserTeam">
+        <h3>{{selectedUser.email}} team for round: {{selectedRound}}</h3>
+        <div class="player" v-for="player in selectedUserTeam" :key="player">
+          <span class="pos">{{players[player].position}}</span>
+          <span class="name">{{players[player].name}}</span>
+          <span class="points">{{players[player].points[`r${selectedRound}`].roundPts}} pts</span>
 
-              <span v-if="selectedUser.rounds[`r${selectedRound}`].cpt === player">C</span>
-              <span v-if="selectedUser.rounds[`r${selectedRound}`].viceCpt === player">VC</span>
-            </div>
-          </div>
-          <div>
-            <div>Total Round Points: {{roundTotal}}</div>
-            <form @submit.prevent="changeCaptainsHandler">
-              <label>
-                Change Captain for the round
-                <vs-select label="New captain" v-model="newCpt" icon>
-                  <vs-select-item
-                    v-for="player in selectedUserTeam"
-                    :key="player"
-                    :value="player"
-                    :text="`${players[player].name} - ${players[player].position}`"
-                  />
-                </vs-select>
-              </label>
-              <label>
-                Change Vice-Captain for the round
-                <vs-select label="New Vice-Captain" v-model="newViceCpt" icon>
-                  <vs-select-item
-                    v-for="player in selectedUserTeam"
-                    :key="player"
-                    :value="player"
-                    :text="`${players[player].name} - ${players[player].position}`"
-                  />
-                </vs-select>
-              </label>
-              <vs-button color="#59A95D" button="submit" type="relief" size="normal">Update Captains</vs-button>
-            </form>
-          </div>
+          <span class="cap" v-if="selectedUser.rounds[`r${selectedRound}`].cpt === player">C</span>
+          <span class="vc" v-if="selectedUser.rounds[`r${selectedRound}`].viceCpt === player">VC</span>
+        </div>
+        <div class="form-container">
+          <div class="round-total">Total Round Points: {{roundTotal}}</div>
+          <form @submit.prevent="changeCaptainsHandler">
+            <label>
+              Change Captain for the round
+              <vs-select label="New captain" v-model="newCpt" icon>
+                <vs-select-item
+                  v-for="player in selectedUserTeam"
+                  :key="player"
+                  :value="player"
+                  :text="`${players[player].name} - ${players[player].position}`"
+                />
+              </vs-select>
+            </label>
+            <label>
+              Change Vice-Captain for the round
+              <vs-select label="New Vice-Captain" v-model="newViceCpt" icon>
+                <vs-select-item
+                  v-for="player in selectedUserTeam"
+                  :key="player"
+                  :value="player"
+                  :text="`${players[player].name} - ${players[player].position}`"
+                />
+              </vs-select>
+            </label>
+            <vs-button color="#59A95D" button="submit" type="relief" size="normal">Update Captains</vs-button>
+          </form>
         </div>
       </div>
       <div v-else>User does not have a team selected for round {{selectedRound}}!</div>
@@ -186,7 +182,7 @@ export default {
         return this.$vs.dialog({
           color: "danger",
           title: "Please change Captain and ViceCaptain!",
-          text: "Captain and ViceCaptain should not be the same!",
+          text: "Captain and ViceCaptain should not be the same!"
         });
       } else {
         return this.$vs.dialog({
@@ -368,6 +364,7 @@ export default {
   }
 
   .user-details {
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -389,6 +386,7 @@ export default {
     .rounds {
       padding: 0 0 10px 0;
       border-bottom: 1px solid #3c474d;
+      width: 100%;
       a {
         display: inline-block;
         padding: 5px;
@@ -408,6 +406,68 @@ export default {
         &.unavailable {
           background-color: #9d9d9d;
           cursor: not-allowed;
+        }
+      }
+    }
+
+    .players-container {
+      width: 100%;
+
+      h3 {
+        padding: 10px 0;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .player {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px 0;
+
+        .pos {
+          width: 7%;
+          padding: 0 10px;
+        }
+        .name {
+          width: 30%;
+          padding: 0 10px;
+        }
+        .pts {
+          padding: 0 10px;
+        }
+        .cap {
+          padding: 5px;
+          background-color: #18d823;
+          border-radius: 50%;
+          margin: 0 0 0 10px;
+        }
+        .vc {
+          padding: 5px;
+          margin: 0 0 0 10px;
+          background-color: #18d8cb;
+          border-radius: 50%;
+        }
+      }
+
+      .form-container {
+        .round-total {
+          width: 100%;
+          padding: 10px 0 10px 10px;
+          background-color: #59a95d;
+          border-radius: 5px;
+          font-weight: bold;
+        }
+      }
+
+      form {
+          margin: 10px 0 0 0;
+
+        button {
+          margin: 10px 0 0 0;
         }
       }
     }

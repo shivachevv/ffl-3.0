@@ -9,8 +9,10 @@ const makeNewTransfer = (
         round,
         team,
         position,
+        transferIn,
         transferOut,
-        transferIn
+        status: 'pending',
+        timeMade: new Date(new Date().getTime())
     }
 }
 

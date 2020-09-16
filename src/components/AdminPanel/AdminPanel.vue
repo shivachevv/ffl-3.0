@@ -18,14 +18,9 @@
           <button @click.prevent="switchComponent" class="menu-item-link">UsersTeams</button>
         </div>
 
-        <a href class="menu-item-section">Leagues</a>
-        <div class="admin-menu-item">
-          <button @click.prevent="switchComponent">Leagues</button>
-        </div>
-
-        <a href class="menu-item-section">Players</a>
-        <div class="admin-menu-item">
-          <button @click.prevent="switchComponent">Transfers</button>
+        <a href class="menu-item-section" @click.prevent="showTransfersHandler">Transfers</a>
+        <div class="admin-menu-item" v-if="showTransfers">
+          <button class="menu-item-link" @click.prevent="switchComponent">Transfers</button>
         </div>
       </div>
     </div>
@@ -44,6 +39,7 @@ import SyncPoints from "./Players/SyncPoints";
 import Rounds from "./Rounds/Rounds";
 import UsersPersonal from "./Users/UsersPersonal";
 import UsersTeams from "./Users/UsersTeams";
+import Transfers from "./Transfers/Transfers";
 
 export default {
   name: "AdminPanel",
@@ -53,13 +49,15 @@ export default {
     PlayersPoints,
     SyncPoints,
     UsersPersonal,
-    UsersTeams
+    UsersTeams,
+    Transfers
   },
   data() {
     return {
       chosenComponent: "PlayersEdit",
       showPlayers: false,
-      showUsers: false
+      showUsers: false,
+      showTransfers: false
     };
   },
   methods: {
@@ -71,6 +69,9 @@ export default {
     },
     showUsersHandler() {
       this.showUsers = !this.showUsers;
+    },
+    showTransfersHandler() {
+      this.showTransfers = !this.showTransfers;
     }
   },
   computed: {},
