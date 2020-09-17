@@ -104,6 +104,11 @@
               <vs-select-item :key="pos" :value="pos" :text="pos" v-for="pos in positions" />
             </vs-select>
           </label>
+          <label>
+            Available:
+            <input type="checkbox" v-model="playerEdited.available" />
+          </label>
+          <span>Currently player is {{playerSelected.available ? '' : 'NOT'}} available!</span>
 
           <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Player</vs-button>
           <vs-button
@@ -247,7 +252,7 @@ export default {
         accept: () => deletePlayer(id)
       });
 
-      const deletePlayer = (id) => {
+      const deletePlayer = id => {
         return fetch(`${DATA_URL}players/${id}.json`, {
           method: "DELETE",
           mode: "cors",
