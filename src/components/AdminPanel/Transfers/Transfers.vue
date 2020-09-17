@@ -148,8 +148,9 @@ export default {
       try {
         await this.updateTransferStatus(tr, "confirmed");
         const team = this.editTeamForNextRnd(tr);
-        const count = this.updateTransferCounts(tr);
-        await this.uploadUserTransfersCount(count, tr);
+        // const count = this.updateTransferCounts(tr,'confirmed');
+        // const count = this.updateTransferCounts(tr,'confirmed');
+        // await this.uploadUserTransfersCount(count, tr);
         await this.uploadUserUpdatedTeam(team, tr);
         this.success = true;
         this.$vs.loading();
@@ -163,7 +164,20 @@ export default {
       }
     },
     async cancelTransfer(tr) {
-      await this.updateTransferStatus(tr, "cancelled");
+      try {
+        const count = this.updateTransferCounts(tr, "cancelled");
+        await this.updateTransferStatus(tr, "cancelled");
+        await this.uploadUserTransfersCount(count, tr);
+        this.success = true;
+        this.$vs.loading();
+        this.transfers = await getAllTransfers();
+        this.users = await getAllUsers();
+        this.selectRoundHandler(this.selectedRound);
+      } catch (error) {
+        console.error(error);
+        this.error = true;
+        this.errorMsg = error;
+      }
     },
     uploadUserTransfersCount(count, tr) {
       const payload = {
@@ -223,11 +237,12 @@ export default {
           // this.errorMsg = error;
         });
     },
-    updateTransferCounts(tr) {
+    updateTransferCounts(tr, action) {
       const [, transfer] = tr;
+      const number = action === "confirmed" ? 1 : -1;
       return (
         this.users[transfer.team].rounds[`r${this.selectedRound}`]
-          .transfersMade + 1
+          .transfersMade + number
       );
     },
     editTeamForNextRnd(tr) {
