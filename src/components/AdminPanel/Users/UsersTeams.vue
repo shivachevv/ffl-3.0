@@ -301,7 +301,8 @@ export default {
       this.roundTotal = "...";
       const total = await roundPointsCalculator(
         this.selectedUser.rounds[`r${this.selectedRound}`],
-        this.selectedRound
+        this.selectedRound,
+        this.players
       );
       return (this.roundTotal = total);
     }

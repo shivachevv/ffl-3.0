@@ -1,8 +1,4 @@
-import { getAllPlayersDataNormal } from './getAllPlayersData'
-
-const roundPointsCalculator = async (round, rndNum) => {
-
-    const players = await getAllPlayersDataNormal()
+const roundPointsCalculator = async (round, rndNum, players) => {
     const { cpt, viceCpt, superCpt } = round
     const roundIDs = round.team
     let total = 0

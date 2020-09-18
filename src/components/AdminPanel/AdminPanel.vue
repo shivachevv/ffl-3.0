@@ -5,22 +5,31 @@
       <div class="admin-menu-items">
         <button href class="menu-item-section" @click.prevent="switchComponent">Rounds</button>
 
-        <a href class="menu-item-section" @click.prevent="showPlayersHandler">Players</a>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('players')">Players</a>
         <div class="admin-menu-item" v-if="showPlayers">
           <button class="menu-item-link" @click.prevent="switchComponent">PlayersEdit</button>
           <button class="menu-item-link" @click.prevent="switchComponent">PlayersPoints</button>
           <button class="menu-item-link" @click.prevent="switchComponent">SyncPoints</button>
         </div>
 
-        <a href class="menu-item-section" @click.prevent="showUsersHandler">Users</a>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('users')">Users</a>
         <div class="admin-menu-item" v-if="showUsers">
           <button @click.prevent="switchComponent" class="menu-item-link">UsersPersonal</button>
           <button @click.prevent="switchComponent" class="menu-item-link">UsersTeams</button>
         </div>
 
-        <a href class="menu-item-section" @click.prevent="showTransfersHandler">Transfers</a>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('transfers')">Transfers</a>
         <div class="admin-menu-item" v-if="showTransfers">
           <button class="menu-item-link" @click.prevent="switchComponent">Transfers</button>
+        </div>
+
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('leagues')">Leagues</a>
+        <div class="admin-menu-item" v-if="showLeagues">
+          <button class="menu-item-link" @click.prevent="switchComponent">Leagues</button>
+        </div>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('h2h')">H2HLeague</a>
+        <div class="admin-menu-item" v-if="showH2H">
+          <button class="menu-item-link" @click.prevent="switchComponent">H2HLeague</button>
         </div>
       </div>
     </div>
@@ -40,6 +49,8 @@ import Rounds from "./Rounds/Rounds";
 import UsersPersonal from "./Users/UsersPersonal";
 import UsersTeams from "./Users/UsersTeams";
 import Transfers from "./Transfers/Transfers";
+import Leagues from "./Leagues/Leagues";
+import H2HLeague from "./H2HLeague/H2HLeague";
 
 export default {
   name: "AdminPanel",
@@ -50,28 +61,36 @@ export default {
     SyncPoints,
     UsersPersonal,
     UsersTeams,
-    Transfers
+    Transfers,
+    Leagues,
+    H2HLeague
   },
   data() {
     return {
       chosenComponent: "PlayersEdit",
       showPlayers: false,
       showUsers: false,
-      showTransfers: false
+      showTransfers: false,
+      showLeagues: false,
+      showH2H: false
     };
   },
   methods: {
     switchComponent(e) {
       return (this.chosenComponent = e.target.innerText);
     },
-    showPlayersHandler() {
-      this.showPlayers = !this.showPlayers;
-    },
-    showUsersHandler() {
-      this.showUsers = !this.showUsers;
-    },
-    showTransfersHandler() {
-      this.showTransfers = !this.showTransfers;
+    showSectionHandler(s) {
+      if (s === "players") {
+        this.showPlayers = !this.showPlayers;
+      } else if (s === "users") {
+        this.showUsers = !this.showUsers;
+      } else if (s === "transfers") {
+        this.showTransfers = !this.showTransfers;
+      } else if (s === "leagues") {
+        this.showLeagues = !this.showLeagues;
+      } else if (s === "h2h") {
+        this.showH2H = !this.showH2H;
+      }
     }
   },
   computed: {},

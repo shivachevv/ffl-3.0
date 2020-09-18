@@ -1,15 +1,15 @@
 const makeNewLeague = (
+    id,
     name,
-    logoSmall,
-    logoActive,
-    logoBig
+    teams
 ) => {
     return {
+        id,
         name,
-        logoSmall,
-        logoActive,
-        logoBig,
-        teams:{}
+        logoSmall: name.toLowerCase() + '-small',
+        logoActive: name.toLowerCase() + '-active',
+        logoBig: name.toLowerCase() + '-big',
+        teams
     }
 }
 
