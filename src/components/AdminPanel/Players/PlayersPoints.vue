@@ -54,7 +54,7 @@
             v-for="(rnd,i) in sortedRounds(Object.entries(p.points))"
             :key="i"
             @click.prevent="selectPlayerRoundHandler(p, rnd[1], i + 1)"
-          >{{rnd[1].roundPts}} pts</a>
+          >{{rnd[1].roundPts}}</a>
         </div>
 
         <vs-popup

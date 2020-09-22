@@ -91,7 +91,7 @@ export default {
       currentRound: undefined,
       transfers: undefined,
       selectedRoundTransfers: undefined,
-      //   players: undefined,
+      players: undefined,
       //   selectedUser: undefined,
       selectedRound: undefined,
       //   selectedUserTeam: undefined,
@@ -107,11 +107,11 @@ export default {
   methods: {
     fillTransfers() {
       const newTransfer = makeNewTransfer(
-        14,
+        5,
         "smAQwrSzWYPsoBVXhL1yWUmU1CE3",
         "DC",
-        "8b6c6764-b08d-41f0-bad2-dc91dc0bef01",
-        "c259f27d-835f-4cd7-8f8f-ad114cfa6fb5"
+        "c6969c32-f562-4fc5-8550-59e43be4a6af",
+        "c6752392-58b2-4855-ae56-613e90da8b85"
       );
       this.fetchNewTransfer(newTransfer);
     },
@@ -142,7 +142,9 @@ export default {
     },
     selectRoundHandler(r) {
       this.selectedRound = r;
-      this.selectedRoundTransfers = this.transfers[`r${r}`];
+      if (this.transfers) {
+        this.selectedRoundTransfers = this.transfers[`r${r}`];
+      }
     },
     async confirmTransfer(tr) {
       try {
@@ -426,12 +428,12 @@ export default {
   computed: {},
   watch: {
     players(nv) {
-      if (nv && this.transfers && this.users) {
+      if (nv && this.users) {
         this.$vs.loading.close();
       }
     },
     users(nv) {
-      if (nv && this.transfers && this.players) {
+      if (nv && this.players) {
         this.$vs.loading.close();
       }
     },

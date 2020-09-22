@@ -160,10 +160,14 @@ export default {
     async selectRoundHandler(r) {
       this.selectedRound = r;
 
-      if (this.selectedUser.rounds[`r${r}`]) {
-        if (this.selectedUser.rounds[`r${r}`].team) {
-          this.selectedUserTeam = this.selectedUser.rounds[`r${r}`].team;
-          await this.calcRoundTotalPts();
+      if (this.selectedUser.rounds) {
+        if (this.selectedUser.rounds[`r${r}`]) {
+          if (this.selectedUser.rounds[`r${r}`].team) {
+            this.selectedUserTeam = this.selectedUser.rounds[`r${r}`].team;
+            await this.calcRoundTotalPts();
+          } else {
+            this.selectedUserTeam = undefined;
+          }
         } else {
           this.selectedUserTeam = undefined;
         }
@@ -465,7 +469,7 @@ export default {
       }
 
       form {
-          margin: 10px 0 0 0;
+        margin: 10px 0 0 0;
 
         button {
           margin: 10px 0 0 0;

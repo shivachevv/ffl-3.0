@@ -9,36 +9,47 @@
     >Round succesfully added!</vs-alert>
     <form @submit.prevent="addRoundHandler">
       <vs-input
-        label="Which play-round will be held during?"
+        label="Which play-round will be held during??"
         placeholder="Round number"
         v-model="newRound.roundHeld"
+        type="number"
       />
-      <vs-select
-        label="Users"
-        v-model="newRound.matches.match1.team1"
-        icon
-        placeholder="Select team"
-      >
-        <vs-select-item
-          :key="u"
-          :value="u"
-          :text="users[u].userTeam"
-          v-for="u in Object.keys(users)"
-        />
-      </vs-select>
-      <vs-select
-        label="Users"
-        v-model="newRound.matches.match1.team2"
-        icon
-        placeholder="Select team"
-      >
-        <vs-select-item
-          :key="u"
-          :value="u"
-          :text="users[u].userTeam"
-          v-for="u in Object.keys(users)"
-        />
-      </vs-select>
+
+      <!-- MATCHES -->
+
+      <div v-for="match in 8" :key="match" class="match-container">
+        <!-- TEAM 1 -->
+        <vs-select
+          :label="`Match ${match}. Team 1`"
+          v-model="newRound.matches[`match${match}`].team1"
+          icon
+          placeholder="Select team"
+        >
+          <vs-select-item
+            :key="u"
+            :value="u"
+            :text="users[u].userTeam"
+            v-for="u in Object.keys(users)"
+          />
+        </vs-select>
+
+        <!-- TEAM 2 -->
+        <vs-select
+          :label="`Match ${match}. Team 2`"
+          v-model="newRound.matches[`match${match}`].team2"
+          icon
+          placeholder="Select team"
+        >
+          <vs-select-item
+            :key="u"
+            :value="u"
+            :text="users[u].userTeam"
+            v-for="u in Object.keys(users)"
+          />
+        </vs-select>
+      </div>
+      <!-- MATCHES END -->
+
       <!-- <div v-if="newLeague.teams.length" class="league-teams">
         <span>Teams:</span>
         <div
@@ -48,20 +59,19 @@
         >{{users[user].userTeam}}</div>
       </div>-->
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create League</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create Round</vs-button>
     </form>
   </div>
 </template>
 
 <script>
-import makeNewLeague from "../../../models/League";
-
+import makeNewH2HRound from "../../../models/H2HRound";
 import { DATA_URL } from "../../../common";
-import getAllLeagues from "../../../utils/getAllLeagues";
+import getAllH2HRounds from '../../../utils/getAllH2HRounds';
+// import getAllLeagues from "../../../utils/getAllLeagues";
 // import { addPlayerPts, makeNewPlayer } from "../../../models/Player";
 // import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
-import { v4 as uuidv4 } from "uuid";
-import getAllUsers from "../../../utils/getAllUsers";
+// import getAllUsers from "../../../utils/getAllUsers";
 // import { getCurrentRound } from "../../../utils/getCurrentRound";
 
 export default {
@@ -80,7 +90,14 @@ export default {
     return {
       newRound: {
         matches: {
-          match1: {}
+          match1: {},
+          match2: {},
+          match3: {},
+          match4: {},
+          match5: {},
+          match6: {},
+          match7: {},
+          match8: {}
         },
         roundHeld: "",
         name: ""
@@ -97,90 +114,103 @@ export default {
   },
   methods: {
     async addRoundHandler() {
-      if (this.isNewLeagueOK()) {
-        const { name, teams } = this.newLeague;
-        const id = uuidv4();
-        const league = makeNewLeague(id, name, teams);
-        const users = this.createEditedUsers(id, teams);
-        await this.fetchNewLeague(league);
-        await this.fetchUpdatedUsers(users);
+      this.isNewRoundOK();
+      if (this.isNewRoundOK()) {
+        const { roundHeld, matches } = this.newRound;
+        const name = `R${this.newRoundNumber}`
+        const round = makeNewH2HRound(name, matches, roundHeld);
+        await this.fetchNewH2HRound(round);
       } else {
         this.error = true;
-        this.errorMsg = "Please enter league name and members!";
+        this.errorMsg = "Please fill all fields correctly!";
       }
     },
-    isNewLeagueOK() {
-      if (this.newLeague.name && this.newLeague.teams.length) {
+    isNewRoundOK() {
+      if (
+        // this.newRound.name &&
+        this.newRound.roundHeld &&
+        this.newRound.matches.match1 &&
+        this.newRound.matches.match2 &&
+        this.newRound.matches.match3 &&
+        this.newRound.matches.match4 &&
+        this.newRound.matches.match5 &&
+        this.newRound.matches.match6 &&
+        this.newRound.matches.match7 &&
+        this.newRound.matches.match8
+      ) {
         return true;
+      } else {
+        return false;
       }
-      return false;
     },
-    createEditedUsers(leagueId, leagueTeams) {
-      let copy = JSON.parse(JSON.stringify(this.users));
+    fetchNewH2HRound(payload) {
+      this.$vs.loading();
+      return fetch(`${DATA_URL}h2h/r${this.newRoundNumber}.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          this.success = true;
+          this.$vs.loading.close()
+          this.updatedRounds = await getAllH2HRounds();
+          this.$emit("updatedH2HRounds", this.updatedRounds);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
+    },
+    // createEditedUsers(leagueId, leagueTeams) {
+    //   let copy = JSON.parse(JSON.stringify(this.users));
 
-      Object.keys(copy).forEach(id => {
-        if (leagueTeams.includes(id)) {
-          let user = copy[id];
-          if (user["league"]) {
-            user["league"] = leagueId;
-          } else {
-            user["league"] = {};
-            user["league"] = leagueId;
-          }
-        }
-      });
-      return copy;
-    },
-    fetchUpdatedUsers(payload) {
-      return fetch(`${DATA_URL}users.json`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(response => response.json())
-        .then(async data => {
-          console.log("Success:", data);
-          this.success = true;
-          this.$vs.loading();
-          this.users = await getAllUsers();
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          this.error = true;
-          this.errorMsg = error;
-        });
-    },
-    fetchNewLeague(payload) {
-      return fetch(`${DATA_URL}leagues/${payload.id}.json`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(response => response.json())
-        .then(async data => {
-          console.log("Success:", data);
-          this.success = true;
-          this.$vs.loading();
-          this.updatedLeagues = await getAllLeagues();
-          this.$emit("updatedLeagues", this.updatedLeagues);
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          this.error = true;
-          this.errorMsg = error;
-        });
-    },
-    removePlayerFromLeague(u) {
-      return (this.newLeague.teams = this.newLeague.teams.filter(x => {
-        return x !== u;
-      }));
-    }
+    //   Object.keys(copy).forEach(id => {
+    //     if (leagueTeams.includes(id)) {
+    //       let user = copy[id];
+    //       if (user["league"]) {
+    //         user["league"] = leagueId;
+    //       } else {
+    //         user["league"] = {};
+    //         user["league"] = leagueId;
+    //       }
+    //     }
+    //   });
+    //   return copy;
+    // },
+    // fetchUpdatedUsers(payload) {
+    //   return fetch(`${DATA_URL}users.json`, {
+    //     method: "PATCH",
+    //     mode: "cors",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(payload)
+    //   })
+    //     .then(response => response.json())
+    //     .then(async data => {
+    //       console.log("Success:", data);
+    //       this.success = true;
+    //       this.$vs.loading();
+    //       this.users = await getAllUsers();
+    //     })
+    //     .catch(error => {
+    //       console.error("Error:", error);
+    //       this.error = true;
+    //       this.errorMsg = error;
+    //     });
+    // },
+    
+    // removePlayerFromLeague(u) {
+    //   return (this.newLeague.teams = this.newLeague.teams.filter(x => {
+    //     return x !== u;
+    //   }));
+    // }
     // createPlayerPointsObj(rnd) {
     //   const playerStatsEmptyValues = Array(20).fill("");
     //   let result = {};
@@ -228,7 +258,11 @@ export default {
     //     });
     // }
   },
-  computed: {},
+  computed: {
+    newRoundNumber(){
+      return Number(Object.keys(this.h2hrounds).length + 1)
+    }
+  },
   watch: {
     selectedUser(nv) {
       if (nv && !this.newLeague.teams.includes(nv)) {
@@ -258,39 +292,14 @@ export default {
     div {
       margin: 10px 0 0 0;
     }
-    .league-teams {
-      width: 100%;
+    .match-container {
       display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-
-      span {
-        font-size: 1.1rem;
-        margin: 5px;
-      }
-      div {
-        margin: 5px;
-        border-left: 1px solid grey;
-        padding: 5px 5px 5px 11px;
-        transition: all 0.3s;
-        position: relative;
-        width: 20%;
-
-        &::after {
-          position: absolute;
-          content: "x";
-          top: 3px;
-          right: 7px;
-          width: 5px;
-          height: 5px;
-        }
-
-        &:hover {
-          cursor: pointer;
-          background-color: #ffbcbc;
-        }
-      }
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #949494;
+      padding: 0 0 10px 0;
+      font-weight: bold;
     }
   }
   .con-vs-alert-primary {

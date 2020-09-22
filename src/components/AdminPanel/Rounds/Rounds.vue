@@ -18,7 +18,7 @@
         button="submit"
         type="relief"
         size="normal"
-        @click.prevent="createUpdatedUsersObject"
+        @click.prevent="createUpdatedH2HObject"
       >TEST</vs-button>
     </div>
     <vs-alert
@@ -44,6 +44,7 @@ import { addPlayerPts } from "../../../models/Player";
 import { addUserRound } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
 import pointsCalculator from "../../../utils/pointsCalculator";
+// import getAllH2HRounds from "../../../utils/getAllH2HRounds";
 
 export default {
   name: "Rounds",
@@ -53,6 +54,7 @@ export default {
       currentRound: undefined,
       players: undefined,
       users: undefined,
+      h2hrounds: undefined,
       success: false,
       error: false,
       errorMsg: ""
@@ -63,6 +65,7 @@ export default {
     addRndHandler() {
       const editedPlayers = this.createUpdatedPlayersObject();
       const editedUsers = this.createUpdatedUsersObject();
+      // const editedH2HRounds = this.createUpdatedH2HObject();
 
       this.$vs.dialog({
         color: "success",
@@ -134,22 +137,22 @@ export default {
     createUpdatedUsersObject() {
       let copy = JSON.parse(JSON.stringify(this.users));
       // const testTeam = {
-      //   gk: "2e94d6fb-6c7f-40d0-a5a0-8ace746e7b73",
-      //   dl1: "550346ce-6f54-44ec-9bec-ae55ab0dfe06",
-      //   dl2: "c2dce738-3946-4f38-a42e-1f35fee51865",
-      //   dc1: "8b6c6764-b08d-41f0-bad2-dc91dc0bef01",
-      //   dc2: "a57a402e-2023-4123-9975-aac2e7121180",
-      //   dr1: "6d886bda-dd5b-4c15-aaee-f7d72ce0b47c",
-      //   dr2: "b5d90bfb-7244-4719-a753-9f45b817145b",
-      //   ml1: "032fb291-8795-427f-a06b-c004c2340a0d",
-      //   ml2: "9612f8c3-758f-4e59-a80c-5daefcf41858",
-      //   mc1: "1fcf1059-6a31-45c0-a29d-690fa4320a8f",
-      //   mc2: "3ba37c17-cab7-4c3f-8c7b-d50dbcedc882",
-      //   mr1: "32e88f9f-512b-4ebc-9786-f7ddfa8d77b9",
-      //   mr2: "4095e200-fda8-499d-956c-72b37b162481",
-      //   st1: "d6510b1e-bafe-4e43-b732-66687c632eee",
-      //   st2: "7df4b751-eb71-42bc-ae65-1aec69e7cef3",
-      //   st3: "646d32fa-5694-4ad3-9576-4720034d1c7d"
+      //   "gk":  "c6752392-58b2-4855-ae56-613e90da8b85",
+      //   "dl1": "c68a8f35-04b3-4f9c-95a1-54019718a20a",
+      //   "dl2": "c69044ec-eec1-4fbc-a142-6d2d5ff605e7",
+      //   "dc1": "c6969c32-f562-4fc5-8550-59e43be4a6af",
+      //   "dc2": "c69ba8a6-24c1-4481-81d1-1097c61c498d",
+      //   "dr1": "c6c3803a-3f95-42c6-aed3-92ca9df5229b",
+      //   "dr2": "c6c3cb72-6687-443e-9ebc-b14a8498e889",
+      //   "ml1": "c6c42c26-f723-4837-89c7-e51920920695",
+      //   "ml2": "c6d8a167-0434-42dc-aa20-36bd6e6ae772",
+      //   "mc1": "c6e6f895-6b06-4db3-8fa4-cc0ac147d50f",
+      //   "mc2": "c6e75a96-0847-45e4-81ad-3b16acb4365b",
+      //   "mr1": "c6eae752-380a-4bf8-a84f-ac6b3090bb62",
+      //   "mr2": "c6ed5493-b615-40ec-9281-3b46eb0ee128",
+      //   "st1": "c6fb9cea-7699-4102-95b3-e329017a2c9b",
+      //   "st2": "c70172ea-875a-4220-84d0-95ec0bef6a34",
+      //   "st3": "c711ea51-accb-478a-919c-36103ab3412a"
       // };
 
       Object.keys(copy).forEach(id => {
@@ -198,6 +201,7 @@ export default {
         const player = copy[id];
         if (player["points"]) {
           player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
+            // + 1
             0,
             ...playerStatsEmptyValues
           );
@@ -210,6 +214,7 @@ export default {
         } else {
           player["points"] = {};
           player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
+            // + 1
             0,
             ...playerStatsEmptyValues
           );
@@ -224,23 +229,34 @@ export default {
 
       return copy;
     },
+    // createUpdatedH2HObject(){                //  TO BE DECIDED WHETHER TO USE !
+    //   console.log(this.h2hrounds);
+    // },
     createNextRndTeam(user) {
       const current = user["rounds"][`r${this.currentRound}`].team;
       const next = user["rounds"][`r${this.currentRound}`].nextRndInfo.team;
       return next ? next : current;
+      // console.log(user);
+      // return {}
     },
     createNextRndTransfers(user) {
       const avail = user["rounds"][`r${this.currentRound}`].transfersAvail;
       const made = user["rounds"][`r${this.currentRound}`].transfersMade;
       return avail - made === 0 ? 1 : 2;
+      // console.log(user);
+      // return 1;
     },
     createNextRndCaptains(user, rank) {
       const current = user["rounds"][`r${this.currentRound}`][rank];
       const next = user["rounds"][`r${this.currentRound}`].nextRndInfo[rank];
       return next ? next : current;
+      // console.log(user, rank);
+      // return
     },
     createNextRndSuperCpt(user) {
       return user["rounds"][`r${this.currentRound}`].nextRndInfo.superCpt;
+      // console.log(user);
+      // return false
     },
     currentPlayerTotalPts(position, stats) {
       return pointsCalculator(
@@ -285,6 +301,11 @@ export default {
         this.$vs.loading.close();
       }
     },
+    // h2hrounds(nv) {
+    //   if (nv && this.players && this.currentRound && this.users) {
+    //     this.$vs.loading.close();
+    //   }
+    // },
     success(nv) {
       if (nv === true) {
         setTimeout(() => {
@@ -305,6 +326,7 @@ export default {
     getCurrentRound().then(data => (this.currentRound = data));
     getAllPlayersDataNormal().then(data => (this.players = data));
     getAllUsers().then(data => (this.users = data));
+    // getAllH2HRounds().then(data => (this.h2hrounds = data));
   }
 };
 </script>
