@@ -31,6 +31,10 @@
         <div class="admin-menu-item" v-if="showH2H">
           <button class="menu-item-link" @click.prevent="switchComponent">H2HLeague</button>
         </div>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('cup')">Cup</a>
+        <div class="admin-menu-item" v-if="showCup">
+          <button class="menu-item-link" @click.prevent="switchComponent">Cup</button>
+        </div>
       </div>
     </div>
     <div class="admin-details">
@@ -51,6 +55,7 @@ import UsersTeams from "./Users/UsersTeams";
 import Transfers from "./Transfers/Transfers";
 import Leagues from "./Leagues/Leagues";
 import H2HLeague from "./H2HLeague/H2HLeague";
+import Cup from "./Cup/Cup";
 
 export default {
   name: "AdminPanel",
@@ -63,7 +68,8 @@ export default {
     UsersTeams,
     Transfers,
     Leagues,
-    H2HLeague
+    H2HLeague,
+    Cup
   },
   data() {
     return {
@@ -72,7 +78,8 @@ export default {
       showUsers: false,
       showTransfers: false,
       showLeagues: false,
-      showH2H: false
+      showH2H: false,
+      showCup: false
     };
   },
   methods: {
@@ -90,6 +97,8 @@ export default {
         this.showLeagues = !this.showLeagues;
       } else if (s === "h2h") {
         this.showH2H = !this.showH2H;
+      }else if (s === "cup") {
+        this.showCup = !this.showCup;
       }
     }
   },
