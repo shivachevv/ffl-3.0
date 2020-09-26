@@ -1,19 +1,19 @@
 <template>
   <div class="cup-section-container" v-if="users">
-    <h1 class="section-header">Cup Section</h1>
+    <h1 class="section-header">Cup Squad Selection</h1>
 
     <!-- CREATE NEW CUP GROUP BUTTON and POPUP -->
-    <vs-popup class="holamundo" title="Create new group!" :active.sync="showPopup1">
+    <!-- <vs-popup class="holamundo" title="Create new group!" :active.sync="showPopup1">
       <AddCupGroupForm :users="users" @updatedCupGroups="cupGroups = $event" />
-    </vs-popup>
-    <vs-button
+    </vs-popup>-->
+    <!-- <vs-button
       class="add-league"
       color="#59A95D"
       button="button"
       type="relief"
       size="large"
       @click.prevent="openAddCupGroupPopup"
-    >Create New Cup Group</vs-button>
+    >Create New Cup Group</vs-button>-->
 
     <vs-button
       color="#59A95D"
@@ -40,11 +40,11 @@
       title="Update finished!"
       active="true"
       color="success"
-    >Cup Round successfully updated!</vs-alert>
+    >Team Squad successfully updated!</vs-alert>
     <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
 
     <!-- EDIT FORM -->
-    <form
+    <!-- <form
       @submit.prevent="editCupGroupFormHandler"
       class="cup-group-details-edit"
       v-if="selectedGroup"
@@ -68,56 +68,103 @@
       </div>
 
       <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Group</vs-button>
-    </form>
+    </form>-->
 
     <!-- CUP GROUP ROUNDS -->
     <div v-if="selectedGroup" class="groups-rounds-container">
-      <vs-popup class="holamundo" title="Create new round!" :active.sync="showPopup2">
+      <div>
+        <!-- GROUP ROUNDS -->
+        <div class="rounds" v-if="selectedGroup.rounds">
+          <h2>CUP GROUP ROUNDS</h2>
+          <a
+            href
+            v-for="rnd in Object.keys(selectedGroup.rounds)"
+            :key="rnd"
+            @click.prevent="selectRoundHandler(rnd)"
+            :class="{selected: rnd === selectedRoundNum}"
+          >{{rnd}}</a>
+        </div>
+
+        <div v-if="selectedRound" class="matches-container">
+          <a
+            v-for="(match,i) in roundMatchesArray(selectedRound)"
+            :key="i"
+            @click.prevent="selectMatchHandler(match, i)"
+            :class="{selected: selectedMatch ? selectedMatch.team1.id === match.team1.id && selectedMatch.team2.id === match.team2.id : false}"
+          >{{users[match.team1.id].userTeam}} - {{users[match.team2.id].userTeam}}</a>
+        </div>
+      </div>
+
+      <div v-if="selectedMatch && players" class="squad-selection-container">
+        <div class="team-squad">
+          <span>Team of {{users[selectedMatch.team1.id].userTeam}}</span>
+          <a
+            v-for="player in matchSquadArray()"
+            :key="player[0]"
+            @click.prevent="addPlayerToCupSquadHandler(player, 'home')"
+            :class="{selected: Object.values(cupSquadHome).includes(player[1])}"
+          >{{player[0]}}: {{players[player[1]].name}}</a>
+          <vs-button
+            color="#59A95D"
+            button="submit"
+            type="relief"
+            size="large"
+            @click.prevent="editTeamSquadHandler(cupSquadHome, 'home')"
+          >Submit team 1</vs-button>
+        </div>
+        <div class="team-squad">
+          <span>Team of {{users[selectedMatch.team2.id].userTeam}}</span>
+          <a
+            v-for="player in matchSquadArray()"
+            :key="player[0]"
+            @click.prevent="addPlayerToCupSquadHandler(player, 'away')"
+            :class="{selected: Object.values(cupSquadAway).includes(player[1])}"
+          >{{player[0]}}: {{players[player[1]].name}}</a>
+          <vs-button
+            color="#59A95D"
+            button="submit"
+            type="relief"
+            size="large"
+            @click.prevent="editTeamSquadHandler(cupSquadAway, 'away')"
+          >Submit team 2</vs-button>
+        </div>
+      </div>
+      <!-- <vs-popup class="holamundo" title="Create new round!" :active.sync="showPopup2">
         <AddCupRoundForm
           :group="cupGroups[selectedGroup.name]"
           :users="users"
           @updatedCupGroups="cupGroups = $event"
-        />
-      </vs-popup>
-      <vs-button
+        /> 
+      </vs-popup>-->
+      <!-- <vs-button
         class="add-league"
         color="#59A95D"
         button="button"
         type="relief"
         size="large"
         @click.prevent="openAddGroupRoundPopup"
-      >Create New Cup Round</vs-button>
+      >Create New Cup Round</vs-button>-->
 
-      <!-- GROUP ROUNDS -->
-      <div class="rounds" v-if="selectedGroup.rounds">
-        <h2>CUP GROUP ROUNDS</h2>
-        <a
-          href
-          v-for="rnd in Object.keys(selectedGroup.rounds)"
-          :key="rnd"
-          @click.prevent="selectRoundHandler(rnd)"
-          :class="{selected: rnd === selectedRoundNum}"
-        >{{rnd}}</a>
-      </div>
-      <form
+      <!-- <form
         @submit.prevent="editCupRoundFormHandler"
         class="cup-group-details-edit"
         v-if="selectedRound"
       >
+
         <vs-input
           label="Which play-round will be held during??"
           placeholder="Round number"
           v-model="selectedRound.roundHeld"
           type="number"
-        />
-        <!-- MATCHES -->
-        <div
+      />-->
+      <!-- MATCHES -->
+      <!-- <div
           v-for="match in Object.keys(selectedRound).length -1"
           :key="match"
           class="match-container"
-        >
-          <!-- TEAM 1 -->
-          <vs-select
+      >-->
+      <!-- TEAM 1 -->
+      <!-- <vs-select
             :label="`Match ${match}. Team 1`"
             icon
             placeholder="Select team"
@@ -129,10 +176,10 @@
               :text="users[u].userTeam"
               v-for="u in selectedGroup.teams"
             />
-          </vs-select>
+      </vs-select>-->
 
-          <!-- TEAM 2 -->
-          <vs-select
+      <!-- TEAM 2 -->
+      <!-- <vs-select
             :label="`Match ${match}. Team 2`"
             icon
             placeholder="Select team"
@@ -145,23 +192,24 @@
               v-for="u in selectedGroup.teams"
             />
           </vs-select>
-        </div>
-        <!-- MATCHES END -->
-        <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Round</vs-button>
-      </form>
+      </div>-->
+      <!-- MATCHES END -->
+      <!-- <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Round</vs-button>
+      </form>-->
     </div>
   </div>
 </template>
 
 <script>
-import AddCupGroupForm from "./AddCupGroupForm";
-import AddCupRoundForm from "./AddCupRoundForm";
+// import AddCupGroupForm from "./AddCupGroupForm";
+// import AddCupRoundForm from "./AddCupRoundForm";
 // import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 import { DATA_URL } from "../../../common";
 // import getAllLeagues from "../../../utils/getAllLeagues";
 // import { getCurrentRound } from "../../../utils/getCurrentRound";
 import getAllUsers from "../../../utils/getAllUsers";
 import getAllCupGroups from "../../../utils/getAllCupGroups";
+import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 // import uploadAllPlayers from "../../../utils/uploadAllPlayers";
 // import { getAllPlayersDataNormal } from '../../../utils/getAllPlayersData';
 // import makeNewLeague from "../../../models/League";
@@ -169,15 +217,16 @@ import getAllCupGroups from "../../../utils/getAllCupGroups";
 // import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
-  name: "Cup",
+  name: "CupSquadSelect",
   components: {
-    AddCupGroupForm,
-    AddCupRoundForm
+    // AddCupGroupForm,
+    // AddCupRoundForm
   },
   data() {
     return {
       cupGroups: undefined,
       users: undefined,
+      players: undefined,
       selectedRound: undefined,
       selectedUser: undefined,
       selectedGroup: undefined,
@@ -186,10 +235,50 @@ export default {
       errorMsg: "",
       showPopup1: false,
       showPopup2: false,
-      selectedRoundNum: undefined
+      selectedRoundNum: undefined,
+      selectedMatchNum: undefined,
+      selectedMatch: undefined,
+      cupSquadHome: {},
+      cupSquadAway: {}
     };
   },
   methods: {
+    editTeamSquadHandler(team, teamNumber) {
+      if (this.isEditedTeamSquadOK(team)) {
+        this.$vs.dialog({
+          color: "success",
+          title: `Confirm ${teamNumber} Squad Edit`,
+          text: this.showSuccessMsgSquad(team, teamNumber),
+          accept: () => {
+            this.fetchUpdatedSquad(team, teamNumber);
+          }
+        });
+      } else {
+        this.error = true;
+        this.errorMsg = "Please select all positions!";
+      }
+    },
+    addPlayerToCupSquadHandler(player, teamNumber) {
+      const pos =
+        player[0].length === 3 ? player[0].substring(0, 2) : player[0];
+      const id = player[1];
+      if (teamNumber === "home") {
+        this.$set(this.cupSquadHome, pos, id);
+      } else {
+        this.$set(this.cupSquadAway, pos, id);
+      }
+    },
+    selectMatchHandler(match, i) {
+      console.log(match);
+      this.selectedMatch = match;
+      this.selectedMatchNum = i + 1;
+      if (match.team1.squad) {
+        this.cupSquadHome = match.team1.squad;
+      }
+      if (match.team2.squad) {
+        this.cupSquadAway = match.team2.squad;
+      }
+    },
     openAddCupGroupPopup() {
       return (this.showPopup1 = true);
     },
@@ -271,6 +360,35 @@ export default {
           this.errorMsg = error;
         });
     },
+    fetchUpdatedSquad(payload, teamNumber) {
+      const group = this.selectedGroup.name;
+      const rnd = this.selectedRoundNum;
+      const match = this.selectedMatchNum;
+      const team = teamNumber === "home" ? "team1" : "team2";
+      return fetch(
+        `${DATA_URL}cup/${group}/rounds/${rnd}/match${match}/${team}/squad.json`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
+      )
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          this.success = true;
+          this.$vs.loading();
+          this.cupGroups = await getAllCupGroups();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
+    },
     showSuccessMsg({ name, teams }) {
       return `You are about to edit group ${name}! 
       Users:
@@ -294,6 +412,16 @@ export default {
         })
         .join(", ")}`;
     },
+    showSuccessMsgSquad(team, teamNumber) {
+      return `You are about to edit the squad for ${teamNumber} team! 
+      Players:
+      ${Object.entries(team)
+        .map(player => {
+          const pos = player[0];
+          return `${pos}: ${player[1]}`;
+        })
+        .join(", ")}`;
+    },
     isEditedCupGroupOK() {
       if (this.selectedGroup.name && this.selectedGroup.teams.length) {
         return true;
@@ -314,19 +442,43 @@ export default {
       });
       return flag;
     },
+    isEditedTeamSquadOK(team) {
+      if (Object.keys(team).length === 8) {
+        return true;
+      }
+      return false;
+    },
     removeUserFromGroup(u) {
       return (this.selectedGroup.teams = this.selectedGroup.teams.filter(x => {
         return x !== u;
       }));
     },
     selectGroupHandler(r) {
+      this.selectedMatch = undefined;
+      this.selectedMatchNum = undefined;
       this.selectedRound = undefined;
       this.selectedRoundNum = undefined;
       this.selectedGroup = this.cupGroups[r];
     },
     selectRoundHandler(r) {
+      this.selectedMatch = undefined;
+      this.selectedMatchNum = undefined;
       this.selectedRound = this.selectedGroup.rounds[r];
       this.selectedRoundNum = r;
+    },
+    roundMatchesArray(rnd) {
+      const result = Object.values(rnd).filter(x => {
+        return typeof x !== "string";
+      });
+      return result;
+    },
+    matchSquadArray() {
+      const result = Object.entries(
+        this.users[this.selectedMatch.team1.id].rounds[
+          `r${this.selectedRound.roundHeld}`
+        ].team
+      );
+      return result;
     }
     // createEditedUsers(leagueId, leagueTeams) {
     //   let copy = JSON.parse(JSON.stringify(this.users));
@@ -686,13 +838,18 @@ export default {
   computed: {},
   watch: {
     cupGroups(nv) {
-      if (nv && this.users) {
+      if (nv && this.users && this.players) {
         this.$vs.loading.close();
         this.selectedGroup = this.cupGroups[this.selectedGroup.name];
       }
     },
+    players(nv) {
+      if (nv && this.users && this.cupGroups) {
+        this.$vs.loading.close();
+      }
+    },
     users(nv) {
-      if (nv) {
+      if (nv && this.players && this.cupGroups) {
         this.$vs.loading.close();
       }
     },
@@ -713,6 +870,7 @@ export default {
     this.$vs.loading();
     this.cupGroups = await getAllCupGroups();
     this.users = await getAllUsers();
+    this.players = await getAllPlayersDataNormal();
   }
 };
 </script>
@@ -813,6 +971,7 @@ export default {
       &.selected {
         background-color: #356538;
         color: white;
+        border-radius: 5px;
       }
       &.unavailable {
         background-color: #9d9d9d;
@@ -822,11 +981,83 @@ export default {
   }
 
   .groups-rounds-container {
-    width: 50%;
+    width: 97%;
     margin: 20px 0 0 0;
     background-color: darkgrey;
     border-radius: 10px;
     padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .matches-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      a {
+        padding: 5px;
+        display: inline-block;
+        transition: all 0.3s;
+        margin: 5px 0 0 0;
+        border-radius: 5px;
+
+        &:hover {
+          background-color: #59a95d;
+          cursor: pointer;
+        }
+        &.selected {
+          background-color: #356538;
+          color: white;
+          border-radius: 5px;
+        }
+      }
+    }
+
+    .squad-selection-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 60%;
+
+      .team-squad {
+          width: 50%;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        span {
+          font-weight: bold;
+          width: 100%;
+          padding: 0 0 10px 0;
+          margin: 0 0 10px 0;
+          text-align: center;
+          border-bottom: 1px solid black;
+        }
+
+        a {
+          margin: 3px 0 3px 0;
+          padding: 4px;
+          width: 100%;
+          cursor: pointer;
+          transition: all 0.3s;
+
+          &:hover {
+            background-color: #59a95d;
+          }
+          &.selected {
+            background-color: #356538;
+            color: white;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
   }
 
   .con-vs-alert-success {
@@ -834,6 +1065,15 @@ export default {
     color: white;
     margin: 15px;
     width: 97%;
+  }
+  .con-vs-alert-primary {
+    background: #ff4c4c80;
+    color: white;
+    margin: 15px;
+    width: 97%;
+    .vs-alert--close {
+      background-color: red;
+    }
   }
 }
 </style>

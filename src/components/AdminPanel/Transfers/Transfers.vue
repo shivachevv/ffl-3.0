@@ -147,13 +147,19 @@ export default {
       }
     },
     async confirmTransfer(tr) {
+      console.log(tr);
       try {
         await this.updateTransferStatus(tr, "confirmed");
         const team = this.editTeamForNextRnd(tr);
-        // const count = this.updateTransferCounts(tr,'confirmed');
-        // const count = this.updateTransferCounts(tr,'confirmed');
-        // await this.uploadUserTransfersCount(count, tr);
+        const count = this.updateTransferCounts(tr, "confirmed");
+        await this.uploadUserTransfersCount(count, tr);
         await this.uploadUserUpdatedTeam(team, tr);
+        await this.updatePlayerAvailableStatus(
+          tr[1].transferIn,
+          tr[1].transferOut,
+          "confirmed"
+        );
+
         this.success = true;
         this.$vs.loading();
         this.transfers = await getAllTransfers();
@@ -170,6 +176,12 @@ export default {
         const count = this.updateTransferCounts(tr, "cancelled");
         await this.updateTransferStatus(tr, "cancelled");
         await this.uploadUserTransfersCount(count, tr);
+        await this.updatePlayerAvailableStatus(
+          tr[1].transferIn,
+          tr[1].transferOut,
+          "cancelled"
+        );
+
         this.success = true;
         this.$vs.loading();
         this.transfers = await getAllTransfers();
@@ -288,6 +300,38 @@ export default {
           console.error("Error:", error);
           // this.error = true;
           // this.errorMsg = error;
+        });
+    },
+    updatePlayerAvailableStatus(idIn, idOut, action) {
+      const statusIn = action === "confirmed" ? false : true;
+      const statusOut = action === "confirmed" ? true : false;
+      const payloadIn = {
+        available: statusIn
+      };
+      const payloadOut = {
+        available: statusOut
+      };
+      this.fetchNewPlayerAvailableStatus(idIn, payloadIn);
+      this.fetchNewPlayerAvailableStatus(idOut, payloadOut);
+    },
+    fetchNewPlayerAvailableStatus(playerId, payload) {
+      console.log(playerId, payload);
+      return fetch(`${DATA_URL}players/${playerId}.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
         });
     }
     // changeCaptainsHandler() {

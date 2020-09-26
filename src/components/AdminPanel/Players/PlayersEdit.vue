@@ -108,7 +108,7 @@
             Available:
             <input type="checkbox" v-model="playerEdited.available" />
           </label>
-          <span>Currently player is {{playerSelected.available ? '' : 'NOT'}} available!</span>
+          <span :style="`color:${playerSelected.available ? 'green' : 'red'}`">Currently player {{playerSelected.available ? 'IS' : 'is NOT'}} available!</span>
 
           <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Player</vs-button>
           <vs-button

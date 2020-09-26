@@ -34,6 +34,7 @@
         <a href class="menu-item-section" @click.prevent="showSectionHandler('cup')">Cup</a>
         <div class="admin-menu-item" v-if="showCup">
           <button class="menu-item-link" @click.prevent="switchComponent">Cup</button>
+          <button class="menu-item-link" @click.prevent="switchComponent">CupSquadSelect</button>
         </div>
       </div>
     </div>
@@ -56,6 +57,7 @@ import Transfers from "./Transfers/Transfers";
 import Leagues from "./Leagues/Leagues";
 import H2HLeague from "./H2HLeague/H2HLeague";
 import Cup from "./Cup/Cup";
+import CupSquadSelect from "./Cup/CupSquadSelect";
 
 export default {
   name: "AdminPanel",
@@ -69,7 +71,8 @@ export default {
     Transfers,
     Leagues,
     H2HLeague,
-    Cup
+    Cup,
+    CupSquadSelect
   },
   data() {
     return {

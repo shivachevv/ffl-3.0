@@ -1,5 +1,5 @@
 <template>
-  <div class="add-form-container" v-if="group">
+  <div class="add-form-container" v-if="users">
     <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
     <vs-alert
       v-if="success"
@@ -9,38 +9,74 @@
     >Round succesfully added!</vs-alert>
 
     <form @submit.prevent="addRoundHandler">
-      <span>Group: {{group.name}}</span>
+      <vs-input label-placeholder="Group name" v-model="newGroup.name" color="dark" />
+      <vs-select label="Add Team to group" v-model="selectedUser" icon placeholder="Select team">
+        <vs-select-item
+          :key="u"
+          :value="u"
+          :text="users[u].userTeam"
+          v-for="u in Object.keys(users)"
+        />
+      </vs-select>
+      <div v-if="newGroup.teams.length" class="cup-teams">
+        <span>Teams:</span>
+        <div
+          v-for="user in newGroup.teams"
+          :key="user"
+          @click.prevent="removeUserFromGroup(user)"
+        >{{users[user].userTeam}}</div>
+      </div>
 
-      <vs-input
+      <!-- <vs-input
         label="Which play-round will be held during??"
         placeholder="Round number"
-        v-model="newRound.roundHeld"
+        v-model="newGroup.roundHeld"
         type="number"
-      />
+      />-->
 
       <!-- MATCHES -->
-      <div v-for="match in groupMatchCount" :key="match" class="match-container">
-        <!-- TEAM 1 -->
-        <vs-select
-          :label="`Match ${match}. Team 1`"
-          icon
-          placeholder="Select team"
-          v-model="newRound[`match${match}`].team1.id"
-        >
-          <vs-select-item :key="u" :value="u" :text="users[u].userTeam" v-for="u in group.teams" />
-        </vs-select>
 
-        <!-- TEAM 2 -->
-        <vs-select
-          :label="`Match ${match}. Team 2`"
+      <!-- <div v-for="match in 8" :key="match" class="match-container"> -->
+      <!-- TEAM 1 -->
+      <!-- <vs-select
+          :label="`Match ${match}. Team 1`"
+          v-model="newGroup"
           icon
           placeholder="Select team"
-          v-model="newRound[`match${match}`].team2.id"
         >
-          <vs-select-item :key="u" :value="u" :text="users[u].userTeam" v-for="u in group.teams" />
+          <vs-select-item
+            :key="u"
+            :value="u"
+            :text="users[u].userTeam"
+            v-for="u in Object.keys(users)"
+          />
+      </vs-select>-->
+
+      <!-- TEAM 2 -->
+      <!-- <vs-select
+          :label="`Match ${match}. Team 2`"
+          v-model="newGroup"
+          icon
+          placeholder="Select team"
+        >
+          <vs-select-item
+            :key="u"
+            :value="u"
+            :text="users[u].userTeam"
+            v-for="u in Object.keys(users)"
+          />
         </vs-select>
-      </div>
+      </div>-->
       <!-- MATCHES END -->
+
+      <!-- <div v-if="newLeague.teams.length" class="league-teams">
+        <span>Teams:</span>
+        <div
+          v-for="user in newLeague.teams"
+          :key="user"
+          @click.prevent="removeUserFromGroup(user)"
+        >{{users[user].userTeam}}</div>
+      </div>-->
 
       <vs-button color="#59A95D" button="submit" type="relief" size="large">Create Group</vs-button>
     </form>
@@ -58,12 +94,12 @@ import getAllCupGroups from "../../../utils/getAllCupGroups";
 // import { getCurrentRound } from "../../../utils/getCurrentRound";
 
 export default {
-  name: "AddCupRoundForm",
+  name: "AddCupGroupForm",
   props: {
-    group: {
-      required: true,
-      type: Object
-    },
+    // cupGroups: {
+    //   required: true,
+    //   type: Object
+    // },
     users: {
       required: true,
       type: Object
@@ -71,11 +107,12 @@ export default {
   },
   data() {
     return {
-      newRound: undefined,
+      newGroup: {
+        name: "",
+        teams: []
+      },
       selectedUser: undefined,
       updatedGroups: undefined,
-      groupMatchCount: undefined,
-      // matchesCount: undefined,
       //   newPlayer: {},
       //   showClub: false,
       //   positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
@@ -86,31 +123,26 @@ export default {
   },
   methods: {
     async addRoundHandler() {
-      if (this.isNewRoundOK()) {
-        await this.fetchNewCupRound(this.newRound);
+      if (this.isNewGroupOK()) {
+        // const { roundHeld, matches } = this.newRound;
+        // const name = `R${this.newRoundNumber}`;
+        // const round = makeNewH2HRound(name, matches, roundHeld);
+        await this.fetchNewH2HRound(this.newGroup);
       } else {
         this.error = true;
         this.errorMsg = "Please fill all fields correctly!";
       }
     },
-    isNewRoundOK() {
-      const { newRound } = this;
-      let flag = true;
-      Object.keys(newRound).forEach(matchId => {
-        if (matchId !== "roundHeld") {
-          const match = newRound[matchId];
-          if (match.team1.id === "" || match.team2.id === "") {
-            flag = false;
-          }
-        }
-      });
-      return flag;
+    isNewGroupOK() {
+      if (this.newGroup.name && this.newGroup.teams.length) {
+        return true;
+      } else {
+        return false;
+      }
     },
-    fetchNewCupRound(payload) {
-      const { name, rounds } = this.group;
-      const roundNum = rounds ? Object.keys(rounds).length + 1 : 1;
+    fetchNewH2HRound(payload) {
       this.$vs.loading();
-      return fetch(`${DATA_URL}cup/${name}/rounds/r${roundNum}.json`, {
+      return fetch(`${DATA_URL}cup/${payload.name}.json`, {
         method: "PATCH",
         mode: "cors",
         headers: {
@@ -170,11 +202,12 @@ export default {
     //       this.errorMsg = error;
     //     });
     // },
-    // removeUserFromGroup(u) {
-    //   return (this.newGroup.teams = this.newGroup.teams.filter(x => {
-    //     return x !== u;
-    //   }));
-    // }
+
+    removeUserFromGroup(u) {
+      return (this.newGroup.teams = this.newGroup.teams.filter(x => {
+        return x !== u;
+      }));
+    }
     // createPlayerPointsObj(rnd) {
     //   const playerStatsEmptyValues = Array(20).fill("");
     //   let result = {};
@@ -221,83 +254,18 @@ export default {
     //       this.errorMsg = err;
     //     });
     // }
-    calculateMatchCount() {
-      this.groupMatchCount = Math.floor(this.group.teams.length / 2);
-      const value = this.groupMatchCount;
-      if (value === 1) {
-        this.newRound = {
-          match1: {
-            team1: {
-              id: ""
-            },
-            team2: {
-              id: ""
-            }
-          },
-          roundHeld: ""
-        };
-      } else if (value === 2) {
-        this.newRound = {
-          match1: {
-            team1: {
-              id: ""
-            },
-            team2: {
-              id: ""
-            }
-          },
-          match2: {
-            team1: {
-              id: ""
-            },
-            team2: {
-              id: ""
-            }
-          },
-          roundHeld: ""
-        };
-      } else if (value === 3) {
-        this.newRound = {
-          match1: {
-            team1: {
-              id: ""
-            },
-            team2: {
-              id: ""
-            }
-          },
-          match2: {
-            team1: {
-              id: ""
-            },
-            team2: {
-              id: ""
-            }
-          },
-          match3: {
-            team1: {
-              id: ""
-            },
-            team2: {
-              id: ""
-            }
-          },
-          roundHeld: ""
-        };
-      }
-    }
   },
   computed: {
-    // groupMatchCount() {
-    //   return Math.floor(this.group.teams.length / 2);
+    // newRoundNumber() {
+    //   return Number(Object.keys(this.h2hrounds).length + 1);
     // }
   },
   watch: {
-    // selectedUser(nv) {
-    //   if (nv && !this.newGroup.teams.includes(nv)) {
-    //     this.newGroup.teams.push(nv);
-    //   }
-    // },
+    selectedUser(nv) {
+      if (nv && !this.newGroup.teams.includes(nv)) {
+        this.newGroup.teams.push(nv);
+      }
+    },
     // "newPlayer.club": function(nv) {
     //   if (nv) {
     //     this.newPlayer["shirt"] = teamCodes[nv];
@@ -311,9 +279,7 @@ export default {
       }
     }
   },
-  created() {
-    this.calculateMatchCount();
-  }
+  async created() {}
 };
 </script>
 
