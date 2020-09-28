@@ -56,7 +56,14 @@
         >{{users[user].userTeam}}</div>
       </div>
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create League</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit League</vs-button>
+      <vs-button
+        color="danger"
+        button="button"
+        type="relief"
+        size="large"
+        @click.prevent="deleteLeagueHandler"
+      >Delete League</vs-button>
     </form>
   </div>
 </template>
@@ -211,6 +218,41 @@ export default {
           return x !== u;
         }
       ));
+    },
+    deleteLeagueHandler() {
+      const text = `Are you sure you want to delete league ${this.leagueSelected.name} ?`;
+      this.$vs.dialog({
+        color: "success",
+        title: "Confirm Delete",
+        text: text,
+        accept: () => {
+          this.fetchDeletedLeague(this.leagueSelected.id);
+        }
+      });
+    },
+    fetchDeletedLeague(id) {
+      const url = `${DATA_URL}leagues/${id}.json`;
+
+      return fetch(url, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          this.success = true;
+          this.$vs.loading();
+          this.leagueSelected = undefined;
+          this.leagues = await getAllLeagues();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
     }
     // fillTransfers() {
     //   const newTransfer = makeNewTransfer(
@@ -623,92 +665,10 @@ export default {
         }
       }
     }
+    button {
+      margin: 20px 20px 0 0;
+    }
   }
-
-  //   .rounds {
-  //     padding: 0 0 10px 0;
-  //     border-bottom: 1px solid #3c474d;
-  //     width: 100%;
-  //     a {
-  //       display: inline-block;
-  //       padding: 5px;
-  //       transition: all 0.3s;
-  //       color: black;
-  //       border-radius: 3px;
-  //       margin: 0 1px 0 1px;
-
-  //       &:hover {
-  //         background-color: #59a95d;
-  //       }
-
-  //       &.selected {
-  //         background-color: #356538;
-  //         color: white;
-  //       }
-  //       &.unavailable {
-  //         background-color: #9d9d9d;
-  //         cursor: not-allowed;
-  //       }
-  //     }
-  //   }
-
-  //   .transfers-container {
-  //     width: 100%;
-  //     display: flex;
-  //     flex-direction: column;
-  //     align-items: flex-start;
-  //     justify-content: flex-start;
-  //     margin: 10px 0 0 0;
-
-  //     .user-transfers {
-  //       width: 98%;
-  //       display: flex;
-  //       flex-direction: column;
-  //       justify-content: flex-start;
-  //       align-items: flex-start;
-  //       background-color: #96969669;
-  //       border-radius: 10px;
-  //       padding: 10px 0;
-  //       margin: 10px 0 0 0;
-
-  //       .user-trans-heading {
-  //         width: 98%;
-  //         font-weight: bold;
-  //         padding: 5px 0;
-  //         border-bottom: 1px solid black;
-  //         margin: 0 10px 0 10px;
-  //       }
-
-  //       .user-transfer {
-  //         padding: 10px;
-  //         display: flex;
-  //         flex-direction: row;
-  //         justify-content: space-between;
-  //         align-items: center;
-  //         width: 100%;
-  //         transition: all 0.3s;
-
-  //         .in {
-  //           background-color: #669f69b8;
-  //           padding: 10px;
-  //         }
-  //         .out {
-  //           background-color: #893f4091;
-  //           padding: 10px;
-  //         }
-
-  //         &:hover {
-  //           background-color: darken(#96969669, 10);
-  //         }
-  //       }
-  //     }
-  //   }
-  //   .no-transfers {
-  //     h2 {
-  //       margin: 20px;
-  //       font-weight: bold;
-  //     }
-  //   }
 
   .con-vs-alert-success {
     background: #46c93a80;
