@@ -68,6 +68,13 @@
       </div>
 
       <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Group</vs-button>
+      <vs-button
+        color="danger"
+        button="button"
+        type="relief"
+        size="large"
+        @click.prevent="deleteHandler('group')"
+      >Delete Group</vs-button>
     </form>
 
     <!-- CUP GROUP ROUNDS -->
@@ -148,6 +155,13 @@
         </div>
         <!-- MATCHES END -->
         <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Round</vs-button>
+        <vs-button
+          color="danger"
+          button="button"
+          type="relief"
+          size="large"
+          @click.prevent="deleteHandler('round')"
+        >Delete Round</vs-button>
       </form>
     </div>
   </div>
@@ -169,7 +183,7 @@ import getAllCupGroups from "../../../utils/getAllCupGroups";
 // import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
-  name: "Cup",
+  name: "CupGroupsAndRounds",
   components: {
     AddCupGroupForm,
     AddCupRoundForm
@@ -203,7 +217,7 @@ export default {
           title: "Confirm Edit",
           text: this.showSuccessMsg(this.selectedGroup),
           accept: () => {
-            this.fetchUpdatedLeague(this.selectedGroup);
+            this.fetchUpdatedGroup(this.selectedGroup);
           }
         });
       } else {
@@ -226,7 +240,7 @@ export default {
         this.errorMsg = "Please enter round matches correctly!";
       }
     },
-    fetchUpdatedLeague(payload) {
+    fetchUpdatedGroup(payload) {
       return fetch(`${DATA_URL}cup/${payload.name}.json`, {
         method: "PATCH",
         mode: "cors",
@@ -327,7 +341,50 @@ export default {
     selectRoundHandler(r) {
       this.selectedRound = this.selectedGroup.rounds[r];
       this.selectedRoundNum = r;
+    },
+    deleteHandler(type) {
+      const text =
+        type === "group"
+          ? `Are you sure you want to delete group ${this.selectedGroup.name} ?`
+          : `Are you sure you want to delete round ${this.selectedRoundNum} ?`;
+      this.$vs.dialog({
+        color: "success",
+        title: "Confirm Delete",
+        text: text,
+        accept: () => {
+          this.fetchDeletedPart(type);
+        }
+      });
+    },
+    fetchDeletedPart(type) {
+      const url =
+        type === "group"
+          ? `${DATA_URL}cup/${this.selectedGroup.name}.json`
+          : `${DATA_URL}cup/${this.selectedGroup.name}/rounds/${this.selectedRoundNum}.json`;
+
+      return fetch(url, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          this.success = true;
+          this.$vs.loading();
+          this.selectedRound = undefined;
+          this.selectedRoundNum = undefined;
+          this.cupGroups = await getAllCupGroups();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
     }
+
     // createEditedUsers(leagueId, leagueTeams) {
     //   let copy = JSON.parse(JSON.stringify(this.users));
 
@@ -785,7 +842,7 @@ export default {
     }
 
     button {
-      margin: 20px 0 0 0;
+      margin: 20px 20px 0 0;
     }
   }
 
@@ -822,7 +879,7 @@ export default {
   }
 
   .groups-rounds-container {
-    width: 50%;
+    width: 75%;
     margin: 20px 0 0 0;
     background-color: darkgrey;
     border-radius: 10px;

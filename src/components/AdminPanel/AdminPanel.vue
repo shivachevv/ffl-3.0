@@ -3,38 +3,85 @@
     <div class="admin-menu">
       <h1 class="admin-menu-header">ADMIN MENU</h1>
       <div class="admin-menu-items">
-        <button href class="menu-item-section" @click.prevent="switchComponent">Rounds</button>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('rounds')">Rounds</a>
+        <div class="admin-menu-item" v-if="showRounds">
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'Rounds'}"
+          >Rounds</button>
+        </div>
 
         <a href class="menu-item-section" @click.prevent="showSectionHandler('players')">Players</a>
         <div class="admin-menu-item" v-if="showPlayers">
-          <button class="menu-item-link" @click.prevent="switchComponent">PlayersEdit</button>
-          <button class="menu-item-link" @click.prevent="switchComponent">PlayersPoints</button>
-          <button class="menu-item-link" @click.prevent="switchComponent">SyncPoints</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'PlayersEdit'}"
+          >PlayersEdit</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'PlayersPoints'}"
+          >PlayersPoints</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'SyncPoints'}"
+          >SyncPoints</button>
         </div>
 
         <a href class="menu-item-section" @click.prevent="showSectionHandler('users')">Users</a>
         <div class="admin-menu-item" v-if="showUsers">
-          <button @click.prevent="switchComponent" class="menu-item-link">UsersPersonal</button>
-          <button @click.prevent="switchComponent" class="menu-item-link">UsersTeams</button>
+          <button
+            @click.prevent="switchComponent"
+            class="menu-item-link"
+            :class="{selected: chosenComponent === 'UsersPersonal'}"
+          >UsersPersonal</button>
+          <button
+            @click.prevent="switchComponent"
+            class="menu-item-link"
+            :class="{selected: chosenComponent === 'UsersTeams'}"
+          >UsersTeams</button>
         </div>
 
         <a href class="menu-item-section" @click.prevent="showSectionHandler('transfers')">Transfers</a>
         <div class="admin-menu-item" v-if="showTransfers">
-          <button class="menu-item-link" @click.prevent="switchComponent">Transfers</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'Transfers'}"
+          >Transfers</button>
         </div>
 
         <a href class="menu-item-section" @click.prevent="showSectionHandler('leagues')">Leagues</a>
         <div class="admin-menu-item" v-if="showLeagues">
-          <button class="menu-item-link" @click.prevent="switchComponent">Leagues</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'Leagues'}"
+          >Leagues</button>
         </div>
         <a href class="menu-item-section" @click.prevent="showSectionHandler('h2h')">H2HLeague</a>
         <div class="admin-menu-item" v-if="showH2H">
-          <button class="menu-item-link" @click.prevent="switchComponent">H2HLeague</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'H2HLeague'}"
+          >H2HLeague</button>
         </div>
         <a href class="menu-item-section" @click.prevent="showSectionHandler('cup')">Cup</a>
         <div class="admin-menu-item" v-if="showCup">
-          <button class="menu-item-link" @click.prevent="switchComponent">Cup</button>
-          <button class="menu-item-link" @click.prevent="switchComponent">CupSquadSelect</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'CupGroupsAndRounds'}"
+          >CupGroupsAndRounds</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'CupSquadSelect'}"
+          >CupSquadSelect</button>
         </div>
       </div>
     </div>
@@ -56,7 +103,7 @@ import UsersTeams from "./Users/UsersTeams";
 import Transfers from "./Transfers/Transfers";
 import Leagues from "./Leagues/Leagues";
 import H2HLeague from "./H2HLeague/H2HLeague";
-import Cup from "./Cup/Cup";
+import CupGroupsAndRounds from "./Cup/CupGroupsAndRounds";
 import CupSquadSelect from "./Cup/CupSquadSelect";
 
 export default {
@@ -71,12 +118,13 @@ export default {
     Transfers,
     Leagues,
     H2HLeague,
-    Cup,
+    CupGroupsAndRounds,
     CupSquadSelect
   },
   data() {
     return {
       chosenComponent: "PlayersEdit",
+      showRounds: false,
       showPlayers: false,
       showUsers: false,
       showTransfers: false,
@@ -90,7 +138,9 @@ export default {
       return (this.chosenComponent = e.target.innerText);
     },
     showSectionHandler(s) {
-      if (s === "players") {
+      if (s === "rounds") {
+        this.showRounds = !this.showRounds;
+      } else if (s === "players") {
         this.showPlayers = !this.showPlayers;
       } else if (s === "users") {
         this.showUsers = !this.showUsers;
@@ -100,7 +150,7 @@ export default {
         this.showLeagues = !this.showLeagues;
       } else if (s === "h2h") {
         this.showH2H = !this.showH2H;
-      }else if (s === "cup") {
+      } else if (s === "cup") {
         this.showCup = !this.showCup;
       }
     }
@@ -155,6 +205,11 @@ export default {
 
       .admin-menu-item {
         width: 100%;
+
+        .selected {
+          font-weight: bold;
+          text-decoration: underline;
+        }
 
         .menu-item-link {
           padding: 10px 0;

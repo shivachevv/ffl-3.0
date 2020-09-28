@@ -86,6 +86,7 @@
         </div>
 
         <div v-if="selectedRound" class="matches-container">
+            <h2>Round is held during round: {{selectedRound.roundHeld}}</h2>
           <a
             v-for="(match,i) in roundMatchesArray(selectedRound)"
             :key="i"
@@ -996,6 +997,10 @@ export default {
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
+
+      h2 {
+          margin: 10px 0 10px 0;
+      }
 
       a {
         padding: 5px;
