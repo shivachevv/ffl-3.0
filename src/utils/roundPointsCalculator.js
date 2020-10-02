@@ -1,4 +1,4 @@
-const roundPointsCalculator = async (round, rndNum, players, isCup = false) => {
+const roundPointsCalculator = (round, rndNum, players, isCup = false) => {
     const { cpt, viceCpt, superCpt } = round
     const roundIDs = round.team
     let total = 0
@@ -8,6 +8,8 @@ const roundPointsCalculator = async (round, rndNum, players, isCup = false) => {
     // } else {
     //     hasCptPlayed = false
     // }
+    
+    
     const hasCptPlayed = cpt ?
         !!players[cpt].points[`r${rndNum}`].roundStats.starter || !!players[cpt].points[`r${rndNum}`].roundStats.sub
         :
@@ -15,7 +17,7 @@ const roundPointsCalculator = async (round, rndNum, players, isCup = false) => {
     // const cptMultiplier = superCpt ? 3 : 2
 
     const cptMultiplier = isCup ? 1 : superCpt ? 3 : 2
-    console.log(cptMultiplier);
+
     Object.keys(roundIDs).forEach(pos => {
         const id = roundIDs[pos]
         if (id === cpt && hasCptPlayed) {

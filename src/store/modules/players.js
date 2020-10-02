@@ -4,6 +4,8 @@ import last5TransfersHelper from "../../utils/last5TransfersHelper";
 import popupPlayerHelper from "../../utils/popupPlayerHelper";
 import userPointsHelper from "../../utils/userPointsHelper";
 import currentRndHelper from "../../utils/currentRndHelper";
+import { getAllPlayersDataNormal } from '../../utils/getAllPlayersData'
+
 
 const URL_PLAYERS = 'https://ffl-3-92418.firebaseio.com/playerPts.json';
 const URL_PLAYERS_HISTORY = 'https://ffl-3-92418.firebaseio.com/playerHistory.json';
@@ -12,6 +14,7 @@ const URL_TRANSFERS_MARADONA = 'https://ffl-3-92418.firebaseio.com/playerTransfe
 const URL_CAPTAINS = 'https://ffl-3-92418.firebaseio.com/userData.json';
 
 const state = {
+    players: undefined,
     pow: '',
     last5Transfers1: '',
     last5Transfers2: '',
@@ -21,6 +24,7 @@ const state = {
 };
 
 const getters = {
+    players: state => state.players,
     pow: state => state.pow,
     last5Transfers1: state => state.last5Transfers1,
     last5Transfers2: state => state.last5Transfers2,
@@ -30,6 +34,12 @@ const getters = {
 };
 
 const actions = {
+    async fetchPlayers({
+        commit
+    }) {
+        const players = await getAllPlayersDataNormal()
+        commit('setPlayers', players)
+    },
     async fetchUserPts({
         commit
     }, code) {
@@ -97,6 +107,9 @@ const actions = {
 };
 
 const mutations = {
+    setPlayers: (state, p) => {
+        state.players = p
+    },
     setCurrentRnd: (state, r) => {
         state.currentRnd = r
     },

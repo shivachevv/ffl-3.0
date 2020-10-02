@@ -4,7 +4,8 @@ export const getPointsFromTool = async (isLeague) => {
     const response = await fetch(`${DATA_URL}pointsSync/points.json`)
     const points = await response.json()
 
-    const result = {}
+    if ( points !== null) {
+        const result = {}
     if (isLeague) {
             Object.values(points).forEach(team => {
                 const playerIds = Object.keys(team.players)
@@ -25,4 +26,8 @@ export const getPointsFromTool = async (isLeague) => {
     }
 
     return result
+    } else {
+        return 'empty'
+    }
+    
 }

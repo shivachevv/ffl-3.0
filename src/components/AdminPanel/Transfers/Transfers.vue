@@ -77,7 +77,7 @@
 import { DATA_URL } from "../../../common";
 import getAllUsers from "../../../utils/getAllUsers";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
-import { getAllTransfers } from "../../../utils/getAllTransfers";
+import getAllTransfers from "../../../utils/getAllTransfers";
 import makeNewTransfer from "../../../models/Transfer";
 import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 // import roundPointsCalculator from "../../../utils/roundPointsCalculator";
@@ -107,7 +107,7 @@ export default {
   methods: {
     fillTransfers() {
       const newTransfer = makeNewTransfer(
-        5,
+        4,
         "smAQwrSzWYPsoBVXhL1yWUmU1CE3",
         "DC",
         "c6969c32-f562-4fc5-8550-59e43be4a6af",
@@ -117,7 +117,7 @@ export default {
     },
     fetchNewTransfer(payload) {
       return fetch(
-        `${DATA_URL}transfers/r${payload.round}/${payload.team}/t1.json`,
+        `${DATA_URL}transfers/r${payload.round}/${payload.team}/t2.json`,
         {
           method: "PATCH",
           mode: "cors",

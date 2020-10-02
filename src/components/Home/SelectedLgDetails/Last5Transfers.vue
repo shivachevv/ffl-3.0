@@ -6,21 +6,21 @@
       </div>
       <h2>Last 5 transfers</h2>
     </div>
-    <div class="transfers-container">
-      <div class="transfer" v-for="(tr,i) in last5Rdy" :key="i">
-        <p class="up arr">{{tr.team}}</p>
+    <div class="transfers-container" v-if="last5TransfersReady">
+      <div class="transfer" v-for="(tr,i) in last5TransfersReady" :key="i">
+        <p class="up arr">{{users[tr.team].userTeam}}</p>
         <div class="transfer-details">
           <span class="tr-round up">R{{tr.round}}</span>
           <span class="tr-in">
-            {{tr.playerIn}}
+            {{players[tr.transferIn].name}}
             <br />
-            <span>{{tr.playerInClub}}</span>
+            <span>{{players[tr.transferIn].club}}</span>
           </span>
           <span class="tr-pos up">{{tr.position}}</span>
           <span class="tr-out">
-            {{tr.playerOut}}
+            {{players[tr.transferOut].name}}
             <br />
-            <span>{{tr.playerOutClub}}</span>
+            <span>{{players[tr.transferOut].club}}</span>
           </span>
         </div>
       </div>
@@ -37,27 +37,48 @@ export default {
     selectedLeagueObj: {
       type: Object,
       required: true
+    },
+    users: {
+      type: Object,
+      required: true
+    },
+    players: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {};
   },
   methods: {
-    ...mapActions(["fetchLast5Transfers1", "fetchLast5Transfers2"])
+    ...mapActions(["fetchTransfers"])
   },
   computed: {
-    ...mapGetters(["last5Transfers1", "last5Transfers2"]),
-    last5Rdy() {
-      let tmp = {
-        pele: this.last5Transfers1,
-        maradona: this.last5Transfers2
-      };
-      return tmp[this.selectedLeagueObj.name];
+    ...mapGetters(["transfers"]),
+    last5TransfersReady() {
+      if (!this.transfers) {
+        return "";
+      }
+      const destructured = [...Object.values(this.transfers)]
+        .map(x => {
+          const obj = Object.values(x)[0];
+          return [...Object.values(obj)];
+        })
+        .flat()
+        .filter(x => {
+          if (this.selectedLeagueObj.teams.includes(x.team)) {
+            return x;
+          }
+        })
+        .sort((a, b) => {
+          return new Date(b.timeMade) - new Date(a.timeMade);
+        });
+
+      return destructured;
     }
   },
   created() {
-    this.fetchLast5Transfers1();
-    this.fetchLast5Transfers2();
+    this.fetchTransfers();
   }
 };
 </script>

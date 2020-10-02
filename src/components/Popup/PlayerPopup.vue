@@ -1,66 +1,67 @@
 <template>
-  <div class="player-popup" v-if="playerRdy">
-    <div class="popup-container sha" v-clickOutside="close">
-      <div class="popup-close up">
-        <span>Player Information</span>
-        <a href @click.prevent="close" class="popup-close-link">
-          <img :src="require(`@/assets/images/popup/close.png`)" alt="close" />
-        </a>
-      </div>
-
+  <div v-if="player">
+    <div class="popup-container sha">
       <div class="popup-name up">
-        <img :src="require(`@/assets/images/teamkits/${playerRdy.kit}.png`)" alt="shirt" />
+        <img :src="require(`@/assets/images/teamkits/${player.shirt}.png`)" alt="shirt" />
         <div class="popup-name-cont">
-          <span class="popup-player-name up">{{playerRdy.name}}</span>
-          <span class="popup-player-team up">{{playerRdy.club}}</span>
-          <span class="popup-player-pos up">{{playerRdy.pos}}</span>
+          <span class="popup-player-name up">{{player.name}}</span>
+          <span class="popup-player-team up">{{player.club}}</span>
+          <span class="popup-player-pos up">{{player.position}}</span>
         </div>
       </div>
 
       <div class="popup-points up">
         <div class="popup-points-total">
-          <span class="popup-pts-name">Total points</span>
-          <span class="popup-pts-val">{{playerRdy.total}} pts</span>
+          <span class="popup-pts-name up">Total points</span>
+          <span class="popup-pts-val">{{playerPoints.total}} pts</span>
         </div>
         <div class="popup-points-per-round">
-          <span class="popup-per-name">Per round</span>
-          <span class="popup-per-val">{{playerRdy.perRound}} pts</span>
+          <span class="popup-per-name up">Per round</span>
+          <span class="popup-per-val">{{playerPoints.perRound}} pts</span>
         </div>
         <div class="popup-points-last5">
-          <span class="popup-last5-name">Last 5 rounds</span>
-          <span class="popup-last5-val">{{playerRdy.last5}} pts</span>
+          <span class="popup-last5-name up">Last 5 rounds</span>
+          <span class="popup-last5-val">{{playerPoints.last5}} pts</span>
         </div>
         <div class="popup-points-last5-per-round">
-          <span class="popup-last5per-name">Last 5 per round</span>
-          <span class="popup-last5per-val">{{playerRdy.last5PerRnd}} pts</span>
+          <span class="popup-last5per-name up">Last 5 per round</span>
+          <span class="popup-last5per-val">{{playerPoints.last5PerRnd}} pts</span>
         </div>
       </div>
 
-      <div class="popup-round-points up">
-        <div class="popup-round-points-header up">
-          <span>Round</span>
-          <span>Points</span>
-        </div>
-        <div class="popup-round-points-container">
-          <div class="popup-round-points-points up" v-for="(r,i) in playerRdy.pts" :key="i">
-            <span>{{i + 1}}</span>
-            <span>{{r}}</span>
-          </div>
-        </div>
-      </div>
+      <table style="overflow-x:auto;">
+        <thead>
+          <tr>
+            <td>Rnd</td>
+            <td>Pts</td>
+            <td v-for="label in Object.keys(player.points.r1.roundStats)" :key="label">
+              <span>{{statsMap[`${label}`].short}}</span>
+              <div class="table-lable">{{statsMap[`${label}`].long}}</div>
+            </td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="(rnd,i) in Object.values(player.points)" :key="i">
+            <td class="round-number">{{i + 1}}</td>
+            <td>{{rnd.roundPts}}</td>
+            <td v-for="stat in Object.entries(rnd.roundStats)" :key="stat[0]">{{stat[1]}}</td>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="popup-graph up">
-        <Chart :style="chartStyle" :rounds="playerRdy.pts"></Chart>
+        <Chart :style="chartStyle" :rounds="playerPoints.chartPts"></Chart>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import popupPtsHelper from "../../utils/popupPtsHelper";
+// import { mapActions, mapGetters } from "vuex";
+// import popupPtsHelper from "../../utils/popupPtsHelper";
 import Chart from "./Chart";
-import { clickOutside } from "../../directives";
+// import { clickOutside } from "../../directives";
 
 export default {
   name: "PlayerPopup",
@@ -68,20 +69,35 @@ export default {
     Chart
   },
   props: {
-    popupShow: {
-      type: Boolean,
-      required: true
-    },
-    popupPlayer: {
+    player: {
       type: Object,
       required: true
-    },
-    selectedLeagueObj: {
-      type: Object
     }
   },
   data() {
     return {
+      statsMap: {
+        assists: { short: "A", long: "Assists" },
+        cleanSheet: { short: "CS", long: "Clean sheet" },
+        clearanceOffLine: { short: "CL", long: "Clearance off line" },
+        errorLeadToGoal: { short: "ERR", long: "Error lead to goal" },
+        goals: { short: "G", long: "Goals" },
+        lastManTackle: { short: "LMT", long: "Last man tackle" },
+        manOfTheMatch: { short: "MOM", long: "Man of the match" },
+        ownGoals: { short: "OG", long: "Own goals" },
+        penaltyGoals: { short: "PG", long: "Penalty goals" },
+        penaltyMissed: { short: "PM", long: "Penalty Missed" },
+        penaltySaved: { short: "PS", long: "Penalty Saved" },
+        ratingOver85: { short: "RAT", long: "Rating over 8.5" },
+        redCards: { short: "RC", long: "Red cards" },
+        saves: { short: "S", long: "Saves" },
+        shotsOnPost: { short: "SP", long: "Shots on post" },
+        starter: { short: "ST", long: "Starter" },
+        sub: { short: "SUB", long: "Substitution" },
+        teamVictory: { short: "TV", long: "Team victory" },
+        threeAllowed: { short: "3G", long: "Three allowed" },
+        yellowCards: { short: "YC", long: "Yellow cards" }
+      },
       chartStyle: "width: 100%; height: 100%; display: block;",
       posMap: {
         GK: "goalkeeper",
@@ -104,39 +120,50 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["popupData"]),
-    playerRdy() {
-      if (this.popupData) {
-        return {
-          name: this.popupData[7],
-          club: this.popupData[8],
-          pos: this.posMap[this.popupData[2]],
-          kit: this.popupData[9],
-          pts: this.popupData.slice(11),
-          total: this.popupData[10],
-          perRound: popupPtsHelper.perRound(this.popupData.slice(11)),
-          last5: popupPtsHelper.last5(this.popupData.slice(11)),
-          last5PerRnd: popupPtsHelper.last5PerRnd(this.popupData.slice(11))
-        };
+    // ...mapGetters(["popupData"]),
+    playerPoints() {
+      if (this.player) {
+        const roundCount = Object.values(this.player.points).length;
+        const total = Object.values(this.player.points).reduce((acc, rnd) => {
+          return acc + rnd.roundPts;
+        }, 0);
+        const perRound = (total / roundCount).toFixed(2);
+        const last5 = Object.values(this.player.points).reduce(
+          (acc, rnd, i) => {
+            const roundsNumToGoBack = 5;
+
+            if (i >= roundCount - roundsNumToGoBack) {
+              return acc + rnd.roundPts;
+            } else {
+              return 0;
+            }
+          },
+          0
+        );
+        const last5PerRnd = (last5 / 5).toFixed(2);
+        const chartPts = Object.values(this.player.points).map(x => {
+          return x.roundPts;
+        });
+        return { total, perRound, last5, last5PerRnd, chartPts };
       } else {
         return "";
       }
     }
   },
   methods: {
-    ...mapActions(["fetchPopupData"]),
-    close() {
-      return this.$emit("popupClose", false);
-    }
+    // ...mapActions(["fetchPopupData"]),
+    // close() {
+    //   return this.$emit("popupClose", false);
+    // }
   },
   created() {
-    this.fetchPopupData(this.popupPlayer);
+    // this.fetchPopupData(this.player);
   },
   destroyed() {
-    this.fetchPopupData("");
+    // this.fetchPopupData("");
   },
   directives: {
-    clickOutside
+    // clickOutside
   }
 };
 </script>
@@ -151,53 +178,86 @@ export default {
   .popup-round-points-points:nth-child(2n) {
     background-color: #d3d3d3;
   } */
-.player-popup {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  background-color: rgba(80, 80, 80, 0.5);
-  display: flex;
-  z-index: 1000;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
 .popup-container {
-  width: 30%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #c6c6c6;
-  z-index: 1001;
-  position: relative;
-  overflow: hidden;
-  border-radius: 7px;
-  border: 1px solid #3c474d;
-  box-shadow: 5px 5px 10px -5px rgba(0, 0, 0, 0.43);
-}
-.popup-close {
-  width: 100%;
-  height: 35px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #3c474d;
-  color: #d3d3d3;
-  span {
-    color: #d3d3d3;
-    font-size: 0.875rem;
-    padding: 0 0 0 15px;
+  // overflow: hidden;
+
+  table {
+    width: 100%;
+    margin: 30px 0 0 0;
+    thead {
+      background-color: #8eca90;
+      color: #103e10;
+
+      tr {
+        td {
+          position: relative;
+          cursor: pointer;
+          padding: 8px 4px;
+          font-weight: bold;
+          border-bottom: 1px solid #184d18;
+
+          // span {
+          // }
+          .table-lable {
+            width: max-content;
+            height: 20px;
+            max-height: 0px;
+            transition: all 0.2s;
+            position: absolute;
+            top: -20px;
+            left: -50%;
+            overflow: hidden;
+            font-weight: normal;
+          }
+          &:nth-child(20),
+          &:nth-child(21),
+          &:nth-child(22) {
+            .table-lable {
+              right: 0px !important;
+              left: auto;
+            }
+          }
+
+          &:hover {
+            text-decoration: underline;
+            .table-lable {
+              max-height: 20px;
+            }
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        height: 20px;
+
+        transition: all 0.2s;
+        &:hover {
+          background-color: #f5f5f5;
+        }
+        .round-number {
+          font-weight: bold;
+          background-color:darken(#e0e0e0, 5);
+        }
+        td {
+          height: 25px;
+          border-bottom: 1px solid #f2f2f2;
+          vertical-align: middle;
+          text-align: center;
+        }
+      }
+    }
   }
-  a {
-    display: inline-block;
-    height: 35px;
-  }
 }
+
 .popup-name {
+  padding: 10px 0;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -245,6 +305,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   font-size: 0.75rem;
+  box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43);
 }
 .popup-points-total {
   width: 25%;

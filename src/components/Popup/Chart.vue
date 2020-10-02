@@ -13,7 +13,10 @@ export default {
   data() {
     return {
       options: {
-          maintainAspectRatio:false,
+        maintainAspectRatio: false,
+        gridLines: {
+          display: false
+        },
         responsive: true,
         legend: {
           position: "top",

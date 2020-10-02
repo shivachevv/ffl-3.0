@@ -97,6 +97,7 @@
           size="normal"
           @click="syncDialog"
         >3. SYNC POINTS WITH PLAYERS</vs-button>
+        <vs-button color="#59A95D" type="relief" size="normal" @click="syncPointsHandler">TEST</vs-button>
       </div>
     </div>
   </div>
@@ -108,6 +109,10 @@ import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 import syncPointsHelper from "../../../utils/syncPointsHelper";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
 import { DATA_URL, roundDates } from "../../../common";
+import getAllLeagues from "../../../utils/getAllLeagues";
+import getAllUsers from "../../../utils/getAllUsers";
+import getStandings from "../../../utils/getStandings";
+import standingsHelper from "../../../utils/standingsHelper";
 
 export default {
   name: "SyncPoints",
@@ -148,6 +153,9 @@ export default {
       currentRound: undefined,
       selectedSyncRound: undefined,
       players: undefined,
+      leagues: undefined,
+      users: undefined,
+      standings: undefined,
       error: false,
       errorMsg: ""
     };
@@ -244,6 +252,7 @@ export default {
         this.points = await getPointsFromTool(this.isLeagueSelected);
         this.buttonEnablerFlags.download = true;
       } catch (err) {
+        this.$vs.loading.close();
         console.log(err);
         this.error = true;
         this.errorMsg = err;
@@ -254,7 +263,31 @@ export default {
       const round = this.selectedSyncRound
         ? this.selectedSyncRound
         : this.currentRound;
-      const payload = await syncPointsHelper(this.points, this.players, round);
+
+      if (this.points !== "empty") {
+        const updatedPlayers = await syncPointsHelper(
+          this.points,
+          this.players,
+          round
+        );
+        const standings = await standingsHelper(
+          this.standings,
+          this.leagues,
+          updatedPlayers,
+          this.users,
+          round
+        );
+
+        this.fetchUpdatedPlayersObject(updatedPlayers);
+        this.fetchUpdatedStandingsObject(standings);
+      } else {
+        this.lastSync = await this.uploadNewSyncDate();
+        this.buttonEnablerFlags.sync = true;
+        this.fetchUpdatedStandingsObject(this.standings[`r${this.selectedSyncRound - 1}`]);
+        this.$vs.loading.close();
+      }
+    },
+    fetchUpdatedPlayersObject(payload) {
       return fetch(`${DATA_URL}players.json`, {
         method: "PATCH",
         mode: "cors",
@@ -269,6 +302,26 @@ export default {
           this.$vs.loading.close();
           this.lastSync = await this.uploadNewSyncDate();
           this.buttonEnablerFlags.sync = true;
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          this.$vs.loading.close();
+          this.error = true;
+          this.errorMsg = err;
+        });
+    },
+    fetchUpdatedStandingsObject(payload) {
+      return fetch(`${DATA_URL}standings/r${this.selectedSyncRound}.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async () => {
+          console.log("Success!");
         })
         .catch(err => {
           console.error("Error:", err);
@@ -350,6 +403,9 @@ export default {
   async created() {
     this.$vs.loading();
     this.players = await getAllPlayersDataNormal();
+    this.leagues = await getAllLeagues();
+    this.users = await getAllUsers();
+    this.standings = await getStandings();
     const uploadDate = await this.getLastUpdate();
     this.lastUpdate = uploadDate ? uploadDate : "No Upload Date!";
 

@@ -150,21 +150,21 @@ export default {
       errorMsg: "",
       newCpt: "",
       newViceCpt: "",
-      roundTotal: 0
+      // roundTotal: 0
     };
   },
   methods: {
     // editUserTeamFormHandler() {
     //   return;
     // },
-    async selectRoundHandler(r) {
+    selectRoundHandler(r) {
       this.selectedRound = r;
 
       if (this.selectedUser.rounds) {
         if (this.selectedUser.rounds[`r${r}`]) {
           if (this.selectedUser.rounds[`r${r}`].team) {
             this.selectedUserTeam = this.selectedUser.rounds[`r${r}`].team;
-            await this.calcRoundTotalPts();
+            // this.calcRoundTotalPts();
           } else {
             this.selectedUserTeam = undefined;
           }
@@ -301,17 +301,25 @@ export default {
     deselectUser() {
       this.selectedUser = "";
     },
-    async calcRoundTotalPts() {
-      this.roundTotal = "...";
-      const total = await roundPointsCalculator(
+    // calcRoundTotalPts() {
+    //   this.roundTotal = "...";
+    //   const total = roundPointsCalculator(
+    //     this.selectedUser.rounds[`r${this.selectedRound}`],
+    //     this.selectedRound,
+    //     this.players
+    //   );
+    //   return (this.roundTotal = total);
+    // }
+  },
+  computed: {
+    roundTotal(){
+      return roundPointsCalculator(
         this.selectedUser.rounds[`r${this.selectedRound}`],
         this.selectedRound,
         this.players
       );
-      return (this.roundTotal = total);
     }
   },
-  computed: {},
   watch: {
     users(nv) {
       if (nv && this.players) {

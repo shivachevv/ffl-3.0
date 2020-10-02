@@ -1,359 +1,60 @@
 <template>
   <main>
-    <div class="main-container">
-      <!---------------- LEAGUE CHOICE -------------------------------------->
+    <div class="main-container" v-if="players && leagues">
+      <div class="league-container">
+        <!---------------- LEAGUE CHOICE -------------------------------------->
 
-      <!-- <section class="choose-league">
-        <div class="up sha choose-league-title">
-          <h2>Choose your league</h2>
-        </div>
-
-        <LeagueBtn
-          v-for="(l,i) in leagues"
-          :key="i"
-          :title="l.name"
-          :logo="selectedLeague === l.name ? l.logoActive : l.logoBig"
+        <LeagueSelect
+          :leagues="leagues"
+          :selectedLeague="selectedLeague"
           @selectedLeague="selectedLeague = $event"
-          :class="{ lgActive : selectedLeague === l.name }"
-        ></LeagueBtn>
-      </section>-->
+        ></LeagueSelect>
 
-      <LeagueSelect :leagues="leagues" :selectedLeague="selectedLeague" @selectedLeague="selectedLeague = $event"></LeagueSelect>
+        <!---------------- STANDINGS -------------------------------------->
 
-      <!---------------- STANDINGS -------------------------------------->
+        <LeagueStandings
+          :selectedLeagueObj="selectedLeagueObj"
+          :currentRound="currentRound"
+          :users="users"
+          :standings="standings"
+        ></LeagueStandings>
 
-      <LeagueStandings :selectedLeagueObj="selectedLeagueObj"></LeagueStandings>
+        <!---------------- LEAGUE DETAILS -------------------------------------->
 
-      <!-- <section class="standings-container" id="card">
-        <div class="st-header-container">
-          <p class="standings-header up">
-            Standings
-            <span>Pele</span>
-          </p>
-          <div class="switch up">
-            <span class="animated heartBeat infinite slow">switch league</span>
-            <img src="images/switch.png" alt />
-          </div>
-        </div>
-        <table class="standings-table front">
-          <thead class="up">
-            <tr>
-              <th class="table-num">#</th>
-              <th class="up table-name">Team</th>
-              <th class="up table-total">
-                Total
-                <br />points
-              </th>
-              <th class="up table-rnd">
-                Round
-                <br />points
-              </th>
-              <th class="up table-move">
-                Up
-                <br />down
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="first">
-              <td class="table-num">1.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                1
-                <span>Test user 1PELE</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="sec-thi">
-              <td class="table-num">2.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                2
-                <span>Test user 2</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move">
-                <img src="images\team-mov\d2.png" alt />
-              </td>
-            </tr>
-            <tr class="sec-thi">
-              <td class="table-num">3.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                3
-                <span>Test user 3</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">4.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                4
-                <span>Test user 4</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">5.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                5
-                <span>Test user 5</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">6.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                6
-                <span>Test user 6</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">7.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                7
-                <span>Test user 7</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">8.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                8
-                <span>Test user 8</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">9.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                9
-                <span>Test user 9</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-            <tr class="grey">
-              <td class="table-num">10.</td>
-              <td class="up table-name">
-                <img src="images/teamlogos/logo1.png" alt />Test team
-                10
-                <span>Test user 10</span>
-              </td>
-              <td class="up table-total">2100</td>
-              <td class="up table-rnd">15</td>
-              <td class="up table-move"></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>-->
+        <SelectedLgDetails
+          :users="users"
+          :selectedLeagueObj="selectedLeagueObj"
+          :players="players"
+          :standings="standings"
+          :currentRound="currentRound"
+          @playerPopupSelected="playerPopupHandler($event)"
+        ></SelectedLgDetails>
+      </div>
 
-      <!---------------- LEAGUE DETAILS -------------------------------------->
+      <!---------------- BEST TEAM OF THE WEEK -------------------------------------->
 
-      <SelectedLgDetails
-        :selectedLeagueObj="selectedLeagueObj"
-        @playerPopupSelected="playerPopupHandler($event)"
-      ></SelectedLgDetails>
-
-      <!-- <section class="maradona-container">
-        <div class="league-title up sha">
-          <h2>
-            League
-            <br />M a r a d o n a
-          </h2>
-          <img src="images/maradona.png" alt="Maradona logo" />
-        </div>
-
-        <div class="league-tow sha hover">
-          <div class="tow-heading up">
-            <div>
-              <img src="images/tow.png" alt="tow icon" />
-            </div>
-            <h2>Team of the week</h2>
-          </div>
-          <div class="tow-points">
-            <h2 class="tow up">Test team</h2>
-            <span class="tow-points-number"></span>
-          </div>
-          <div class="loading-tow" id>
-            <img src="images/spinner.gif" alt="loading" />
-          </div>
-        </div>
-
-        <div class="league-pow sha hover">
-          <div class="pow-heading up">
-            <div>
-              <img src="images/pow.png" alt />
-            </div>
-            <h2>Player of the week</h2>
-          </div>
-
-          <div class="pow-points">
-            <h2 class="pow up">
-              No points yet
-              <span></span>
-            </h2>
-            <span class="pow-points-number"></span>
-          </div>
-          <div class="pow-points">
-            <h2 class="pow up">
-              No points yet
-              <span></span>
-            </h2>
-            <span class="pow-points-number"></span>
-          </div>
-          <div class="pow-points">
-            <h2 class="pow up">
-              No points yet
-              <span></span>
-            </h2>
-            <span class="pow-points-number"></span>
-          </div>
-          <div class="loading-pow" id>
-            <img src="images/spinner.gif" alt="loading" />
-          </div>
-        </div>
-
-        <div class="league-last5 sha hover">
-          <div class="last5-heading up">
-            <div>
-              <img src="images/last5.png" alt />
-            </div>
-            <h2>Last 5 transfers</h2>
-          </div>
-          <div class="transfers-container">
-            <div class="transfer">
-              <p class="up arr">Transfer team 1</p>
-
-              <div class="transfer-details">
-                <span class="tr-round up">round</span>
-                <span class="tr-in">
-                  transfer in 1
-                  <br />
-                  <span>team</span>
-                </span>
-                <span class="tr-pos up">st</span>
-                <span class="tr-out">
-                  transfer out 1
-                  <br />
-                  <span>team</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="transfer">
-              <p class="up">Transfer team 2</p>
-
-              <div class="transfer-details">
-                <span class="tr-round up">round</span>
-                <span class="tr-in">
-                  transfer in 2
-                  <br />
-                  <span>team</span>
-                </span>
-                <span class="tr-pos up">st</span>
-                <span class="tr-out">
-                  transfer out 2
-                  <br />
-                  <span>team</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="transfer">
-              <p class="up">Transfer team 3</p>
-
-              <div class="transfer-details">
-                <span class="tr-round up">round</span>
-                <span class="tr-in">
-                  transfer in 3
-                  <br />
-                  <span>team</span>
-                </span>
-                <span class="tr-pos up">st</span>
-                <span class="tr-out">
-                  transfer out 3
-                  <br />
-                  <span>team</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="transfer">
-              <p class="up">Transfer team 4</p>
-
-              <div class="transfer-details">
-                <span class="tr-round up">round</span>
-                <span class="tr-in">
-                  transfer in 4
-                  <br />
-                  <span>team</span>
-                </span>
-                <span class="tr-pos up">st</span>
-                <span class="tr-out">
-                  transfer out 4
-                  <br />
-                  <span>team</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="transfer">
-              <p class="up">Transfer team 5</p>
-
-              <div class="transfer-details">
-                <span class="tr-round up">round</span>
-                <span class="tr-in">
-                  transfer in 5
-                  <br />
-                  <span>team</span>
-                </span>
-                <span class="tr-pos up">st</span>
-                <span class="tr-out">
-                  transfer out 5
-                  <br />
-                  <span>team</span>
-                </span>
-              </div>
-            </div>
-            <div class="loading-tr" id>
-              <img src="images/spinner.gif" alt="loading" />
-            </div>
-          </div>
-        </div>
-      </section>-->
+      <BestTeam
+        :players="players"
+        :currentRound="currentRound"
+        @playerPopupHandler="playerPopupHandler($event)"
+      />
     </div>
     <transition name="slide-left" mode="out-in">
-      <PlayerPopup
+      <vs-popup
+        class="holamundo"
+        :title="`${popupPlayer.name} Information`"
+        :active.sync="popupShow"
+        v-if="popupPlayer"
+      >
+        <PlayerPopup :player="popupPlayer" />
+      </vs-popup>
+      <!-- <PlayerPopup
         v-if="popupShow"
         :popupPlayer="popupPlayer"
         :popupShow="popupShow"
         :selectedLeagueObj="selectedLeagueObj"
         @popupClose="popupShow = $event"
-      ></PlayerPopup>
+      ></PlayerPopup>-->
     </transition>
   </main>
 </template>
@@ -362,8 +63,9 @@
 import LeagueSelect from "./LeagueSelect/LeagueSelect";
 import LeagueStandings from "./LeagueStandings/LeagueStandings";
 import SelectedLgDetails from "./SelectedLgDetails/SelectedLgDetails";
+import BestTeam from "./BestTeam/BestTeam";
 import PlayerPopup from "../Popup/PlayerPopup";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -371,25 +73,40 @@ export default {
     LeagueSelect,
     LeagueStandings,
     SelectedLgDetails,
-    PlayerPopup
+    PlayerPopup,
+    BestTeam
   },
   data() {
     return {
-      // leagues: leagues,
-      // selectedLeague: "pele",
       popupShow: false,
       popupPlayer: "",
       selectedLgTmp: ""
     };
   },
   methods: {
+    ...mapActions([
+      "fetchLeagues",
+      "fetchPlayers",
+      "fetchCurrentRound",
+      "fetchUsers",
+      "fetchStandings"
+    ]),
     playerPopupHandler(p) {
+      console.log("popup");
       this.popupShow = true;
       this.popupPlayer = p;
     }
   },
   computed: {
-    ...mapGetters(["loggedUser", "leagues"]),
+    ...mapGetters([
+      "loggedUser",
+      "leagues",
+      "players",
+      "currentRound",
+      "users",
+      "standings"
+    ]),
+
     selectedLeagueObj() {
       return this.leagues[this.selectedLeague];
     },
@@ -402,19 +119,121 @@ export default {
             ? "pele"
             : "maradona";
         } else {
-          return this.selectedLgTmp ? this.selectedLgTmp : "pele";
+          return this.selectedLgTmp
+            ? this.selectedLgTmp
+            : "33c46ff1-1756-41a1-a80f-01b2f4fb4b3c";
         }
       },
       set: function(v) {
         this.selectedLgTmp = v;
       }
     }
+  },
+  watch: {
+    leagues(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.currentRound &&
+        this.users &&
+        this.standings
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    players(nv) {
+      if (
+        nv &&
+        this.leagues &&
+        this.currentRound &&
+        this.users &&
+        this.standings
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    currentRound(nv) {
+      if (nv && this.players && this.leagues && this.users && this.standings) {
+        this.$vs.loading.close();
+      }
+    },
+    users(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.leagues &&
+        this.currentRound &&
+        this.standings
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    standings(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.leagues &&
+        this.currentRound &&
+        this.users
+      ) {
+        this.$vs.loading.close();
+      }
+    }
+  },
+  async created() {
+    if (!this.leagues) {
+      this.$vs.loading();
+      this.fetchLeagues();
+    }
+    if (!this.players) {
+      this.$vs.loading();
+      this.fetchPlayers();
+    }
+    if (!this.currentRound) {
+      this.$vs.loading();
+      this.fetchCurrentRound();
+    }
+    if (!this.users) {
+      this.$vs.loading();
+      this.fetchUsers();
+    }
+    if (!this.standings) {
+      this.$vs.loading();
+      this.fetchStandings();
+    }
+    // this.fetchCurrentRound();
+    // this.fetchUsers();
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style  lang="scss">
+.league-container {
+  width: 90%;
+  background: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+//POPUP STYLES
+.vs-popup {
+  width: 50% !important;
+  .vs-popup--content {
+    font-size: 0.9em !important;
+    -webkit-transition: all 0.23s ease 0.1s !important;
+    transition: all 0.23s ease 0.1s !important;
+    overflow: auto !important;
+    max-height: calc(100vh - 100px) !important;
+    padding: 0px !important;
+    width: 100% !important;
+    margin: 0px !important;
+    background-color: #e0e0e0;
+  }
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.3s;
@@ -447,5 +266,4 @@ export default {
   opacity: 0;
   transform: translate(-2em, 0);
 }
-
 </style>

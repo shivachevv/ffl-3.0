@@ -1,6 +1,6 @@
 <template>
   <div class="league-pow sha hover" v-if="powRdy">
-    <div class="pow-heading up">
+    <!-- <div class="pow-heading up">
       <div>
         <img :src="require(`@/assets/images/home/pow.png`)" alt="pow-icon`" />
       </div>
@@ -27,12 +27,12 @@
         <span>{{p.team}}</span>
       </h2>
       <span class="pow-points-number">{{p.pts}} pts</span>
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+// import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Pow",
@@ -40,22 +40,47 @@ export default {
     selectedLeagueObj: {
       type: Object,
       required: true
+    },
+    players: {
+      type: Object,
+      required: true
+    },
+    currentRound: {
+      type: Number,
+      required: true
+    },
+    users: {
+      type: Object,
+      required: true
     }
   },
   methods: {
-    ...mapActions(["fetchPow"]),
-    playerPopupHandler(p) {    
-      return this.$emit('playerPopupSelected', p)
+    // ...mapActions(["fetchPow"]),
+    playerPopupHandler(p) {
+      return this.$emit("playerPopupSelected", p);
     }
   },
   computed: {
-    ...mapGetters(["pow"]),
+    // ...mapGetters(["pow"]),
     powRdy() {
-      return this.pow[this.selectedLeagueObj.name];
+      const teams = this.selectedLeagueObj.teams;
+      const userTeams = Object.values(this.users)
+        .filter(x => {
+          if (this.selectedLeagueObj.id === x.league) {
+            return x;
+          }
+        })
+        .map(x => {
+          return x.rounds[`r${this.currentRound}`].team
+        });
+
+      console.log(teams, userTeams);
+
+      return "test";
     }
   },
   created() {
-    this.fetchPow();
+    // this.fetchPow();
   }
 };
 </script>

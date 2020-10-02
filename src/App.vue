@@ -265,11 +265,11 @@ main {
 }
 
 .main-container {
-  width: 80%;
-  background: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
+  width: 90%;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;  
 }
 </style>

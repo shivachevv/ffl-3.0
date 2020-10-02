@@ -4,7 +4,7 @@
       <h2>
         League
         <br />
-        {{selectedLeagueObj.name | leagueName}}
+        {{selectedLeagueObj.name}}
       </h2>
       <img
         :src="require(`@/assets/images/home/${selectedLeagueObj.logoSmall}.png`)"
@@ -12,149 +12,48 @@
       />
     </div>
 
-    <Tow :selectedLeagueObj="selectedLeagueObj"></Tow>
+    <Tow :standings="standings" :selectedLeagueObj="selectedLeagueObj" :currentRound="currentRound" :users="users"></Tow>
 
-    <Pow :selectedLeagueObj="selectedLeagueObj" @playerPopupSelected="playerPopupHandler($event)"></Pow>
+    <Last5Transfers :selectedLeagueObj="selectedLeagueObj" :users="users" :players="players"></Last5Transfers>
 
-    <Last5Transfers :selectedLeagueObj="selectedLeagueObj"></Last5Transfers>
-
-    <!-- <div class="league-last5 sha hover">
-      <div class="last5-heading up">
-        <div>
-          <img src="images/last5.png" alt />
-        </div>
-        <h2>Last 5 transfers</h2>
-      </div>
-      <div class="transfers-container">
-        <div class="transfer">
-          <p class="up arr">Transfer team 1</p>
-
-          <div class="transfer-details">
-            <span class="tr-round up">round</span>
-            <span class="tr-in">
-              transfer in 1
-              <br />
-              <span>team</span>
-            </span>
-            <span class="tr-pos up">st</span>
-            <span class="tr-out">
-              transfer out 1
-              <br />
-              <span>team</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="transfer">
-          <p class="up">Transfer team 2</p>
-
-          <div class="transfer-details">
-            <span class="tr-round up">round</span>
-            <span class="tr-in">
-              transfer in 2
-              <br />
-              <span>team</span>
-            </span>
-            <span class="tr-pos up">st</span>
-            <span class="tr-out">
-              transfer out 2
-              <br />
-              <span>team</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="transfer">
-          <p class="up">Transfer team 3</p>
-
-          <div class="transfer-details">
-            <span class="tr-round up">round</span>
-            <span class="tr-in">
-              transfer in 3
-              <br />
-              <span>team</span>
-            </span>
-            <span class="tr-pos up">st</span>
-            <span class="tr-out">
-              transfer out 3
-              <br />
-              <span>team</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="transfer">
-          <p class="up">Transfer team 4</p>
-
-          <div class="transfer-details">
-            <span class="tr-round up">round</span>
-            <span class="tr-in">
-              transfer in 4
-              <br />
-              <span>team</span>
-            </span>
-            <span class="tr-pos up">st</span>
-            <span class="tr-out">
-              transfer out 4
-              <br />
-              <span>team</span>
-            </span>
-          </div>
-        </div>
-
-        <div class="transfer">
-          <p class="up">Transfer team 5</p>
-
-          <div class="transfer-details">
-            <span class="tr-round up">round</span>
-            <span class="tr-in">
-              transfer in 5
-              <br />
-              <span>team</span>
-            </span>
-            <span class="tr-pos up">st</span>
-            <span class="tr-out">
-              transfer out 5
-              <br />
-              <span>team</span>
-            </span>
-          </div>
-        </div>
-        <div class="loading-tr" id>
-          <img src="images/spinner.gif" alt="loading" />
-        </div>
-      </div>
-    </div>-->
   </section>
 </template>
 
 <script>
 import Tow from "./Tow";
-import Pow from "./Pow";
 import Last5Transfers from "./Last5Transfers";
 
 export default {
   name: "SelectedLgDetails",
   components: {
     Tow,
-    Pow,
     Last5Transfers
   },
   props: {
     selectedLeagueObj: {
       type: Object,
       required: true
+    },
+    users: {
+      type: Object,
+      required: true
+    },
+    players: {
+      type: Object,
+      required: true
+    },
+    currentRound: {
+      type: Number,
+      required: true
+    },
+    standings: {
+      type: Object,
+      required: true
     }
   },
   methods:{
-    playerPopupHandler(p) {
-      return this.$emit('playerPopupSelected', p)
-    }
   },
   filters: {
-    leagueName: function(v) {
-      return v.split("").join(" ");
-    }
   }
 };
 </script>

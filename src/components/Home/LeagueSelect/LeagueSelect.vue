@@ -8,16 +8,16 @@
       v-for="(l,i) in leagues"
       :key="i"
       :title="l.name"
-      :logo="selectedLeague === l.name ? l.logoActive : l.logoBig"
+      :id="l.id"
+      :logo="selectedLeague === l.id ? l.logoActive : l.logoBig"
       @selectedLeague="selectedLeagueHandler($event)"
-      :class="{ lgActive : selectedLeague === l.name }"
+      :class="{ lgActive : selectedLeague === l.id }"
     ></LeagueBtn>
   </section>
 </template>
 
 <script>
 import LeagueBtn from "./LeagueBtn";
-import { mapGetters } from "vuex";
 
 export default {
   name: "LeagueSelect",
@@ -35,32 +35,12 @@ export default {
   },
   data() {
     return {
-      selectedLgTmp: ""
     };
   },
   computed: {
-    ...mapGetters(["loggedUser"]),
-
-    // selectedLeague: {
-    //   get: function() {
-    //     if (this.loggedUser && !this.selectedLgTmp) {
-    //       return this.leagues["pele"].teams.filter(
-    //         x => x.email === this.loggedUser.info.email
-    //       )[0]
-    //         ? "pele"
-    //         : "maradona";
-    //     } else {
-    //       return this.selectedLgTmp ? this.selectedLgTmp : "pele";
-    //     }
-    //   },
-    //   set: function(v) {
-    //     this.selectedLgTmp = v;
-    //   }
-    // }
   },
   methods: {
     selectedLeagueHandler(x) {
-      // this.selectedLeague = x;
       return this.$emit("selectedLeague", x);
     }
   }

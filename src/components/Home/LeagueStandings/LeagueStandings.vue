@@ -27,24 +27,24 @@
       </thead>
       <tbody>
         <router-link
-          :to="t.name | routeFilter"
+          :to="users[t[0]].userLogo"
           tag="tr"
           :class="{first : i === 0, secthi : i === 1 || i === 2, grey : i > 2 }"
-          v-for="(t,i) in standingsRdy"
-          :key="i"
+          v-for="(t,i) in Object.entries(standings[`r${currentRound}`][selectedLeagueObj.id])"
+          :key="t[0]"
         >
           <td class="table-num">{{i + 1}}</td>
           <td class="up table-name">
-            <img :src="require(`@/assets/images/team-logos/logo1.png`)" :alt="`${t.name} logo`" />
-            {{t.name}}
-            <span>{{t.user}}</span>
+            <img :src="require(`@/assets/images/team-logos/logo1.png`)" :alt="`${users[t[0]].userTeam} logo`" />
+            {{users[t[0]].userTeam}}
+            <span>{{users[t[0]].email}}</span>
           </td>
-          <td class="up table-total">{{t.total}}</td>
-          <td class="up table-rnd">{{t.roundPts}}</td>
+          <td class="up table-total">{{t[1].total}}</td>
+          <td class="up table-rnd">{{t[1].lastRndTotal}}</td>
           <td class="up table-move">
             <img
-              :src="require(`@/assets/images/home/team-mov/${movement(t.move)}.png`)"
-              :alt="`${t.name} logo`"
+              :src="require(`@/assets/images/home/team-mov/${movement(t[1].movement)}.png`)"
+              :alt="`${t[1].movement} logo`"
             />
           </td>
         </router-link>
@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+// import { mapActions, mapGetters } from "vuex";
+// import standingsHelper from '../../../utils/standingsHelper'
 
 export default {
   name: "LeagueStandings",
@@ -65,16 +66,30 @@ export default {
     selectedLeagueObj: {
       type: Object,
       required: true
+    },
+    users: {
+      type: Object,
+      required: true
+    },
+    standings: {
+      type: Object,
+      required: true
+    },
+    currentRound: {
+      type: Number,
+      required: true
     }
   },
   computed: {
-    ...mapGetters(["standings"]),
-    standingsRdy() {
-      return this.standings[this.selectedLeagueObj.name];
-    }
+    // ...mapGetters(['currentRound']),
+    // standingsRdy() {
+    //   // return 'test'
+    //   // console.log('test');
+    //   // return standingsHelper(this.standings, this.leagues, this.players, this.users, this.currentRound)
+    // }
   },
   methods: {
-    ...mapActions(["fetchStandings"]),
+    // ...mapActions(['fetchCurrentRound']),
     movement(v) {
       if (v < 0) {
         return `d${v * -1}`;
@@ -86,16 +101,16 @@ export default {
     }
   },
   watch: {},
-  created() {
-    this.fetchStandings();
+  async created() {
+    // await this.fetchCurrentRound()
   },
   filters: {
-    routeFilter: function(v) {
-      return v
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-    }
+    // routeFilter: function(v) {
+    //   return v
+    //     .toLowerCase()
+    //     .split(" ")
+    //     .join("-");
+    // }
   }
 };
 </script>

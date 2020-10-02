@@ -1,5 +1,5 @@
 <template>
-  <div class="choose-lg-container sha" @click="selectLeagueHandler(title)">
+  <div class="choose-lg-container sha" @click="selectLeagueHandler(id)">
     <img :src="require(`@/assets/images/home/${logo}.png`)" :alt="`${title} logo`" />
     <p class="up">{{title}}</p>
   </div>
@@ -14,6 +14,10 @@ export default {
       required: true
     },
     logo: {
+      type: String,
+      required: true
+    },
+    id: {
       type: String,
       required: true
     }

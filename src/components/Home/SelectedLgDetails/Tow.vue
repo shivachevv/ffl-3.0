@@ -6,93 +6,55 @@
       </div>
       <h2>Team of the week</h2>
     </div>
-    <div class="tow-points">
-      <!-- <transition name="slide-left" mode="out-in">
-      <img
-        :src="require(`@/assets/images/team-logos/logo1.png`)"
-        :alt="`${towRdy.team} logo`"
-        v-if="towtoggle"
-      />
-      </transition>-->
-      <router-link :to="towRdy.team | routeFilter" tag="h2" class="tow up">{{towRdy.team}}</router-link>
-      <span class="tow-points-number">{{towRdy.pts}} pts</span>
+    <div class="tow-points" v-for="team in towRdy" :key="team[0]">
+      <router-link :to="users[team[0]].userLogo" tag="h2" class="tow up">{{users[team[0]].userTeam}}</router-link>
+      <span class="tow-points-number">{{team[1].lastRndTotal}} pts</span>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
 export default {
   name: "Tow",
   props: {
     selectedLeagueObj: {
       type: Object,
       required: true
+    },
+    currentRound: {
+      type: Number,
+      required: true
+    },
+    standings: {
+      type: Object,
+      required: true
+    },
+    users: {
+      type: Object,
+      required: true
     }
   },
   data() {
-    return {
-      //   towtoggle: false
-    };
+    return {};
   },
-  methods: {
-    ...mapActions(["fetchTow"])
-  },
+  methods: {},
   computed: {
-    ...mapGetters(["tow"]),
     towRdy() {
-      return this.tow[this.selectedLeagueObj.name];
+      const tow = Object.entries(
+        this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
+      ).sort((a, b) => {
+        return b[1].lastRndTotal - a[1].lastRndTotal;
+      });
+
+      return tow;
     }
   },
-  created() {
-    this.fetchTow();
-  },
-  filters: {
-    routeFilter: function(v) {
-      return v
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-    }
-  }
+  created() {}
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition-duration: 0.2s;
-  transition-property: height, opacity, transform;
-  transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
-  overflow: hidden;
-}
-
-.slide-left-enter,
-.slide-right-leave-active {
-  opacity: 0;
-  transform: translate(2em, 0);
-}
-
-.slide-left-leave-active,
-.slide-right-enter {
-  opacity: 0;
-  transform: translate(-2em, 0);
-}
 /*************** TEAM OF THE WEEK ***********/
 * {
   transition: all 0.3s;
