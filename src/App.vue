@@ -13,7 +13,7 @@
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Logos from "./components/common/Logos/Logos";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "App",
@@ -22,26 +22,20 @@ export default {
     Footer,
     Logos
   },
-  data(){
-    return {
-
-    }
+  data() {
+    return {};
   },
   methods: {
-    ...mapActions(["fetchLoggedUser", "fetchCurrentRnd"])
+    ...mapActions(["fetchLoggedUser", "fetchStandings", "fetchLeagues"])
   },
-  computed:{
-    ...mapGetters(["allPlayersData"])
-  },
-  watch:{
-    allPlayersData(nv){
-      console.log(nv);
-    }
-  },
+  computed: {},
+  watch: {},
   async created() {
+        console.log('App');
+
     this.fetchLoggedUser();
-    this.fetchCurrentRnd();
-    
+    this.fetchStandings()
+    this.fetchLeagues()
   }
 };
 </script>
@@ -266,10 +260,10 @@ main {
 
 .main-container {
   width: 90%;
-    background: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;  
+  background: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 </style>

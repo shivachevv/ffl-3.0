@@ -8,12 +8,12 @@
 
     <ul class="navigation">
       <li class="nav-links up" v-for="link in menuLinks" :key="link.title">
-        <router-link v-if="link.path" :to="link.path | routeFilter">
+        <router-link v-if="link.path" :to="link.path">
           {{link.title}}
-          <img
+          <!-- <img
             v-if="link.isMyTeam && link.title !== 'Logout'"
             :src="require(`@/assets/images/team-logos/${link.logo}.png`)"
-          />
+          /> -->
         </router-link>
       </li>
       <li class="nav-links up" v-if="loggedUser">
@@ -35,7 +35,7 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["fetchMenuLinks", "fetchLoggedUser"]),
+    ...mapActions(["fetchLoggedUser", 'fetchMenuLinks']),
     logoutHandler() {
       firebase
         .auth()
@@ -55,12 +55,12 @@ export default {
     this.fetchMenuLinks();
   },
   filters: {
-    routeFilter: function(v) {
-      return v
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-    }
+    // routeFilter: function(v) {
+    //   return v
+    //     .toLowerCase()
+    //     .split(" ")
+    //     .join("-");
+    // }
   }
 };
 </script>

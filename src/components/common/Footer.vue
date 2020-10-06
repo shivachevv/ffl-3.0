@@ -1,17 +1,17 @@
 <template>
-  <footer>
+  <footer v-if="leagues && menuLinks && users">
     <div class="footer-logo">
       <img src="@/assets/images/footer/footer-logo.png" alt />
       <router-link class="up" to="/" target="blank">fantasy legends</router-link>
     </div>
 
-    <div v-for="league in leagues" :key="league.name" :class="`footer-${league.name}`">
+    <div v-for="league in leagues" :key="league.id" :class="`footer-${league.name.toLowerCase()}`">
       <h2 class="up">{{league.name}} league</h2>
       <router-link
         v-for="team in league.teams"
-        :key="team.email"
-        :to="`/team-details/${team.teamName.toLowerCase().split(' ').join('-')}`"
-      >{{team.teamName}}</router-link>
+        :key="team"
+        :to="`/team-details/${users[team].userLogo}`"
+      >{{users[team].userTeam}}</router-link>
     </div>
 
     <div class="footer-cat">
@@ -22,10 +22,10 @@
     <div class="footer-fb">
       <a
         class="up"
-        href="https://www.facebook.com/groups/393007311341533/?ref=group_header"
+        href="https://www.facebook.com/groups/292412975320252"
         target="blank"
       >Follow the legends</a>
-      <a href="https://www.facebook.com/groups/393007311341533/?ref=group_header" target="blank">
+      <a href="https://www.facebook.com/groups/292412975320252" target="blank">
         <img src="@/assets/images/footer/fb.png" alt />
       </a>
     </div>
@@ -42,7 +42,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["leagues", "menuLinks"])
+    ...mapGetters(["leagues", "menuLinks", "users"])
   }
 };
 </script>

@@ -36,16 +36,17 @@
     <div class="team" v-if="rndShow">
       <!------------------ TEAMMATE  ----------------->
       <Teammate
-        v-for="(pl,i) in rndShow.team"
-        :class="pl.pos | playerClassFilter"
-        :player="pl"
-        :isTripple="rndShow.tripple"
+        v-for="(pl,i) in Object.entries(rndShow.team)"
+        :class="pl[0]"
+        :player="players[pl[1]]"
+        :isTripple="rndShow.superCpt === pl[1]"
+        :currentRound="currentRound"
         :key="i"
-        @click.prevent.native="playerPopupHandler(pl)"
+        @click.prevent.native="playerPopupHandler(pl[1])"
       ></Teammate>
 
       <div class="round-total-points up">
-        {{rndShow.total}}
+        {{rndShowTotal}}
         <br />points
       </div>
 
@@ -57,38 +58,45 @@
 <script>
 import Teammate from "./Teammate";
 import TeamHeader from "./TeamHeader";
-import { mapGetters, mapActions } from "vuex";
+import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
   name: "UserTeam",
   components: {
     Teammate,
     TeamHeader,
-    Keypress: () => import('vue-keypress')
+    Keypress: () => import("vue-keypress")
   },
   props: {
     user: {
       type: Object,
       required: true
+    },
+    players: {
+      type: Object,
+      required: true
+    },
+    currentRound: {
+      type: Number,
+      required: true
     }
   },
   data() {
     return {
-      tmpRndShow: ""
+      tmpRndShow: Object.keys(this.user.rounds).length
     };
   },
   computed: {
-    ...mapGetters(["userPts"]),
     isShowingLastRnd() {
-      return this.tmpRndShow === this.userPts.length;
+      return Number(this.tmpRndShow) === Object.keys(this.user.rounds).length;
     },
     isShowingFirstRnd() {
-      return this.tmpRndShow === 1;
+      return Number(this.tmpRndShow) === 1;
     },
     rndShow: {
       get: function() {
-        if (this.userPts) {
-          return this.userPts[this.tmpRndShow - 1];
+        if (this.user) {
+          return this.user.rounds[`r${this.currentRound}`];
         } else {
           return 1;
         }
@@ -96,24 +104,33 @@ export default {
       set: function(v) {
         return (this.tmpRndShow = v);
       }
+    },
+    rndShowTotal() {
+      const total = roundPointsCalculator(
+        this.rndShow,
+        this.tmpRndShow,
+        this.players,
+        false
+      );
+      return total;
     }
   },
   methods: {
-    ...mapActions(["fetchUserPts"]),
     prevRnd() {
       if (this.tmpRndShow > 1) this.tmpRndShow--;
     },
     nextRnd() {
-      if (this.tmpRndShow < this.userPts.length) this.tmpRndShow++;
+      if (this.tmpRndShow < Object.keys(this.user.rounds).length)
+        this.tmpRndShow++;
     },
     playerPopupHandler(p) {
       return this.$emit("playerPopupHandler", p);
     }
   },
   watch: {
-    userPts(nv) {
-      this.tmpRndShow = nv.length;
-    },
+    // userPts(nv) {
+    //   this.tmpRndShow = nv.length;
+    // },
     user(nv) {
       this.fetchUserPts(nv.teamCode);
     }
@@ -123,9 +140,7 @@ export default {
       return v.toLowerCase();
     }
   },
-  created() {
-    this.fetchUserPts(this.user.teamCode);
-  },
+  created() {},
   mounted() {}
 };
 </script>

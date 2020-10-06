@@ -78,7 +78,7 @@ export default {
   name: "MatchPrep",
   components: { Timer },
   props: {
-    logCheck: {
+    isThisLoggedTeam: {
       type: Boolean,
       required: true
     },

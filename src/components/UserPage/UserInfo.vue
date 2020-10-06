@@ -1,12 +1,12 @@
 <template>
-  <div class="user-stats">
+  <div class="user-stats" v-if="standingsStats && user">
     <div class="user-name">
       <img src="@/assets/images/user-page/user-head.png" alt="user-head" />
       <h2 class="up">{{user.userName}}</h2>
     </div>
 
     <div class="league-name">
-      <h2>League {{userLeague}}</h2>
+      <h2>League {{standingsStats.league}}</h2>
     </div>
 
     <div class="info-stat sha">
@@ -26,20 +26,20 @@
       <span class="pts-value up">{{user.favTeam}}</span>
     </div>
     <div class="info-stat sha">
-      <span class="up">Team Nickname</span>
-      <span class="pts-value up">{{user.teamNickname}}</span>
+      <span class="up">Team Motto</span>
+      <span class="pts-value up">{{user.motto}}</span>
     </div>
     <div class="total-pts sha">
       <span class="up">Total points</span>
-      <span class="pts-value">{{totalPoints}} pts</span>
+      <span class="pts-value">{{standingsStats.total}} pts</span>
     </div>
     <div class="last-week-pts sha">
       <span class="up">Last week points</span>
-      <span class="last-week-pts-value">{{lastWeekPts}} pts</span>
+      <span class="last-week-pts-value">{{standingsStats.lastWeek}} pts</span>
     </div>
     <div class="league-pos sha">
       <span class="up">League position</span>
-      <span class="league-pos-value"></span>
+      <span class="league-pos-value">{{standingsStats.currentPos}}</span>
     </div>
     <div class="cup-pos sha">
       <span class="up">Cup status</span>
@@ -49,52 +49,51 @@
     </div>
     <div class="curr-round sha">
       <span class="up">Current round</span>
-      <span class="curr-round-value">Round {{currentRnd}}</span>
+      <span class="curr-round-value">Round {{currentRound}}</span>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "UserInfo",
   props: {
     user: {
       type: Object,
       required: true
+    },
+    currentRound: {
+      type: Number,
+      required: true
     }
   },
   computed: {
-    ...mapGetters(["currentRnd", "userPts", "standings"]),
-    totalPoints() {
-      if (this.userPts) {
-        return this.userPts.reduce((prev, next) => {
-          return Number(prev) + Number(next.total);
-        }, 0);
+    ...mapGetters(["standings", "leagues"]),
+    standingsStats() {
+      if (this.standings && this.currentRound && this.leagues && this.user) {
+        const lastRndStandings = this.standings[`r${this.currentRound}`];
+
+        const userLeagueId = Object.keys(lastRndStandings).filter(leagueId => {
+          if (Object.keys(lastRndStandings[leagueId]).includes(this.user.uid)) {
+
+            return leagueId;
+          }
+        })[0];
+        const userStandingsStats = lastRndStandings[userLeagueId][this.user.uid]
+        return {
+          total: userStandingsStats.total,
+          lastWeek: userStandingsStats.lastRndTotal,
+          currentPos: userStandingsStats.place,
+          league: this.leagues[userLeagueId].name
+        };
       } else {
         return "Loading";
       }
-    },
-    lastWeekPts() {
-      if (this.userPts) {
-        return this.userPts[this.currentRnd - 2].total;
-      } else {
-          return "Loading"
-      }
-    },
-    currentPos() {
-      return "TO IMPLEMENT";
-    },
-    userLeague(){
-        return this.user.teamCode < 11 ? "P E L E" : "M A R A D O N A"
     }
   },
-  methods: {
-    ...mapActions(["fetchStandings"])
-  },
-  created() {
-    this.fetchStandings();
-  }
+  methods: {},
+  created() {}
 };
 </script>
 

@@ -53,11 +53,16 @@ const standingsHelper = (oldStandings, leagues, players, users, currentRound) =>
             return b[1].total - a[1].total
         })
             .forEach((x, i) => {
+                console.log(x);
+                console.log(1);
                 result[leagueId][x[0]].place = i + 1
                 if (oldStandings && !isFirstRnd) {
                     const previousRound = oldStandings[`r${currentRound - 1}`]
+                    console.log(2);
 
                     result[leagueId][x[0]].movement = previousRound[leagueId][x[0]].place - result[leagueId][x[0]].place
+                    console.log(3);
+
                 } else {
                     result[leagueId][x[0]].movement = 0
                 }

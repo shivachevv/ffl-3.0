@@ -17,83 +17,84 @@ import leagues from "../game data/leagues.json";
 Vue.use(VueRouter);
 
 const routes = [{
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login,
-    props: true,
-    beforeEnter(to, from, next) {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          next('/')
-        } else {
-          next()
-        }
-      });
-    }
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: Register,
-    props: true,
-    // beforeEnter(to, from, next) {
-    //   firebase.auth().onAuthStateChanged(user => {
-    //     if (user) {
-    //       next('/')
-    //     } else {
-    //       next()
-    //     }
-    //   });
-    // }
-  },
-  {
-    path: '/team-details/:id',
-    component: UserPage,
-    props: true,
-  },
-  {
-    path: '/transfers/:id',
-    component: () =>
-        import(/* webpackChunkName: "user-transfers" */ "../components/UserPage/UserTransfers/UserTransfers"),
-    name: 'mytransfers',
-    props: true,
-    beforeEnter(to, from, next) {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          const lg1 = leagues["pele"].teams.filter(x => to.params.id === x.teamName.toLowerCase().split(' ').join('-'))[0]
-          const lg2 = leagues["maradona"].teams.filter(x => to.params.id === x.teamName.toLowerCase().split(' ').join('-'))[0]
-          const toEmail = (lg1 ? lg1 : lg2).email
-          if (toEmail === user.email) {
-            next()
-          } else {
-            next('/')
-          }
-        } else {
-          next('/')
-        }
-      });
-    }
-  },
-  {
-    path: '/getallplayers',
-    name: 'getallplayers',
-    component: GetAllPlayers
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    component: AdminPanel,
-  },
-  {
-    path: '*',
-    name: 'not-found',
-    component: NotFound
+  path: "/",
+  name: "Home",
+  component: Home
+},
+{
+  path: '/login',
+  name: 'login',
+  component: Login,
+  props: true,
+  beforeEnter(to, from, next) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        next('/')
+      } else {
+        next()
+      }
+    });
   }
+},
+{
+  path: '/register',
+  name: 'register',
+  component: Register,
+  props: true,
+  beforeEnter(to, from, next) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        next('/')
+      } else {
+        next()
+      }
+    });
+  }
+},
+{
+  path: '/team-details/:id',
+  component: UserPage,
+  props: true,
+  name: "UserPage"
+},
+{
+  path: '/transfers/:id',
+  component: () =>
+    import(/* webpackChunkName: "user-transfers" */ "../components/UserPage/UserTransfers/UserTransfers"),
+  name: 'mytransfers',
+  props: true,
+  beforeEnter(to, from, next) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const lg1 = leagues["pele"].teams.filter(x => to.params.id === x.teamName.toLowerCase().split(' ').join('-'))[0]
+        const lg2 = leagues["maradona"].teams.filter(x => to.params.id === x.teamName.toLowerCase().split(' ').join('-'))[0]
+        const toEmail = (lg1 ? lg1 : lg2).email
+        if (toEmail === user.email) {
+          next()
+        } else {
+          next('/')
+        }
+      } else {
+        next('/')
+      }
+    });
+  }
+},
+{
+  path: '/getallplayers',
+  name: 'getallplayers',
+  component: GetAllPlayers
+},
+{
+  path: '/admin',
+  name: 'admin',
+  component: AdminPanel,
+},
+{
+  path: '*',
+  name: 'not-found',
+  component: NotFound
+}
   // ,
   // {
   //   path: "/about",

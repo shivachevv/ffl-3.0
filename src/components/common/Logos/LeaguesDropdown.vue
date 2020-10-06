@@ -1,6 +1,6 @@
 <template>
   <div class="logo-separator up">
-    <a a href @click.prevent="toggleDropdown">{{ selected }}</a>
+    <a a href @click.prevent="toggleDropdown">{{ leagues[selected].name }}</a>
     <svg viewBox="0 0 1030 638" width="10">
       <path
         d="M1017 68L541 626q-11 12-26 12t-26-12L13 68Q-3 49 6 24.5T39 0h952q24 0 33 24.5t-7 43.5z"
@@ -9,8 +9,8 @@
     </svg>
     <transition name="slide" appear>
       <div class="sub-menu" v-if="dropdownToggle">
-        <div class="menu-item" v-for="(league,i) in leagues" :key="i">
-          <a href @click.prevent="selectedLeagueHandler(league)">{{league}}</a>
+        <div class="menu-item" v-for="league in Object.keys(leagues)" :key="league">
+          <a href @click.prevent="selectedLeagueHandler(league)">{{leagues[league].name}}</a>
         </div>
       </div>
     </transition>
@@ -23,7 +23,7 @@
 export default {
   name: "LeaguesDropdown",
   props: {
-    leagues: Array,
+    leagues: Object,
     selected:String
   },
   data() {

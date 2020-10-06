@@ -89,7 +89,8 @@ export default {
       "fetchPlayers",
       "fetchCurrentRound",
       "fetchUsers",
-      "fetchStandings"
+      "fetchStandings",
+      "fetchLoggedUser"
     ]),
     playerPopupHandler(p) {
       console.log("popup");
@@ -104,7 +105,8 @@ export default {
       "players",
       "currentRound",
       "users",
-      "standings"
+      "standings",
+      "loggedUser"
     ]),
 
     selectedLeagueObj() {
@@ -113,11 +115,14 @@ export default {
     selectedLeague: {
       get: function() {
         if (this.loggedUser && !this.selectedLgTmp) {
-          return this.leagues["pele"].teams.filter(
-            x => x.email === this.loggedUser.info.email
-          )[0]
-            ? "pele"
-            : "maradona";
+          const result = Object.keys(this.leagues).filter(id => {
+            if (this.leagues[id].teams.includes(this.loggedUser.uid)) {
+              return id
+            }
+          })[0]
+
+          // console.log(result);
+          return result;
         } else {
           return this.selectedLgTmp
             ? this.selectedLgTmp
@@ -127,7 +132,11 @@ export default {
       set: function(v) {
         this.selectedLgTmp = v;
       }
-    }
+    },
+    // loggedUserObj(){
+      
+    //   return this.users[this.loggedUser]
+    // }
   },
   watch: {
     leagues(nv) {
@@ -181,6 +190,7 @@ export default {
     }
   },
   async created() {
+    console.log('home');
     if (!this.leagues) {
       this.$vs.loading();
       this.fetchLeagues();
@@ -200,6 +210,10 @@ export default {
     if (!this.standings) {
       this.$vs.loading();
       this.fetchStandings();
+    }
+    if (!this.loggedUser) {
+      this.$vs.loading();
+      this.fetchLoggedUser();
     }
     // this.fetchCurrentRound();
     // this.fetchUsers();

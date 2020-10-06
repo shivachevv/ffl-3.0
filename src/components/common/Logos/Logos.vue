@@ -1,21 +1,21 @@
 <template>
-  <section class="logos-container">
-    <div v-if="leagueSelected1">
-      <div class="logo" v-for="team in leagueSelected1" :key="team.email">
-        <router-link :to="`/team-details/${team.teamName.toLowerCase().split(' ').join('-')}`">
-          <img :src="require(`@/assets/images/team-logos/${team.teamLogo}.png`)" alt="Team logo" />
+  <section class="logos-container" v-if="selectedLeague && users && loggedUser">
+    <div >
+      <div class="logo" v-for="team in leagueSelected1stHalf" :key="team">
+        <router-link :to="`/team-details/${users[team].userLogo}`">
+          <img :src="require(`@/assets/images/team-logos/${users[team].userLogo}.png`)" alt="Team logo" />
         </router-link>
       </div>
 
-      <!-- <Half :leagueSelected="leagueSelected2"></Half> -->
-      <LeaguesDropdown :leagues="menuLeagues" :selected="selectedLeague" @selectedLeague="selectedLeague = $event"></LeaguesDropdown>
-      <div class="logo" v-for="team in leagueSelected2" :key="team.email">
-        <router-link :to="`/team-details/${team.teamName.toLowerCase().split(' ').join('-')}`">
-          <img :src="require(`@/assets/images/team-logos/${team.teamLogo}.png`)" alt="Team logo" />
+      <!-- <Half :leagueSelected="leagueSelected1stHalf"></Half> -->
+      <LeaguesDropdown :leagues="this.leagues" :selected="selectedLeague" @selectedLeague="selectedLeague = $event"></LeaguesDropdown>
+      <div class="logo" v-for="team in leagueSelected2ndHalf" :key="team">
+        <router-link :to="`/team-details/${users[team].userLogo}`">
+          <img :src="require(`@/assets/images/team-logos/${users[team].userLogo}.png`)" alt="Team logo" />
         </router-link>
       </div>
 
-      <!-- <Half :leagueSelected="leagueSelected1"></Half> -->
+      <!-- <Half :leagueSelected="leagueSelected1stHalf"></Half> -->
     </div>
   </section>
 </template>
@@ -32,32 +32,38 @@ export default {
   },
   data() {
     return {
-      menuLeagues: ["pele", "maradona"],
       selectedLgTmp: ""
     };
   },
   computed: {
-    ...mapGetters(["leagues", "loggedUser"]),
-    leagueSelected1() {
+    ...mapGetters(["leagues", "loggedUser", "users"]),
+    // menuLeagues(){
+
+    // }
+    leagueSelected1stHalf() {
       return this.leagues[this.selectedLeague].teams.filter((x, i) => {       
         return i < this.leagues[this.selectedLeague].teams.length / 2;
       });
     },
-    leagueSelected2() {
+    leagueSelected2ndHalf() {
       return this.leagues[this.selectedLeague].teams.filter((x, i) => {
         return i >= this.leagues[this.selectedLeague].teams.length / 2;
       });
     },
     selectedLeague: {
       get: function() {        
-        if (this.loggedUser && !this.selectedLgTmp) {
-          return this.leagues["pele"].teams.filter(
-            x => x.email === this.loggedUser.info.email
-          )[0]
-            ? "pele"
-            : "maradona";
+        if (this.loggedUser && !this.selectedLgTmp && this.leagues) {
+          return Object.values(this.leagues).filter(x => {
+            if ( x.teams.includes(this.loggedUser.uid)) {
+              return x.id
+            }
+          })[0].id
         } else {
-          return this.selectedLgTmp ? this.selectedLgTmp : "pele";
+          if (this.leagues){
+            return this.selectedLgTmp ? this.selectedLgTmp : Object.keys(this.leagues)[0];
+          } else {
+            return undefined
+          }
         }
       },
       set: function(v) {

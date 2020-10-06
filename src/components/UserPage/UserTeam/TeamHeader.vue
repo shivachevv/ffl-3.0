@@ -1,13 +1,13 @@
 <template>
   <div class="team-header">
     <h1 class="team-name up">
-      {{user.teamName}}
+      {{user.userTeam}}
       <div class="logo-cont">
         <div class="color-1"></div>
         <div class="color-2">
           <img
-            :src="require(`@/assets/images/team-logos/${user.teamLogo}.png`)"
-            :alt="`${user.teamLogo} logo`"
+            :src="require(`@/assets/images/team-logos/${user.userLogo}.png`)"
+            :alt="`${user.userLogo} logo`"
           />
         </div>
         <div class="color-1"></div>

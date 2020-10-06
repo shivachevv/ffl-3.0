@@ -1,29 +1,36 @@
 <template>
-  <main>
+  <main v-if="users && loggedUser && currentRound && players">
     <div class="main-container">
       <!---------------- USER TEAM SECTION -------------------------------------->
-      <UserTeam :user="user" @playerPopupHandler="playerPopupHandler($event)"></UserTeam>
+      <UserTeam
+        :players="players"
+        :user="user"
+        :currentRound="currentRound"
+        @playerPopupHandler="playerPopupHandler($event)"
+      ></UserTeam>
 
       <!---------------- USER DETAILS -------------------------------------->
       <section class="user-details">
-        <UserInfo :user="user"></UserInfo>
-        
+        <UserInfo :user="user" :currentRound="currentRound"></UserInfo>
+
         <!---------------- MATCH PREPARATION -------------------------------------->
 
-        <MatchPrep :logCheck="logCheck" :owner="user.teamName" ></MatchPrep>
+        <MatchPrep :isThisLoggedTeam="isThisLoggedTeam" :owner="user.teamName"></MatchPrep>
 
         <!-- TRANSFERS INFORMATION -->
 
-        <TeamTransfers v-if="logCheck" :ownerId="user.teamCode" :owner="user.teamName"></TeamTransfers>
+        <TeamTransfers v-if="isThisLoggedTeam" :ownerId="user.teamCode" :owner="user.teamName"></TeamTransfers>
       </section>
     </div>
     <transition name="slide-left" mode="out-in">
-      <PlayerPopup
-        v-if="popupShow"
-        :popupPlayer="popupPlayer"
-        :popupShow="popupShow"
-        @popupClose="popupShow = $event"
-      ></PlayerPopup>
+      <vs-popup
+        class="holamundo"
+        :title="`${popupPlayer.name} Information`"
+        :active.sync="popupShow"
+        v-if="popupPlayer"
+      >
+        <PlayerPopup :player="popupPlayer" />
+      </vs-popup>
     </transition>
   </main>
 </template>
@@ -34,7 +41,7 @@ import UserInfo from "./UserInfo";
 import MatchPrep from "./MatchPrep";
 import TeamTransfers from "./TeamTransfers";
 import PlayerPopup from "../Popup/PlayerPopup";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "UserPage",
@@ -45,6 +52,7 @@ export default {
     PlayerPopup,
     TeamTransfers
   },
+  props: {},
   data() {
     return {
       popupShow: false,
@@ -52,33 +60,43 @@ export default {
     };
   },
   methods: {
+    ...mapActions([
+      // "fetchLeagues",
+      "fetchPlayers",
+      "fetchCurrentRound",
+      "fetchUsers"
+      // "fetchStandings",
+      // "fetchLoggedUser"
+    ]),
     playerPopupHandler(p) {
       this.popupShow = true;
-      this.popupPlayer = p;
+      this.popupPlayer = this.players[p];
     }
   },
   computed: {
-    ...mapGetters(["leagues", "loggedUser"]),
-    logCheck(){
-      return this.user === this.loggedUser.info
+    ...mapGetters(["users", "loggedUser", "currentRound", "players"]),
+    isThisLoggedTeam() {
+      return this.user.uid === this.loggedUser.uid;
     },
     user() {
-      let a = this.leagues["pele"].teams.filter(
-        x =>
-          x.teamName
-            .toLowerCase()
-            .split(" ")
-            .join("-") === this.$route.params.id
-      )[0];
-      let b = this.leagues["maradona"].teams.filter(
-        x =>
-          x.teamName
-            .toLowerCase()
-            .split(" ")
-            .join("-") === this.$route.params.id
-      )[0];
-      return a ? a : b;
+      if (this.users) {
+        const user = Object.values(this.users).filter(x => {
+          const routeTeam = this.$route.params.id;
+          if (routeTeam === x.userLogo) {
+            return x;
+          }
+        })[0];
+
+        return user;
+      } else {
+        return undefined;
+      }
     }
+  },
+  created() {
+    this.fetchUsers();
+    this.fetchCurrentRound();
+    this.fetchPlayers();
   }
 };
 </script>

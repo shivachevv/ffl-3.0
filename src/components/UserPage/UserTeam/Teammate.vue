@@ -8,16 +8,16 @@
     </div>
     <div class="player-stats-cont">
       <div class="name-cont">
-        <span class="pos">{{player.pos}}</span>
+        <span class="pos">{{player.position}}</span>
         <span class="name">{{player.name}}</span>
         <a href="#" class="player-stats">
           <img src="@/assets/images/user-page/computer.png" alt />
         </a>
       </div>
-      <div class="pts">{{player.pts}}</div>
+      <div class="pts">{{player.points[`r${currentRound}`].roundPts}}</div>
     </div>
-    <span v-if="player.isCpt && !isTripple" class="captain">C</span>
-    <span v-else-if="player.isCpt && isTripple" class="captain">SC</span>
+    <!-- <span v-if="player.isCpt && !isTripple" class="captain">C</span>
+    <span v-else-if="player.isCpt && isTripple" class="captain">SC</span> -->
   </div>
 </template>
 
@@ -26,6 +26,10 @@
 export default {
   name: "Teammate",
   props: {
+    currentRound: {
+      type: Number,
+      required: true
+    },
     player: {
       type: Object,
       required: true
@@ -40,7 +44,8 @@ export default {
   computed: {},
   methods: {},
   watch: {},
-  created() {}
+  created() {
+  }
 };
 </script>
 

@@ -157,7 +157,7 @@ export default {
       users: undefined,
       standings: undefined,
       error: false,
-      errorMsg: ""
+      errorMsg: "",
     };
   },
   methods: {
@@ -320,8 +320,9 @@ export default {
         body: JSON.stringify(payload)
       })
         .then(response => response.json())
-        .then(async () => {
+        .then(async (data) => {
           console.log("Success!");
+          this.standings = data
         })
         .catch(err => {
           console.error("Error:", err);
