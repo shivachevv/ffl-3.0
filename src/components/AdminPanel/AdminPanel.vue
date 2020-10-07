@@ -83,6 +83,14 @@
             :class="{selected: chosenComponent === 'CupSquadSelect'}"
           >CupSquadSelect</button>
         </div>
+        <a href class="menu-item-section" @click.prevent="showSectionHandler('matching')">Matching</a>
+        <div class="admin-menu-item" v-if="showMatching">
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'Matching'}"
+          >Matching</button>
+        </div>
       </div>
     </div>
     <div class="admin-details">
@@ -105,6 +113,7 @@ import Leagues from "./Leagues/Leagues";
 import H2HLeague from "./H2HLeague/H2HLeague";
 import CupGroupsAndRounds from "./Cup/CupGroupsAndRounds";
 import CupSquadSelect from "./Cup/CupSquadSelect";
+import Matching from "./Matching/Matching";
 
 export default {
   name: "AdminPanel",
@@ -119,7 +128,8 @@ export default {
     Leagues,
     H2HLeague,
     CupGroupsAndRounds,
-    CupSquadSelect
+    CupSquadSelect,
+    Matching
   },
   data() {
     return {
@@ -130,7 +140,8 @@ export default {
       showTransfers: false,
       showLeagues: false,
       showH2H: false,
-      showCup: false
+      showCup: false,
+      showMatching: false
     };
   },
   methods: {
@@ -152,6 +163,8 @@ export default {
         this.showH2H = !this.showH2H;
       } else if (s === "cup") {
         this.showCup = !this.showCup;
+      } else if (s === "matching") {
+        this.showMatching = !this.showMatching;
       }
     }
   },

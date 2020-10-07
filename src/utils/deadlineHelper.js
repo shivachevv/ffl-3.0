@@ -9,6 +9,6 @@ function getNextDayOfTheWeek(dayName, excludeToday = true, refDate = new Date())
 }
 
 export default {
-    next: getNextDayOfTheWeek("Wed").toLocaleString(),
+    next: getNextDayOfTheWeek("tue").toLocaleString(),
     now: new Date().toLocaleString()
 }

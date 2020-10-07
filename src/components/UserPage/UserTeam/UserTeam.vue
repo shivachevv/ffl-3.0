@@ -131,9 +131,9 @@ export default {
     // userPts(nv) {
     //   this.tmpRndShow = nv.length;
     // },
-    user(nv) {
-      this.fetchUserPts(nv.teamCode);
-    }
+    // user(nv) {
+    //   this.fetchUserPts(nv.teamCode);
+    // }
   },
   filters: {
     playerClassFilter: function(v) {

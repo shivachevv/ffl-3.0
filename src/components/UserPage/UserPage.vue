@@ -1,5 +1,5 @@
 <template>
-  <main v-if="users && loggedUser && currentRound && players">
+  <main v-if="user && users && loggedUser && currentRound && players">
     <div class="main-container">
       <!---------------- USER TEAM SECTION -------------------------------------->
       <UserTeam
@@ -15,11 +15,17 @@
 
         <!---------------- MATCH PREPARATION -------------------------------------->
 
-        <MatchPrep :isThisLoggedTeam="isThisLoggedTeam" :owner="user.teamName"></MatchPrep>
+        <MatchPrep
+          :isThisLoggedTeam="isThisLoggedTeam"
+          :owner="user.userTeam"
+          :user="user"
+          :currentRound="currentRound"
+          :players="players"
+        ></MatchPrep>
 
         <!-- TRANSFERS INFORMATION -->
 
-        <TeamTransfers v-if="isThisLoggedTeam" :ownerId="user.teamCode" :owner="user.teamName"></TeamTransfers>
+        <TeamTransfers v-if="isThisLoggedTeam" :ownerId="user.uid" :owner="user.userTeam"></TeamTransfers>
       </section>
     </div>
     <transition name="slide-left" mode="out-in">
@@ -62,7 +68,7 @@ export default {
   methods: {
     ...mapActions([
       // "fetchLeagues",
-      "fetchPlayers",
+      // "fetchPlayers",
       "fetchCurrentRound",
       "fetchUsers"
       // "fetchStandings",
@@ -96,7 +102,7 @@ export default {
   created() {
     this.fetchUsers();
     this.fetchCurrentRound();
-    this.fetchPlayers();
+    // this.fetchPlayers();
   }
 };
 </script>
@@ -106,6 +112,22 @@ export default {
 // @include media("≥phone", "≤desktop") {
 //   background-color: red;
 // }
+.main-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .user-details {
+    height: fit-content;
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 0 0 20px;
+  }
+}
 
 .fade-enter-active,
 .fade-leave-active {
@@ -138,15 +160,5 @@ export default {
 .slide-right-enter {
   opacity: 0;
   transform: translate(-2em, 0);
-}
-
-.user-details {
-  height: fit-content;
-  width: 35%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0 0 0 20px;
 }
 </style>

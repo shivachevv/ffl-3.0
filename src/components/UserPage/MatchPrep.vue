@@ -1,78 +1,121 @@
 <template>
-  <div class="preparation sha">
+  <div class="preparation sha" v-if="userRoundStats">
     <div class="prep-header up">
       <h2>Next round preparation</h2>
     </div>
     <div class="deadline up">
-      <span>Deadline for round {{currentRnd + 1}}</span>
+      <span>Deadline for round {{ currentRound + 1 }}</span>
     </div>
     <div class="countdown-cont">
       <img src="@/assets/images/user-page/swords.png" alt="countdown-img" />
-      <Timer :starttime="starttime" :endtime="endtime" :trans="trans" :endtimeRaw="endtimeRaw"></Timer>
+      <Timer
+        :starttime="starttime"
+        :endtime="endtime"
+        :trans="trans"
+        :endtimeRaw="endtimeRaw"
+      ></Timer>
     </div>
     <div class="captain-selected">
-      <h2 v-if="captainSelected && logCheck">
-        You have selected {{captainSelected.captain.toUpperCase()}}
-        <br />for your captain!
+      <h2 v-if="isThisLoggedTeam">Next Round Captains:</h2>
+      <h2 v-if="isThisLoggedTeam">
+        Captain:
+        {{
+          userRoundStats.cpt
+            ? players[userRoundStats.cpt].name
+            : "Not Selected!"
+        }}
       </h2>
-      <h2 v-if="!captainSelected && logCheck">You have not yet selected your captain for this round!</h2>
+      <h2 v-if="isThisLoggedTeam">
+        Vice Captain:
+        {{
+          userRoundStats.viceCpt
+            ? players[userRoundStats.viceCpt].name
+            : "Not Selected!"
+        }}
+      </h2>
+      <h2 v-if="isThisLoggedTeam">
+        Super Captain:
+        {{ userRoundStats.superCpt ? "Activated!" : "Not Activated!" }}
+      </h2>
     </div>
 
     <!---------------- CAPTAIN SELECTION -------------------------------------->
 
-    <form v-if="logCheck" @submit.prevent="captainHandler">
-      <div class="row1">
-        <div class="captain-select">
-          <div>
-            <img
-              v-if="!superCpt"
-              src="@/assets/images/user-page/cpt.png"
-              alt="captain-img"
-              id="cpt-image"
-            />
-            <img v-else src="@/assets/images/user-page/cpt1.png" alt="captain-img" id="cpt-image" />
-            <select class="hover-form up" name="captain" v-model="captain" required v-if="userPts">
-              <option value hidden>Choose your captain</option>
-              <option
-                v-for="(p,i) of userPts[currentRnd - 1].team"
-                :key="i"
-                :value="p.name"
-              >{{p.name}}</option>
-            </select>
-          </div>
-          <div class="form-down">
-            <div>
-              <input
-                class="check"
-                type="checkbox"
-                name="superCpt"
-                id="superCpt"
-                v-model="isSuperCpt"
-                @click="addSuperCpt()"
-              />
-              <label for="superCpt" class="up">SUPER CAPTAIN</label>
-            </div>
-            <button class="button" type="submit">Submit</button>
-          </div>
+    <form
+      class="captain-select"
+      v-if="isThisLoggedTeam"
+      @submit.prevent="captainHandler"
+    >
+      <div>
+        <img
+          v-if="!nextRnd.superCpt"
+          src="@/assets/images/user-page/cpt.png"
+          alt="captain-img"
+          id="cpt-image"
+        />
+        <img
+          v-else
+          src="@/assets/images/user-page/cpt1.png"
+          alt="captain-img"
+          id="cpt-image"
+        />
+
+        <vs-alert :active.sync="cptError" closable close-icon="close"
+          >Captain and Vice Captain cannot be the same player!</vs-alert
+        >
+
+        <vs-select label="Choose your Captain!" v-model="nextRnd.cpt" icon>
+          <vs-select-item
+            :value="p"
+            :text="players[p].name"
+            v-for="(p, i) of userRoundStats.team"
+            :key="i"
+          />
+        </vs-select>
+        <vs-select
+          label="Choose your Vice Captain!"
+          v-model="nextRnd.viceCpt"
+          icon
+        >
+          <vs-select-item
+            :value="p"
+            :text="players[p].name"
+            v-for="(p, i) of userRoundStats.team"
+            :key="i"
+          />
+        </vs-select>
+      </div>
+      <div class="form-down">
+        <div>
+          <input
+            class="check"
+            type="checkbox"
+            name="superCpt"
+            id="superCpt"
+            v-model="nextRnd.superCpt"
+          />
+          <label for="superCpt" class="up">SUPER CAPTAIN</label>
         </div>
+        <vs-button color="#59A95D" type="relief" size="normal" button="submit"
+          >SUBMIT</vs-button
+        >
       </div>
     </form>
     <!---------------- CAPTAIN SELECTION END -------------------------------------->
 
-    <div v-if="!logCheck" class="please-login">
+    <div v-if="!isThisLoggedTeam" class="please-login">
       <img src="@/assets/images/user-page/sad-face.png" alt />
-      <h2>
-        You should be the coach of {{owner}}
-        <br />to view this panel!
-      </h2>
+      <h2>You should be the coach of {{ owner }} <br />to view this panel!</h2>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 import Timer from "./Timer";
 import deadline from "../../utils/deadlineHelper";
+import { mapActions } from "vuex";
+import { DATA_URL } from "../../common";
 
 export default {
   name: "MatchPrep",
@@ -84,6 +127,18 @@ export default {
     },
     owner: {
       type: String,
+      required: true
+    },
+    user: {
+      type: Object,
+      required: true
+    },
+    players: {
+      type: Object,
+      required: true
+    },
+    currentRound: {
+      type: Number,
       required: true
     }
   },
@@ -106,56 +161,106 @@ export default {
           upcoming: ""
         }
       },
-      CAPTAINS_URL: "https://ffl-3-92418.firebaseio.com/captains-display",
-      superCpt: false,
-      captain: "",
-      isSuperCpt: false,
-      captainSelected: ""
+      nextRnd: {
+        cpt: "",
+        viceCpt: "",
+        superCpt: false
+      },
+      cptError: false
     };
   },
   computed: {
-    ...mapGetters(["userPts", "currentRnd"]),
-    updatedURL() {
-      return `${this.CAPTAINS_URL}/${this.owner
-        .toLowerCase()
-        .split(" ")
-        .join("-")}/${this.currentRnd + 1}.json`;
+    userRoundStats() {
+      if (this.user && this.currentRound) {
+        return this.user.rounds[`r${this.currentRound}`].nextRndInfo;
+      } else {
+        return undefined;
+      }
     }
   },
   methods: {
+    ...mapActions(["fetchUsers"]),
     addSuperCpt() {
       return (this.superCpt = !this.superCpt);
     },
+    mergeCaptains(_old, _new) {
+      let result = {};
+      Object.keys(_old).forEach(atttr => {
+        if (_new[atttr]) {
+          result[atttr] = _new[atttr];
+        } else {
+          result[atttr] = _old[atttr];
+        }
+        result["superCpt"] = _new["superCpt"];
+      });
+      return result;
+    },
     captainHandler() {
-      let data = {
-        captain: this.captain,
-        isSuper: this.isSuperCpt,
-        updatedCpt: new Date()
-      };
-      fetch(this.updatedURL, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-        .then(x => x.json())
-        .then(x => {
-          this.captainSelected = x;
+      const merged = this.mergeCaptains(this.userRoundStats, this.nextRnd);
+      if (merged.cpt !== merged.viceCpt) {
+        return this.$vs.dialog({
+          color: "success",
+          title: "Confirm Captains",
+          text: this.showSuccessMsg(merged),
+          accept: () => this.fetchCaptains(merged)
+        });
+      } else {
+        return this.$vs.dialog({
+          color: "danger",
+          title: "Please change Captain and ViceCaptain!",
+          text: "Captain and Vice Captain cannot be the same player!"
+        });
+      }
+    },
+    showSuccessMsg({ cpt, viceCpt, superCpt }) {
+      return `Are you sure you want to update next round team:
+             Captain: ${cpt ? this.players[cpt].name : "not selected"},
+             Vice Captain: ${
+               viceCpt ? this.players[viceCpt].name : "not selected"
+             },
+             Super Captain: ${superCpt ? "activated:" : "not activated"}?`;
+    },
+    fetchCaptains(payload) {
+      const { uid } = this.user;
+      const round = this.currentRound;
+      return fetch(
+        `${DATA_URL}users/${uid}/rounds/r${round}/nextRndInfo.json`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
+      )
+        .then(response => response.json())
+        .then(async () => {
+          console.log("Success:");
+          this.$vs.loading();
+          await this.fetchUsers();
+          this.$vs.loading.close();
         })
-        .catch(err => {
-          console.log(err);
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
         });
     }
   },
   watch: {
-    async updatedURL() {
-      this.captainSelected = await fetch(this.updatedURL).then(x => x.json());
+    "nextRnd.cpt": function(nv) {
+      if (nv === this.nextRnd.viceCpt) {
+        this.cptError = true;
+      }
+    },
+    "nextRnd.viceCpt": function(nv) {
+      if (nv === this.nextRnd.cpt) {
+        this.cptError = true;
+      }
     }
   },
-  async created() {
-    this.captainSelected = await fetch(this.updatedURL).then(x => x.json());
-  }
+  async created() {}
 };
 </script>
 
@@ -163,6 +268,17 @@ export default {
 <style scoped lang="scss">
 /********************************************************
 ***************   MATCH PREPARATION   ******************/
+// .con-vs-alert-primary {
+//   width: 98%;
+//   margin: 10px;
+//   background-color: #e5000059;
+//   color: white;
+
+//   .con-vs-alert-primary .con-x {
+//     background-color: #3b454b;
+//     color: #fff;
+//   }
+// }
 
 .preparation {
   width: 100%;
