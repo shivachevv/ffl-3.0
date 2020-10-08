@@ -27,7 +27,7 @@
       </thead>
       <tbody>
         <router-link
-          :to="users[t[0]].userLogo"
+          :to="`team-details/${users[t[0]].userLogo}`"
           tag="tr"
           :class="{first : i === 0, secthi : i === 1 || i === 2, grey : i > 2 }"
           v-for="(t,i) in Object.entries(standings[`r${currentRound}`][selectedLeagueObj.id])"

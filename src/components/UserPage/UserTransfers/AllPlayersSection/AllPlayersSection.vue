@@ -2,7 +2,10 @@
   <section class="user-tr-cont">
     <!-- HEADER -->
     <div class="user-tr-header">
-      <img src="@/assets/images/user-transfers/transfers-head.png" alt="user-head" />
+      <img
+        src="@/assets/images/user-transfers/transfers-head.png"
+        alt="user-head"
+      />
       <h2 class="up">Player Selection</h2>
     </div>
 
@@ -14,18 +17,36 @@
       </div>
 
       <div class="elements-cont" v-if="!selectedLeague">
-        <div class="league" v-for="(l,i) in leagues" :key="i" @click="selectLeagueHandler(l)">
-          <img :src="require(`@/assets/images/user-transfers/leagues/${l}.png`)" alt="league" />
-          <h3 class="league up">{{l.split('_').join(' ')}}</h3>
+        <div
+          class="league"
+          v-for="(l, i) in leagues"
+          :key="i"
+          @click="selectLeagueHandler(l)"
+        >
+          <img
+            :src="
+              `http://ff-legends.com/team-logos/${l
+                .toLowerCase()
+                .split(' ')
+                .join('-')}.png`
+            "
+            alt="league"
+          />
+          <h3 class="league up">{{ l.split("_").join(" ") }}</h3>
         </div>
       </div>
       <div v-if="selectedLeague" class="selected">
         <img src="@/assets/images/user-transfers/triangle.png" alt="triangle" />
         <img
-          :src="require(`@/assets/images/user-transfers/leagues/${selectedLeague}.png`)"
+          :src="
+            `http://ff-legends.com/team-logos/${selectedLeague
+              .toLowerCase()
+              .split(' ')
+              .join('-')}.png`
+          "
           alt="league"
         />
-        <h3 class="up">{{selectedLeague.split('_').join(' ')}}</h3>
+        <h3 class="up">{{ selectedLeague.split("_").join(" ") }}</h3>
         <a @click.prevent="deselectLeague">
           <img src="@/assets/images/user-transfers/close.png" alt />
         </a>
@@ -41,21 +62,42 @@
       </div>
 
       <div class="elements-cont" v-if="!selectedTeam && selectedLeague">
-        <div class="team" v-for="(t,i) in teams" :key="i" @click="selectTeamHandler(t)">
+        <div
+          class="team"
+          v-for="(t, i) in teams"
+          :key="i"
+          @click="selectTeamHandler(t)"
+        >
           <img
-            :src="require(`@/assets/images/user-transfers/teams/${selectedLeague}/${t}.png`)"
+            :src="
+              `http://ff-legends.com/team-logos/${selectedLeague
+                .toLowerCase()
+                .split(' ')
+                .join('-')}/${t
+                .toLowerCase()
+                .split(' ')
+                .join('-')}.png`
+            "
             alt="league"
           />
-          <h3 class="league up">{{t.split('_').join(' ')}}</h3>
+          <h3 class="league up">{{ t.split("_").join(" ") }}</h3>
         </div>
       </div>
       <div v-if="selectedTeam" class="selected">
         <img src="@/assets/images/user-transfers/triangle.png" alt="triangle" />
         <img
-          :src="require(`@/assets/images/user-transfers/teams/${selectedLeague}/${selectedTeam}.png`)"
-          alt="league"
+          :src="
+            `http://ff-legends.com/team-logos/${selectedLeague
+              .toLowerCase()
+              .split(' ')
+              .join('-')}/${selectedTeam
+              .toLowerCase()
+              .split(' ')
+              .join('-')}.png`
+          "
+          alt="team"
         />
-        <h3 class="up">{{selectedTeam.split('_').join(' ')}}</h3>
+        <h3 class="up">{{ selectedTeam.split("_").join(" ") }}</h3>
         <a @click.prevent="deselectTeam">
           <img src="@/assets/images/user-transfers/close.png" alt />
         </a>
@@ -77,26 +119,43 @@
         </div>
         <div
           class="player"
-          :class="{takenplayer: !!p[userLeague], selectedplayer: transferedIn.includes(p)}"
-          v-for="(p,i) in playersToShow"
+          :class="{
+            takenplayer: !p.available,
+            takenplayer: positionIsNotNeeded(transferedOutInfo, p.position),
+            selectedplayer: transferedIn.includes(p)
+          }"
+          v-for="(p, i) in players"
           :key="i"
           @click="selectPlayerHandler(p)"
         >
-          <h3 class="pl-name">{{p.name}}</h3>
-          <h3 class="pl-pos">{{p.pos}}</h3>
-          <h3 class="pl-total">{{p.total}} pts</h3>
+          <h3 class="pl-name">{{ p.name }}</h3>
+          <h3 class="pl-pos">{{ p.position }}</h3>
+          <h3 class="pl-total">{{ playerTotal(p) }} pts</h3>
         </div>
       </div>
     </div>
     <div class="buttons-cont">
-      <a class="clear-transfers-in up" @click.prevent="clearTransfersIn">Clear All<br>Transfers In</a>
-      <a class="submit-transfers up" @click.prevent="submitTransfers">Submit<br>Transfers</a>
+      <vs-button
+        color="#b28a8b"
+        button="submit"
+        type="relief"
+        size="large"
+        @click.prevent="clearTransfersIn"
+        >Clear All Transfers In</vs-button>
+      
+      <vs-button
+        color="#59A95D"
+        button="submit"
+        type="relief"
+        size="large"
+        @click.prevent="submitTransfers"
+        >Submit Transfers</vs-button>
     </div>
   </section>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+// import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "AllPlayersSection",
@@ -111,6 +170,10 @@ export default {
     transferedIn: {
       type: Array,
       required: true
+    },
+    playersCathegorized: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -119,78 +182,56 @@ export default {
       selectedTeam: ""
     };
   },
-  watch: {
-    allPlayersData(nv) {
-      if (nv) {
-        // console.log("ready", new Date());
-        this.$vs.loading.close();
-      }
-    }
-  },
+  watch: {},
   computed: {
-    ...mapGetters(["allPlayersData"]),
     userLeague() {
       return this.user.teamCode < 11 ? "league1" : "league2";
     },
     leagues() {
-      return Object.keys(this.allPlayersData);
+      return Object.keys(this.playersCathegorized);
     },
     teams() {
       if (this.selectedLeague) {
-        return this.allPlayersData[this.selectedLeague]
-          .filter(x => {
-            if (x) {
-              return x;
-            }
-          })
-          .map(x => {
-            return Object.keys(x)[0];
-          });
+        return Object.keys(this.playersCathegorized[this.selectedLeague]);
       } else {
         return "";
       }
     },
     players() {
       if (this.selectedLeague && this.selectedTeam) {
-        const teamPlayers = this.allPlayersData[this.selectedLeague].filter(
-          x => {
-            if (x) {
-              return Object.keys(x)[0] === this.selectedTeam;
-            }
-          }
-        )[0];
-        return Object.values(teamPlayers)[0];
+        return Object.values(
+          this.playersCathegorized[this.selectedLeague][this.selectedTeam]
+        );
       } else {
         return "";
       }
-    },
-    playersToShow() {
-      if (this.players.length) {
-        return this.players
-          .filter(x => {
-            const tmp = Object.keys(x)[0];
-            if (this.positions.includes(tmp)) {
-              return x[tmp];
-            } else if (this.positions.length === 0) {
-              return x[tmp];
-            }
-          })
-          .map(x => {
-            return x[Object.keys(x)[0]];
-          })
-          .flat(1);
-      } else return "";
-    },
-    positions() {
-      if (this.transferedOutInfo.length) {
-        return this.transferedOutInfo.map(x => {
-          return x.pos.substring(0, 2).toLowerCase();
-        });
-      } else return "";
     }
   },
   methods: {
-    ...mapActions(["fetchAllPlayersData"]),
+    positionIsNotNeeded(transfersOut, position) {
+      if (transfersOut.length) {
+        return !transfersOut
+          .map(player => {
+            return player.position;
+          })
+          .includes(position);
+      } else {
+        return false;
+      }
+    },
+    playerTotal(p) {
+      const result = Object.keys(p.points).reduce((acc, round) => {
+        const total = p.points[round].roundPts;
+        return acc + total;
+      }, 0);
+      return result;
+    },
+    linkify(v) {
+      return v
+        .toLowerCase()
+        .split(" ")
+        .join("-");
+    },
     selectLeagueHandler(l) {
       this.selectedLeague = l;
     },
@@ -205,9 +246,10 @@ export default {
       return (this.selectedTeam = "");
     },
     selectPlayerHandler(p) {
+      // console.log(p);
       if (
         this.transferedIn.length < this.transferedOutInfo.length &&
-        !p[this.userLeague]
+        p.available
       ) {
         return this.$emit("makeTransferIn", p);
       } else if (this.transferedIn.includes(p)) {
@@ -221,11 +263,7 @@ export default {
       return this.$emit("submitTransfers");
     }
   },
-  created() {
-    // console.log("created", new Date());
-    this.$vs.loading();
-    this.fetchAllPlayersData();
-  }
+  created() {}
 };
 </script>
 

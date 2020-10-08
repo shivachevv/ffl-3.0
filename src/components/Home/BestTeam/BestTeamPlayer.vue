@@ -1,7 +1,7 @@
 <template>
   <div class="player-container" v-if="player" @click.prevent="playerPopupHandler(player)">
     <h3 class="pos">{{player.position}}</h3>
-    <img :src="`http://ff-legends.com/images/teamkits/${player.shirt}.png`" alt="Player" />
+    <img :src="`http://ff-legends.com/team-kits/${player.shirt}.png`" alt="Player" />
     <h3 class="name">{{player.name}} : {{player.points[`r${currentRound - 1}`].roundPts}} pts</h3>
     <h3 class="team">{{player.club}}</h3>
   </div>

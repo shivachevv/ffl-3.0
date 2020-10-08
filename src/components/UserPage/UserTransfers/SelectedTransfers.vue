@@ -1,20 +1,24 @@
 <template>
   <div class="transfers-container">
     <div class="tr-cont">
-      <span
-        class="transfers-in"
-        v-for="(t,i) in transferedIn"
-        :key="i"
-      >{{t.name}}{{i === transferedIn.length - 1 ? "" : ", "}}</span>
-      <img class="green" src="@/assets/images/teamkits/tr-green.png" alt />
+      <span class="transfers-in" v-for="(t, i) in transferedIn" :key="i"
+        >{{ t.name }}{{ i === transferedIn.length - 1 ? "" : ", " }}</span
+      >
+      <img
+        class="green"
+        :src="`http://ff-legends.com/team-kits/tr-green.png`"
+        alt
+      />
     </div>
     <div class="tr-cont">
-      <span
-        class="transfers-in"
-        v-for="(t,i) in transferedOut"
-        :key="i"
-      >{{t.name}}{{i === transferedOut.length - 1 ? "" : ", "}}</span>
-      <img class="red" src="@/assets/images/teamkits/tr-red.png" alt />
+      <span class="transfers-in" v-for="(t, i) in transferedOut" :key="i"
+        >{{ t.name }}{{ i === transferedOut.length - 1 ? "" : ", " }}</span
+      >
+      <img
+        class="green"
+        :src="`http://ff-legends.com/team-kits/tr-red.png`"
+        alt
+      />
     </div>
   </div>
 </template>
@@ -48,7 +52,7 @@ export default {
     width: 50%;
     height: 100%;
     display: flex;
-    padding:0 0 0 10px;
+    padding: 0 0 0 10px;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;

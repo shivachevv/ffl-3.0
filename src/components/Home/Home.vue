@@ -191,30 +191,30 @@ export default {
   },
   async created() {
     console.log('home');
-    if (!this.leagues) {
-      this.$vs.loading();
-      this.fetchLeagues();
-    }
-    if (!this.players) {
-      this.$vs.loading();
-      this.fetchPlayers();
-    }
-    if (!this.currentRound) {
-      this.$vs.loading();
-      this.fetchCurrentRound();
-    }
-    if (!this.users) {
-      this.$vs.loading();
-      this.fetchUsers();
-    }
-    if (!this.standings) {
-      this.$vs.loading();
-      this.fetchStandings();
-    }
-    if (!this.loggedUser) {
-      this.$vs.loading();
-      this.fetchLoggedUser();
-    }
+    // if (!this.leagues) {
+    //   this.$vs.loading();
+    //   this.fetchLeagues();
+    // }
+    // if (!this.players) {
+    //   this.$vs.loading();
+    //   this.fetchPlayers();
+    // }
+    // if (!this.currentRound) {
+    //   this.$vs.loading();
+    //   this.fetchCurrentRound();
+    // }
+    // if (!this.users) {
+    //   this.$vs.loading();
+    //   this.fetchUsers();
+    // }
+    // if (!this.standings) {
+    //   this.$vs.loading();
+    //   this.fetchStandings();
+    // }
+    // if (!this.loggedUser) {
+    //   this.$vs.loading();
+    //   this.fetchLoggedUser();
+    // }
     // this.fetchCurrentRound();
     // this.fetchUsers();
   }

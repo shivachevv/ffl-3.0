@@ -2,7 +2,7 @@
   <div class="teammate">
     <div class="player-shirt">
       <img
-        :src="require(`@/assets/images/teamkits/${player.shirt}.png`)"
+        :src="`http://ff-legends.com/team-kits/${player.shirt}.png`"
         :alt="`${player.name} logo`"
       />
     </div>

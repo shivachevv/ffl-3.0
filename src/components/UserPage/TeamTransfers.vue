@@ -4,7 +4,9 @@
     <div class="sub-cont">
       <div class="labels-cont">
         <div class="label">
-          <span :class="{ smallerspan: transfersAvail === 2}">{{transfersAvail}}</span>
+          <span :class="{ smallerspan: transfersAvail === 2 }">{{
+            transfersAvail
+          }}</span>
           <h3 class="up">Transfers Left</h3>
         </div>
         <div class="label">
@@ -38,29 +40,27 @@
           <h3 v-if="!hasWildcard" class="up">Wildcard Not Available</h3>
         </div>
       </div>
-      <router-link
-        class="sha button up"
-        :to="`/transfers/${owner.toLowerCase().split(' ').join('-')}`"
-      >
-        Transfers
-        <br />Page
+      <router-link :to="`/transfers/${user.userLogo}`">
+        <vs-button color="#59A95D" type="relief" size="normal" button="button"
+          >TRANSFERS PAGE</vs-button
+        >
       </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+// import { mapGetters } from "vuex";
 
 export default {
   name: "TeamTransfers",
   props: {
-    ownerId: {
-      type: Number,
+    user: {
+      type: Object,
       required: true
     },
-    owner: {
-      type: String,
+    currentRound: {
+      type: Number,
       required: true
     }
   },
@@ -68,24 +68,22 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["standings", "WCandTripple"]),
+    // ...mapGetters(["standings", "WCandTripple"]),
     hasWildcard() {
-      if (Object.keys(this.WCandTripple).length) {
-        return !this.WCandTripple[this.ownerId][0];
-      } else {
-        return "";
-      }
+      return !this.user.wildCards[1];
     },
     transfersAvail() {
-      return 1;
+      const avail = Number(
+        this.user.rounds[`r${this.currentRound}`].transfersAvail
+      );
+      const made = Number(
+        this.user.rounds[`r${this.currentRound}`].transfersMade
+      );
+      return avail - made;
     }
   },
-  methods: {
-    ...mapActions(["fetchWCandTripple"])
-  },
-  created() {
-    this.fetchWCandTripple();
-  }
+  methods: {},
+  created() {}
 };
 </script>
 

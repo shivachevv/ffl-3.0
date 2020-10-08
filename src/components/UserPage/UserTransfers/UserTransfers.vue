@@ -1,9 +1,14 @@
 <template>
   <main>
-    <div class="main-container">
+    <div
+      class="main-container"
+      v-if="loggedUser && currentRound && playersCathegorized"
+    >
       <!---------------- USER TEAM SECTION -------------------------------------->
       <UserTransfersTeam
-        :user="loggedUser.info"
+        :user="loggedUser"
+        :players="players"
+        :currentRound="currentRound"
         :transfersAvail="transfersAvail"
         :transferedOut="transferedOut"
         :transferedIn="transferedIn"
@@ -14,9 +19,10 @@
       ></UserTransfersTeam>
 
       <AllPlayersSection
-        :user="loggedUser.info"
+        :user="loggedUser"
         :transferedOutInfo="transferedOut"
         :transferedIn="transferedIn"
+        :playersCathegorized="playersCathegorized"
         @makeTransferIn="addTransferIn($event)"
         @submitTransfers="submitTransfers()"
       ></AllPlayersSection>
@@ -25,9 +31,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import UserTransfersTeam from "./UserTransfersTeam";
 import AllPlayersSection from "./AllPlayersSection/AllPlayersSection";
+import { cathegorizePlayers } from "../../../utils/getAllPlayersData";
+import { DATA_URL } from "../../../common";
 
 export default {
   name: "UserTransfers",
@@ -40,24 +48,33 @@ export default {
       transferedOut: [],
       transferedIn: [],
       maxTransfersReached: false,
-      wildcard: false,
-      CAPTAINS_URL: "https://ffl-3-92418.firebaseio.com/captains-display"
+      wildcard: false
     };
   },
   computed: {
-    ...mapGetters(["loggedUser", "currentRnd"]),
+    ...mapGetters(["loggedUser", "currentRound", "players"]),
     transfersAvail() {
-      return this.wildcard ? 3 : 2;
+      const currentTransfersCount =
+        this.loggedUser.rounds[`r${this.currentRound}`].transfersAvail -
+        this.loggedUser.rounds[`r${this.currentRound}`].transfersMade;
+      return this.wildcard ? 3 : currentTransfersCount;
+    },
+    transfersMadeSoFar() {
+      return this.loggedUser.rounds[`r${this.currentRound}`].transfersMade;
     },
     updatedURL() {
-      return `${this.CAPTAINS_URL}/${this.loggedUser.info.teamName
-        .toLowerCase()
-        .split(" ")
-        .join("-")}/${this.currentRnd + 1}.json`;
+      return `${DATA_URL}/${this.loggedUser.uid}/rounds/r${this.currentRound}/`;
+    },
+    playersCathegorized() {
+      if (this.players) {
+        return cathegorizePlayers(this.players);
+      } else {
+        return "";
+      }
     }
   },
   methods: {
-    ...mapActions(["fetchLoggedUser"]),
+    // ...mapActions(["fetchPlayersCathegorized"]),
     addTransferOut(x) {
       if (typeof x === "string" && x.includes("remove")) {
         const name = x.substring(7);
@@ -79,7 +96,7 @@ export default {
       ) {
         return this.transferedIn.push(x);
       } else if (this.transferedIn.includes(x)) {
-        this.transferedIn = this.transferedIn.filter(p => p.name !== x.name);
+        this.transferedIn = this.transferedIn.filter(p => p.id !== x.id);
       }
     },
     max(x) {
@@ -89,24 +106,27 @@ export default {
       let countsOut = this.countPositions(out);
       let countsIn = this.countPositions(inn);
 
-      for (const p in countsOut) {
-        if (countsIn[p]) {
-          countsOut[p] -= countsIn[p];
+      for (const pos in countsOut) {
+        if (countsIn[pos]) {
+          countsOut[pos] -= countsIn[pos];
         }
       }
-      if (countsOut[p.pos.toLowerCase()]) {
+      if (countsOut[p.position]) {
         return true;
       } else {
         return false;
       }
     },
-    countPositions(a) {
-      let result = {};
-      a.forEach(el => {
-        result[el.pos.substring(0, 2).toLowerCase()] =
-          (result[el.pos.substring(0, 2).toLowerCase()] || 0) + 1;
+    countPositions(arr) {
+      let positionsCount = {};
+      arr.forEach(player => {
+        if (positionsCount[player.position]) {
+          positionsCount[player.position]++;
+        } else {
+          positionsCount[player.position] = 1;
+        }
       });
-      return result;
+      return positionsCount;
     },
     simplifyTrIn() {
       return this.transferedIn.map(x => {
@@ -119,13 +139,13 @@ export default {
       });
     },
     submitTransfers() {
-      const o = this.simplifyTrOut();
-      const i = this.simplifyTrIn();
-      if (o.length === i.length && o.length !== 0) {
+      const _out = this.simplifyTrOut();
+      const _in = this.simplifyTrIn();
+      if (_out.length === _in.length && _out.length !== 0) {
         this.$vs.dialog({
           color: "success",
           title: "Transfers Confirmation",
-          text: `${o.join(", ")} - OUT     ${i.join(", ")} - IN`,
+          text: `${_out.join(", ")} - OUT     ${_in.join(", ")} - IN`,
           accept: this.acceptTransfers
         });
       } else {
@@ -136,25 +156,92 @@ export default {
         });
       }
     },
-    acceptTransfers() {
-      const data = {
-        transfersIn: this.simplifyTrIn().join(", "),
-        transfersOut: this.simplifyTrOut().join(", "),
-        wildcard: this.wildcard,
-        updatedTransfers: new Date()
+    async acceptTransfers() {
+      const next = this.loggedUser.rounds[`r${this.currentRound}`].nextRndInfo
+        .team;
+      const prev = this.loggedUser.rounds[`r${this.currentRound}`].team;
+      const oldTeam = next ? next : prev;
+      const mergedTeams = this.mergeTeams(
+        this.transferedIn,
+        this.transferedOut,
+        oldTeam
+      );
+      const updatedCount = {
+        transfersMade: this.transfersMadeSoFar + this.transferedIn.length
       };
-      fetch(this.updatedURL, {
+      await this.fetchUpdatedTeam(mergedTeams);
+      await this.fetchUpdatedTransfersMade(updatedCount);
+
+      this.acceptAlert();
+    },
+    fetchUpdatedTeam(payload) {
+      return fetch(`${this.updatedURL}nextRndInfo/team.json`, {
         method: "PATCH",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       })
-        .then(x => x.json())
-        .catch(err => {
-          console.log(err);
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          //   this.success = true;
+          // this.$vs.loading();
+          // this.transfers = await getAllTransfers();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          //   this.error = true;
+          //   this.errorMsg = error;
         });
-      this.acceptAlert();
+    },
+    fetchUpdatedTransfersMade(payload) {
+      return fetch(`${this.updatedURL}.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async data => {
+          console.log("Success:", data);
+          //   this.success = true;
+          // this.$vs.loading();
+          // this.transfers = await getAllTransfers();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          //   this.error = true;
+          //   this.errorMsg = error;
+        });
+    },
+    mergeTeams(transfersIn, transfersOut, oldTeam) {
+      let transfersPositions = [];
+      let merged = {};
+      for (const pos in oldTeam) {
+        transfersOut.forEach(oldPLayer => {
+          if (oldTeam[pos] === oldPLayer.id) {
+            transfersPositions.push(pos);
+          }
+        });
+        merged[pos] = oldTeam[pos];
+      }
+      let playersAlreadyTransfered = [];
+      transfersPositions.forEach(pos => {
+        transfersIn.forEach(newPlayer => {
+          if (
+            pos.includes(newPlayer.position.toLowerCase()) &&
+            !playersAlreadyTransfered.includes(newPlayer.id)
+          ) {
+            merged[pos] = newPlayer.id;
+            playersAlreadyTransfered.push(newPlayer.id);
+          }
+        });
+      });
+      return merged;
     },
     acceptAlert() {
       this.$vs.notify({
@@ -163,10 +250,28 @@ export default {
         // text:'Lorem ipsum dolor sit amet, consectetur'
       });
     }
+  },
+  watch: {
+    // playersCathegorized(nv) {
+    //   if (nv) {
+    //     this.$vs.loading.close();
+    //   }
+    // }
+  },
+  created() {
+    // this.$vs.loading();
+    // this.fetchPlayersCathegorized();
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.main-container {
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
 </style>

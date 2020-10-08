@@ -5,6 +5,7 @@ import popupPlayerHelper from "../../utils/popupPlayerHelper";
 import userPointsHelper from "../../utils/userPointsHelper";
 import currentRndHelper from "../../utils/currentRndHelper";
 import { getAllPlayersDataNormal } from '../../utils/getAllPlayersData'
+import { getAllPlayersDataCathegorized } from '../../utils/getAllPlayersData'
 
 
 const URL_PLAYERS = 'https://ffl-3-92418.firebaseio.com/playerPts.json';
@@ -15,6 +16,7 @@ const URL_CAPTAINS = 'https://ffl-3-92418.firebaseio.com/userData.json';
 
 const state = {
     players: undefined,
+    playersCathegorized: undefined,
     pow: '',
     last5Transfers1: '',
     last5Transfers2: '',
@@ -25,6 +27,7 @@ const state = {
 
 const getters = {
     players: state => state.players,
+    playersCathegorized: state => state.playersCathegorized,
     pow: state => state.pow,
     last5Transfers1: state => state.last5Transfers1,
     last5Transfers2: state => state.last5Transfers2,
@@ -39,6 +42,12 @@ const actions = {
     }) {
         const players = await getAllPlayersDataNormal()
         commit('setPlayers', players)
+    },
+    async fetchPlayersCathegorized({
+        commit
+    }) {
+        const playersCathegorized = await getAllPlayersDataCathegorized()
+        commit('setPlayersCathegorized', playersCathegorized)
     },
     async fetchUserPts({
         commit
@@ -109,6 +118,9 @@ const actions = {
 const mutations = {
     setPlayers: (state, p) => {
         state.players = p
+    },
+    setPlayersCathegorized: (state, p) => {
+        state.playersCathegorized = p
     },
     setCurrentRnd: (state, r) => {
         state.currentRnd = r

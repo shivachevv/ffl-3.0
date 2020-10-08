@@ -1,17 +1,17 @@
 <template>
   <div class="teammate" @click="transferOutHandler(player)">
     <div class="player-shirt">
-      <img :src="require(`@/assets/images/teamkits/${shirt}.png`)" :alt="`${player.name} logo`" />
+      <img :src="`http://ff-legends.com/team-kits/${shirt}.png`" alt />
     </div>
     <div class="player-stats-cont">
       <div class="name-cont">
-        <span class="pos">{{player.pos}}</span>
-        <span class="name">{{player.name}}</span>
+        <span class="pos">{{ player.pos }}</span>
+        <span class="name">{{ player.name }}</span>
         <a href="#" class="player-stats">
           <img src="@/assets/images/user-page/computer.png" alt />
         </a>
       </div>
-      <div class="pts">{{transferStatus}}</div>
+      <div class="pts">{{ transferStatus }}</div>
     </div>
   </div>
 </template>
@@ -74,7 +74,7 @@ export default {
   watch: {
     reset(nv) {
       if (nv) {
-        return this.shirt = this.player.shirt;
+        return (this.shirt = this.player.shirt);
       }
     },
     limitReached(nv) {

@@ -25,7 +25,7 @@
 
         <!-- TRANSFERS INFORMATION -->
 
-        <TeamTransfers v-if="isThisLoggedTeam" :ownerId="user.uid" :owner="user.userTeam"></TeamTransfers>
+        <TeamTransfers v-if="isThisLoggedTeam" :user="user" :currentRound="currentRound"></TeamTransfers>
       </section>
     </div>
     <transition name="slide-left" mode="out-in">
@@ -115,7 +115,7 @@ export default {
 .main-container {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   .user-details {

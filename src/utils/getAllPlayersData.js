@@ -35,7 +35,35 @@ const getAllPlayersDataCathegorized = async () => {
     return cathegorized
 }
 
+const cathegorizePlayers = (players) => {
+    let cathegorized = {}
+
+    Object.keys(players).forEach(id => {
+        const player = players[id]
+        
+        if (!cathegorized[player.country]) {
+            cathegorized[player.country] = {}
+            if (!cathegorized[player.country][player.club]) {
+                cathegorized[player.country][player.club] = {}
+                cathegorized[player.country][player.club][id] = player
+            } else {
+                cathegorized[player.country][player.club][id] = player
+            }
+        } else {
+            if (!cathegorized[player.country][player.club]) {
+                cathegorized[player.country][player.club] = {}
+                cathegorized[player.country][player.club][id] = player
+            } else {
+                cathegorized[player.country][player.club][id] = player
+            }
+        }
+    })
+
+    return cathegorized
+}
+
 export {
     getAllPlayersDataNormal,
-    getAllPlayersDataCathegorized
+    getAllPlayersDataCathegorized,
+    cathegorizePlayers
 }

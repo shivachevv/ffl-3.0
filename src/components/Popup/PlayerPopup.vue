@@ -2,7 +2,7 @@
   <div v-if="player">
     <div class="popup-container sha">
       <div class="popup-name up">
-        <img :src="require(`@/assets/images/teamkits/${player.shirt}.png`)" alt="shirt" />
+        <img :src="`http://ff-legends.com/team-kits/${player.shirt}.png`" alt="shirt" />
         <div class="popup-name-cont">
           <span class="popup-player-name up">{{player.name}}</span>
           <span class="popup-player-team up">{{player.club}}</span>

@@ -30,7 +30,9 @@ export default {
       "fetchLoggedUser",
       "fetchStandings",
       "fetchLeagues",
-      "fetchPlayers"
+      "fetchPlayers",
+      "fetchCurrentRound",
+      "fetchUsers"
     ])
   },
   computed: {},
@@ -42,6 +44,8 @@ export default {
     this.fetchStandings();
     this.fetchLeagues();
     this.fetchPlayers();
+    this.fetchCurrentRound()
+    this.fetchUsers()
   }
 };
 </script>

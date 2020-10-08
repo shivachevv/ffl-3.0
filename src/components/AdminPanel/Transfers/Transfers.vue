@@ -7,38 +7,46 @@
         v-for="rnd in currentRound"
         :key="rnd"
         @click.prevent="selectRoundHandler(rnd)"
-        :class="{selected: rnd === selectedRound}"
-      >{{rnd}}</a>
+        :class="{ selected: rnd === selectedRound }"
+        >{{ rnd }}</a
+      >
     </div>
     <vs-alert
       v-if="success"
       title="Update finished!"
       active="true"
       color="success"
-    >Transfer successfully updated!</vs-alert>
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+      >Transfer successfully updated!</vs-alert
+    >
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
     <div v-if="selectedRoundTransfers" class="transfers-container">
       <div
         v-for="userId in Object.keys(selectedRoundTransfers)"
         :key="userId"
         class="user-transfers"
       >
-        <div class="user-trans-heading">{{users[userId].userTeam}}</div>
+        <div class="user-trans-heading">{{ users[userId].userTeam }}</div>
         <div
-          v-for="(transfer,i) in Object.entries(selectedRoundTransfers[userId])"
+          v-for="(transfer, i) in Object.entries(
+            selectedRoundTransfers[userId]
+          )"
           :key="i"
           class="user-transfer"
         >
-          <span class="position">{{transfer[1].position}}</span>
-          <span class="in">{{players[transfer[1].transferIn].name}}</span>
-          <span class="out">{{players[transfer[1].transferOut].name}}</span>
-          <span class="status">{{transfer[1].status}}</span>
+          <span class="position">{{ transfer[1].position }}</span>
+          <span class="in">{{ players[transfer[1].transferIn].name }}</span>
+          <span class="out">{{ players[transfer[1].transferOut].name }}</span>
+          <span class="status">{{ transfer[1].status }}</span>
           <span class="time">
-            {{transfer[1].timeMade
-            .split("T")
-            .join(" ")
-            .split(".")
-            .shift()}}
+            {{
+              transfer[1].timeMade
+                .split("T")
+                .join(" ")
+                .split(".")
+                .shift()
+            }}
           </span>
           <vs-button
             v-if="transfer[1].status === 'pending'"
@@ -47,7 +55,8 @@
             type="relief"
             size="small"
             @click="confirmTransfer(transfer)"
-          >Confirm</vs-button>
+            >Confirm</vs-button
+          >
           <vs-button
             v-if="transfer[1].status === 'pending'"
             color="#893f40"
@@ -55,12 +64,13 @@
             type="relief"
             size="small"
             @click="cancelTransfer(transfer)"
-          >Cancel</vs-button>
+            >Cancel</vs-button
+          >
         </div>
       </div>
     </div>
     <div v-else class="no-transfers">
-      <h2>No transfers for round {{selectedRound}}</h2>
+      <h2>No transfers for round {{ selectedRound }}</h2>
     </div>
     <vs-button
       color="#59A95D"
@@ -68,7 +78,8 @@
       type="relief"
       size="normal"
       @click.prevent="fillTransfers"
-    >TEST</vs-button>
+      >TEST</vs-button
+    >
   </div>
 </template>
 
@@ -271,9 +282,17 @@ export default {
       const _in = transfer.transferIn;
       const _out = transfer.transferOut;
 
-      return Object.values(editTeam).map(x => {
-        return x === _out ? _in : x;
+      let result = {};
+      Object.keys(editTeam).forEach(pos => {
+        if (editTeam[pos] === _out) {
+          result[pos] = _in;
+        } else {
+          result[pos] = editTeam[pos];
+        }
+        // return x === _out ? _in : x;
       });
+      console.log(result);
+      return result;
     },
     updateTransferStatus(tr, status) {
       const payload = { status };

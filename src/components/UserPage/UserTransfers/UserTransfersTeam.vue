@@ -2,24 +2,27 @@
   <section class="user-team sha">
     <TeamHeader :user="user"></TeamHeader>
 
-    <SelectedTransfers 
+    <SelectedTransfers
       :transferedIn="transferedIn"
       :transferedOut="transferedOut"
     ></SelectedTransfers>
     <transition name="fadeDown" mode="out-in">
       <div class="error-msg" v-if="maxTransfersReached">
-        <h1>You have a maximum of {{transfersAvail}} {{transfersAvail === 1 ? "transfer" : "transfers"}} this week!</h1>
+        <h1>
+          You have a maximum of {{ transfersAvail }}
+          {{ transfersAvail === 1 ? "transfer" : "transfers" }} this week!
+        </h1>
       </div>
     </transition>
-    {{transferedOut}}
-    {{transferedIn}}
+    <!-- {{ transferedOut }}
+    {{ transferedIn }} -->
     <!------------------ USER TEAM  ----------------->
-    <div class="team" v-if="userPts">
+    <div class="team" v-if="players">
       <!------------------ TEAMMATE  ----------------->
       <TransfersTeammate
-        v-for="(pl,i) in initialTeam"
-        :class="pl.pos | playerClassFilter"
-        :player="pl"
+        v-for="(pos, i) in Object.keys(initialTeam)"
+        :class="pos.toLowerCase()"
+        :player="players[initialTeam[pos]]"
         :transfersAvail="transfersAvail"
         :transferedOut="transferedOut"
         :reset="reset"
@@ -32,8 +35,9 @@
       <div class="addition transfers-avail">
         <h3 class="up">Transfers</h3>
         <span
-          :class="{ smallerspan: transfersAvail === 2 || transfersAvail === 3}"
-        >{{transfersAvail}}</span>
+          :class="{ smallerspan: transfersAvail === 2 || transfersAvail === 3 }"
+          >{{ transfersAvail }}</span
+        >
       </div>
       <div class="addition wildcard">
         <h3 class="up">Wildcard</h3>
@@ -47,7 +51,7 @@
 import TransfersTeammate from "./TransfersTeammate";
 import TeamHeader from "../UserTeam/TeamHeader";
 import SelectedTransfers from "./SelectedTransfers";
-import { mapGetters, mapActions } from "vuex";
+// import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "UserTransfersTeam",
@@ -59,6 +63,14 @@ export default {
   props: {
     user: {
       type: Object,
+      required: true
+    },
+    players: {
+      type: Object,
+      required: true
+    },
+    currentRound: {
+      type: Number,
       required: true
     },
     transfersAvail: {
@@ -85,24 +97,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userPts"]),
+    // ...mapGetters(["userPts"]),
     initialTeam() {
-      if (this.userPts) {
-        const tmp = this.userPts[this.userPts.length - 1].team;
-        return tmp.map(x => {
-          return {
-            name: x.name,
-            pos: x.pos,
-            shirt: x.shirt
-          };
-        });
-      } else {
-        return 1;
-      }
+      const next = this.user.rounds[`r${this.currentRound}`].nextRndInfo.team
+      const prev = this.user.rounds[`r${this.currentRound}`].team
+      
+      return next ? next : prev
+        // .map(id => {
+        //   return this.players[id];
+        // })
+        // .sort((a, b) => {
+        //   return a.position.localeCompare(b.position);
+        // });
     }
   },
   methods: {
-    ...mapActions(["fetchUserPts"]),
+    // ...mapActions(["fetchUserPts"]),
 
     makeTransferOut(x) {
       return this.$emit("makeTransferOut", x);
@@ -121,12 +131,12 @@ export default {
     }
   },
   filters: {
-    playerClassFilter: function(v) {
-      return v.toLowerCase();
-    }
+    // playerClassFilter: function(v) {
+    //   return v.toLowerCase();
+    // }
   },
   created() {
-    this.fetchUserPts(this.user.teamCode);
+    // this.fetchUserPts(this.user.teamCode);
   }
 };
 </script>
@@ -464,65 +474,69 @@ export default {
     color: #3c474d;
   }
 }
-/************  TRANSITION   *******************/ 
+/************  TRANSITION   *******************/
 
-.fadeUp-enter { opacity: 0; }
+.fadeUp-enter {
+  opacity: 0;
+}
 .fadeUp-enter-active {
-    animation: slide-in .3s ease-in-out forwards;
-    transition: opacity .3s;
+  animation: slide-in 0.3s ease-in-out forwards;
+  transition: opacity 0.3s;
 }
 
 .fadeUp-leave-active {
-    animation: slide-out .3s ease-in-out forwards;
-    transition: opacity  .3s;
-    opacity: 0;
+  animation: slide-out 0.3s ease-in-out forwards;
+  transition: opacity 0.3s;
+  opacity: 0;
 }
 
-.fadeDown-enter { opacity: 0; }
+.fadeDown-enter {
+  opacity: 0;
+}
 .fadeDown-enter-active {
-    animation: slide-in-down .3s ease-in-out forwards;
-    transition: opacity .3s;
+  animation: slide-in-down 0.3s ease-in-out forwards;
+  transition: opacity 0.3s;
 }
 
 .fadeDown-leave-active {
-    animation: slide-out-down .3s ease-in-out forwards;
-    transition: opacity  .3s;
-    opacity: 0;
+  animation: slide-out-down 0.3s ease-in-out forwards;
+  transition: opacity 0.3s;
+  opacity: 0;
 }
 
 @keyframes slide-in {
-    from {
-        transform: translateY(2rem);
-    }
-    to {
-        transform: translateY(0);
-    }
+  from {
+    transform: translateY(2rem);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-out {
-    from {
-        transform: translateY(0);
-    }
-    to {
-        transform: translateY(-2rem);
-    }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2rem);
+  }
 }
 
 @keyframes slide-in-down {
-    from {
-        transform: translateY(-2rem);
-    }
-    to {
-        transform: translateY(0);
-    }
+  from {
+    transform: translateY(-2rem);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-out-down {
-    from {
-        transform: translateY(0);
-    }
-    to {
-        transform: translateY(2rem);
-    }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(2rem);
+  }
 }
 </style>
