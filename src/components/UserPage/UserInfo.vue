@@ -2,7 +2,7 @@
   <div class="user-stats" v-if="standingsStats && user">
     <div class="user-name">
       <img src="@/assets/images/user-page/user-head.png" alt="user-head" />
-      <h2 class="up">{{user.userName}}</h2>
+      <h2 class="up">{{user.name}}</h2>
     </div>
 
     <div class="league-name">

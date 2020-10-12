@@ -11,6 +11,7 @@
         </div>
         <div class="label">
           <svg
+            v-if="!isWCActive"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 3312 3312"
             shape-rendering="geometricPrecision"
@@ -28,16 +29,51 @@
               stroke-width="20"
             />
             <path
-              v-if="!hasWildcard"
+              v-if="!hasWildcard && !isWCActive"
               class="uncheck"
               xmlns="http://www.w3.org/2000/svg"
               d="M1664 0c460 0 876 186 1177 487s487 717 487 1177-186 876-487 1177-717 487-1177 487-876-186-1177-487S0 2124 0 1664 186 788 487 487 1204 0 1664 0zm507 1012c35-35 92-35 128 0 35 35 35 92 0 128l-524 524 524 524c35 35 35 92 0 128-35 35-92 35-128 0l-524-524-524 524c-35 35-92 35-128 0-35-35-35-92 0-128l524-524-524-524c-35-35-35-92 0-128 35-35 92-35 128 0l524 524 524-524zm542-397c-268-268-639-435-1049-435S883 346 615 615c-268 268-435 639-435 1049s166 781 435 1049c268 268 639 435 1049 435s781-166 1049-435c268-268 435-639 435-1049s-166-781-435-1049z"
               fill-rule="nonzero"
             />
           </svg>
+          <svg
+            v-if="isWCActive"
+            version="1.1"
+            id="Capa_1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 191.812 191.812"
+            style="enable-background:new 0 0 191.812 191.812;"
+            xml:space="preserve"
+          >
+            <g>
+              <path
+                style="fill:#FF6600;"
+                d="M95.906,121.003c6.903,0,12.5-5.597,12.5-12.5V51.511c0-6.904-5.597-12.5-12.5-12.5
+		s-12.5,5.596-12.5,12.5v56.993C83.406,115.407,89.003,121.003,95.906,121.003z"
+              />
+              <path
+                style="fill:#FF6600;"
+                d="M95.909,127.807c-3.29,0-6.521,1.33-8.841,3.66c-2.329,2.32-3.659,5.54-3.659,8.83
+		s1.33,6.52,3.659,8.84c2.32,2.33,5.551,3.66,8.841,3.66s6.51-1.33,8.84-3.66c2.319-2.32,3.66-5.55,3.66-8.84s-1.341-6.51-3.66-8.83
+		C102.419,129.137,99.199,127.807,95.909,127.807z"
+              />
+              <path
+                style="fill:#FF6600;"
+                d="M95.906,0C43.024,0,0,43.023,0,95.906s43.023,95.906,95.906,95.906s95.905-43.023,95.905-95.906
+		S148.789,0,95.906,0z M95.906,176.812C51.294,176.812,15,140.518,15,95.906S51.294,15,95.906,15
+		c44.611,0,80.905,36.294,80.905,80.906S140.518,176.812,95.906,176.812z"
+              />
+            </g>
+          </svg>
 
           <h3 v-if="hasWildcard" class="up">Wildcard Available</h3>
-          <h3 v-if="!hasWildcard" class="up">Wildcard Not Available</h3>
+          <h3 v-if="!hasWildcard && !isWCActive" class="up">
+            Wildcard Not Available
+          </h3>
+          <h3 v-if="isWCActive" class="up">Wildcard Activated<br/>for this round</h3>
         </div>
       </div>
       <router-link :to="`/transfers/${user.userLogo}`">
@@ -50,7 +86,6 @@
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
 
 export default {
   name: "TeamTransfers",
@@ -72,14 +107,26 @@ export default {
     hasWildcard() {
       return !this.user.wildCards[1];
     },
+    isWCActive() {
+      return this.user.rounds[`r${this.currentRound}`].wildCard;
+    },
     transfersAvail() {
-      const avail = Number(
-        this.user.rounds[`r${this.currentRound}`].transfersAvail
-      );
+      // const avail = Number(
+      //   this.user.rounds[`r${this.currentRound}`].transfersAvail
+      // );
+      // const made = Number(
+      //   this.user.rounds[`r${this.currentRound}`].transfersMade
+      // );
+      // return avail - made;
+
       const made = Number(
         this.user.rounds[`r${this.currentRound}`].transfersMade
       );
-      return avail - made;
+      const avail = Number(
+        this.user.rounds[`r${this.currentRound}`].transfersAvail
+      );
+      const currentTransfersCount = this.isWCActive ? 3 - made : avail - made;
+      return currentTransfersCount;
     }
   },
   methods: {},

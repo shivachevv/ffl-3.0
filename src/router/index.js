@@ -13,6 +13,8 @@ import NotFound from "../components/common/NotFound";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
+import getAllUsers from '../utils/getAllUsers'
+
 Vue.use(VueRouter);
 
 const routes = [{
@@ -63,21 +65,22 @@ const routes = [{
   name: 'mytransfers',
   props: true,
   beforeEnter(to, from, next) {
-    next()
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     const lg1 = leagues["pele"].teams.filter(x => to.params.id === x.teamName.toLowerCase().split(' ').join('-'))[0]
-    //     const lg2 = leagues["maradona"].teams.filter(x => to.params.id === x.teamName.toLowerCase().split(' ').join('-'))[0]
-    //     const toEmail = (lg1 ? lg1 : lg2).email
-    //     if (toEmail === user.email) {
-    //       next()
-    //     } else {
-    //       next('/')
-    //     }
-    //   } else {
-    //     next('/')
-    //   }
-    // });
+    firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        const teamName = to.params.id
+        const users = await getAllUsers()
+        const teamId = Object.values(users).filter(u => {
+          return u.userTeam === teamName
+        })[0].uid
+        if (teamId === user.uid) {
+          next()
+        } else {
+          next('/')
+        }
+      } else {
+        next('/')
+      }
+    });
   }
 },
 {

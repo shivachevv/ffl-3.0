@@ -25,7 +25,11 @@
 
         <!-- TRANSFERS INFORMATION -->
 
-        <TeamTransfers v-if="isThisLoggedTeam" :user="user" :currentRound="currentRound"></TeamTransfers>
+        <TeamTransfers
+          v-if="isThisLoggedTeam"
+          :user="user"
+          :currentRound="currentRound"
+        ></TeamTransfers>
       </section>
     </div>
     <transition name="slide-left" mode="out-in">
@@ -126,6 +130,22 @@ export default {
     align-items: center;
     justify-content: flex-start;
     margin: 0 0 0 20px;
+  }
+
+  //POPUP STYLES
+  .vs-popup {
+    width: 50% !important;
+    .vs-popup--content {
+      font-size: 0.9em !important;
+      -webkit-transition: all 0.23s ease 0.1s !important;
+      transition: all 0.23s ease 0.1s !important;
+      overflow: auto !important;
+      max-height: calc(100vh - 100px) !important;
+      padding: 0px !important;
+      width: 100% !important;
+      margin: 0px !important;
+      background-color: #e0e0e0;
+    }
   }
 }
 

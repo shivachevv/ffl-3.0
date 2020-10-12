@@ -1,6 +1,7 @@
 export const makeNewUser = (
     uid,
     email,
+    name,
     userTeam,
     age,
     location,
@@ -11,6 +12,7 @@ export const makeNewUser = (
 ) => {
     return {
         email,
+        name,
         userTeam,
         userLogo: userTeam.toLowerCase().split(' ').join('-'),
         uid,

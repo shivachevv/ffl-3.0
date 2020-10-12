@@ -474,7 +474,7 @@ export default {
     //   }
     // },
     transfers(nv) {
-      if (nv) {
+      if (nv && this.players) {
         this.$vs.loading.close();
       }
     },
@@ -484,7 +484,7 @@ export default {
       }
     },
     users(nv) {
-      if (nv) {
+      if (nv && this.players) {
         this.$vs.loading.close();
       }
     }

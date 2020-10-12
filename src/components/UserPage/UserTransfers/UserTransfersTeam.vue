@@ -108,24 +108,6 @@ export default {
     };
   },
   computed: {
-    // wildcard: {
-    //   get() {
-    //     if (this.wcTemp === null) {
-    //       const WCStatus = this.user.rounds[`r${this.currentRound}`].wildCard;
-    //       this.$emit("wcHandler", WCStatus);
-    //       // if (WCStatus) {
-    //       //   this.makeSwitchUnavail = true;
-    //       // }
-    //       return WCStatus;
-    //     } else {
-    //       this.$emit("wcHandler", this.wcTemp);
-    //       return this.wcTemp;
-    //     }
-    //   },
-    //   set(val) {
-    //     this.wcTemp = val;
-    //   }
-    // },
     makeSwitchUnavail() {
       const WCStatus = this.user.rounds[`r${this.currentRound}`].wildCard;
       this.$emit("wcHandler", WCStatus);

@@ -41,9 +41,20 @@
           @blur="$v.rePassword.$touch"
         />
 
+        <template v-if="$v.name.$error">
+          <span class="error-msg" v-if="!$v.name.required">User Name is required!</span>
+        </template>
+        <input
+          type="text"
+          name="name"
+          placeholder="User Name*"
+          v-model="name"
+          @blur="$v.name.$touch"
+        />
+
         <h2 class="section-header">Team details:</h2>
         <template v-if="$v.teamName.$error">
-          <span class="error-msg" v-if="!$v.rePassword.required">Team Name is required!</span>
+          <span class="error-msg" v-if="!$v.teamName.required">Team Name is required!</span>
         </template>
         <input
           type="text"
@@ -223,6 +234,9 @@ export default {
       email,
       minLength: minLength(6)
     },
+    name: {
+      required,
+    },
     password: {
       required,
       minLength: minLength(6)
@@ -236,6 +250,7 @@ export default {
   },
   data() {
     return {
+      name:"",
       email: "",
       password: "",
       rePassword: "",
@@ -258,6 +273,7 @@ export default {
           const {
             email,
             password,
+            name,
             teamName,
             age,
             location,
@@ -272,6 +288,7 @@ export default {
           const newUser = makeNewUser(
             uid,
             email,
+            name,
             teamName,
             age,
             location,
