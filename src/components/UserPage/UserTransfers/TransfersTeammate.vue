@@ -64,7 +64,7 @@ export default {
         this.tmpShirt = this.player.shirt;
         this.transferStatus = this.statuses[0];
 
-        return this.$emit("makeTransferOut", `remove ${this.player.name}`);
+        return this.$emit("makeTransferOut", `remove ${this.player.id}`);
       }
       if (this.limitReached) {
         return this.$emit("max", true);
@@ -79,6 +79,14 @@ export default {
     },
     limitReached(nv) {
       return this.$emit("max", nv);
+    },
+    transferedOut(nv){
+      if (nv.length === 0) {
+         console.log('check');
+         this.shirt = this.tmpShirt;
+         this.tmpShirt = this.player.shirt;
+         this.transferStatus = this.statuses[0];
+       }
     }
   },
   created() {}

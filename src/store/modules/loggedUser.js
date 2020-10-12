@@ -74,6 +74,11 @@ const actions = {
             title: "Stats",
             path: "/stats",
             isMyTeam: false
+        },
+        {
+            title: "Admin",
+            path: "/admin",
+            isMyTeam: false
         }
         ]
         commit('setMenuLinks', tmp)

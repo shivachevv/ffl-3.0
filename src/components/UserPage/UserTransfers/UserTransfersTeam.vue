@@ -2,6 +2,12 @@
   <section class="user-team sha">
     <TeamHeader :user="user"></TeamHeader>
 
+    <RoundTransfersSoFar
+      :currentRound="currentRound"
+      :loggedUser="user"
+      :players="players"
+    />
+
     <SelectedTransfers
       :transferedIn="transferedIn"
       :transferedOut="transferedOut"
@@ -14,8 +20,7 @@
         </h1>
       </div>
     </transition>
-    <!-- {{ transferedOut }}
-    {{ transferedIn }} -->
+
     <!------------------ USER TEAM  ----------------->
     <div class="team" v-if="players">
       <!------------------ TEAMMATE  ----------------->
@@ -39,9 +44,13 @@
           >{{ transfersAvail }}</span
         >
       </div>
-      <div class="addition wildcard">
+      <div class="addition wildcard" v-if="!makeSwitchUnavail">
         <h3 class="up">Wildcard</h3>
         <vs-switch class="switch" color="success" v-model="wildcard" />
+      </div>
+      <div class="addition wildcard" v-else>
+        <h3 class="up">Wildcard</h3>
+        <vs-switch class="switch-inactive" disabled="true" color="success" />
       </div>
     </div>
   </section>
@@ -51,6 +60,7 @@
 import TransfersTeammate from "./TransfersTeammate";
 import TeamHeader from "../UserTeam/TeamHeader";
 import SelectedTransfers from "./SelectedTransfers";
+import RoundTransfersSoFar from "./RoundTransfersSoFar";
 // import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -58,7 +68,8 @@ export default {
   components: {
     TransfersTeammate,
     TeamHeader,
-    SelectedTransfers
+    SelectedTransfers,
+    RoundTransfersSoFar
   },
   props: {
     user: {
@@ -97,23 +108,43 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters(["userPts"]),
+    // wildcard: {
+    //   get() {
+    //     if (this.wcTemp === null) {
+    //       const WCStatus = this.user.rounds[`r${this.currentRound}`].wildCard;
+    //       this.$emit("wcHandler", WCStatus);
+    //       // if (WCStatus) {
+    //       //   this.makeSwitchUnavail = true;
+    //       // }
+    //       return WCStatus;
+    //     } else {
+    //       this.$emit("wcHandler", this.wcTemp);
+    //       return this.wcTemp;
+    //     }
+    //   },
+    //   set(val) {
+    //     this.wcTemp = val;
+    //   }
+    // },
+    makeSwitchUnavail() {
+      const WCStatus = this.user.rounds[`r${this.currentRound}`].wildCard;
+      this.$emit("wcHandler", WCStatus);
+      return WCStatus;
+    },
     initialTeam() {
-      const next = this.user.rounds[`r${this.currentRound}`].nextRndInfo.team
-      const prev = this.user.rounds[`r${this.currentRound}`].team
-      
-      return next ? next : prev
-        // .map(id => {
-        //   return this.players[id];
-        // })
-        // .sort((a, b) => {
-        //   return a.position.localeCompare(b.position);
-        // });
+      const next = this.user.rounds[`r${this.currentRound}`].nextRndInfo.team;
+      const prev = this.user.rounds[`r${this.currentRound}`].team;
+
+      return next ? next : prev;
+      // .map(id => {
+      //   return this.players[id];
+      // })
+      // .sort((a, b) => {
+      //   return a.position.localeCompare(b.position);
+      // });
     }
   },
   methods: {
-    // ...mapActions(["fetchUserPts"]),
-
     makeTransferOut(x) {
       return this.$emit("makeTransferOut", x);
     },
@@ -145,7 +176,7 @@ export default {
 <style scoped lang="scss">
 /********************  USER TEAM **********************/
 .user-team {
-  height: 900px;
+  // height: 900px;
   width: 65%;
   display: flex;
   flex-direction: column;
@@ -455,6 +486,12 @@ export default {
       }
       &.vs-switch-active {
         background: rgb(70, 201, 58);
+      }
+    }
+    .switch-inactive {
+      margin: 10px;
+      &.vs-switch-success {
+        background: #2e7125;
       }
     }
   }

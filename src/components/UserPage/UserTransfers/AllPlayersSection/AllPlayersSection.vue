@@ -120,7 +120,7 @@
         <div
           class="player"
           :class="{
-            takenplayer: !p.available,
+            notavailableplayer: !p.available,
             takenplayer: positionIsNotNeeded(transferedOutInfo, p.position),
             selectedplayer: transferedIn.includes(p)
           }"
@@ -458,7 +458,7 @@ export default {
         text-align: end;
       }
 
-      .takenplayer {
+      .takenplayer, .notavailableplayer {
         background-color: #b28a8b;
         cursor: not-allowed;
 

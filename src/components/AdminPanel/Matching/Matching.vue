@@ -200,7 +200,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .players-edit-container {
   width: 100%;
   display: flex;

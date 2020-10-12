@@ -1,18 +1,51 @@
 <template>
   <div class="add-form-container">
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
     <vs-alert
       v-if="success"
       title="Upload finished!"
       active="true"
       color="success"
-    >Player succesfully added!</vs-alert>
+      >Player succesfully added!</vs-alert
+    >
     <form @submit.prevent="addPlayerHandler">
-      <vs-select label="Leagues" v-model="newPlayer.country" icon placeholder="Select a league">
-        <vs-select-item :key="l" :value="l" :text="l" v-for="l in Object.keys(players)" />
-      </vs-select>
+      <label>
+        Country: {{ newPlayer.country }}
+        <select
+          label="Leagues"
+          v-model="newPlayer.country"
+          placeholder="Select a league"
+        >
+          <option :key="l" :value="l" v-for="l in Object.keys(players)">{{
+            l
+          }}</option>
+        </select>
+      </label>
 
-      <vs-select
+      <!-- <vs-select label="Leagues" v-model="newPlayer.country" icon placeholder="Select a league">
+        <vs-select-item :key="l" :value="l" :text="l" v-for="l in Object.keys(players)" />
+      </vs-select> -->
+
+      <label v-if="newPlayer.country">
+        Club: {{ newPlayer.club }}
+        <select
+          v-if="newPlayer.country"
+          label="Clubs"
+          v-model="newPlayer.club"
+          placeholder="Select team"
+        >
+          <option
+            :key="p"
+            :value="p"
+            v-for="p in Object.keys(players[newPlayer.country])"
+            >{{ p }}</option
+          >
+        </select>
+      </label>
+
+      <!-- <vs-select
         v-if="newPlayer.country"
         label="Clubs"
         v-model="newPlayer.club"
@@ -25,14 +58,32 @@
           :text="p"
           v-for="p in Object.keys(players[newPlayer.country])"
         />
-      </vs-select>
-      <vs-input label="Name" placeholder="Insert player name" v-model="newPlayer.name" />
+      </vs-select> -->
+      <vs-input
+        label="Name"
+        placeholder="Insert player name"
+        v-model="newPlayer.name"
+      />
+      <label>
+        Position: {{ newPlayer.position }}
+        <select
+          label="Position"
+          v-model="newPlayer.position"
+          placeholder="Select position"
+        >
+          <option :key="pos" :value="pos" v-for="pos in positions">{{
+            pos
+          }}</option>
+        </select>
+      </label>
 
-      <vs-select label="Position" v-model="newPlayer.position" icon placeholder="Select position">
+      <!-- <vs-select label="Position" v-model="newPlayer.position" icon placeholder="Select position">
         <vs-select-item :key="pos" :value="pos" :text="pos" v-for="pos in positions" />
-      </vs-select>
+      </vs-select> -->
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Player</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large"
+        >Add Player</vs-button
+      >
     </form>
   </div>
 </template>
@@ -50,6 +101,12 @@ export default {
     players: {
       required: true,
       type: Object
+    },
+    leagueSelected: {
+      type: String
+    },
+    teamSelected: {
+      type: String
     }
   },
   data() {
@@ -68,7 +125,7 @@ export default {
         const { country, club, name, position, shirt } = this.newPlayer;
         const id = uuidv4();
         const player = makeNewPlayer(name, position, club, shirt, id, country);
-        player["points"] = this.createPlayerPointsObj(this.currentRound)
+        player["points"] = this.createPlayerPointsObj(this.currentRound);
         this.uploadNewPlayer(player);
       }
     },
@@ -78,7 +135,7 @@ export default {
       for (let i = 0; i < rnd; i++) {
         result[`r${i + 1}`] = addPlayerPts(0, ...playerStatsEmptyValues);
       }
-      return result
+      return result;
     },
     isNewPlayerOK() {
       const { country, club, name, position } = this.newPlayer;
@@ -121,6 +178,16 @@ export default {
   },
   computed: {},
   watch: {
+    // leagueSelected(nv) {
+    //   if (nv) {
+    //     this.newPlayer.country = nv;
+    //   }
+    // },
+    // teamSelected(nv) {
+    //   if (nv) {
+    //     this.newPlayer.club = nv;
+    //   }
+    // },
     "newPlayer.club": function(nv) {
       if (nv) {
         this.newPlayer["shirt"] = teamCodes[nv];
@@ -135,6 +202,9 @@ export default {
     }
   },
   async created() {
+    // this.newPlayer.country = this.leagueSelected;
+    // this.newPlayer.club = this.teamSelected;
+
     this.currentRound = await getCurrentRound();
   }
 };
@@ -142,6 +212,23 @@ export default {
 
 <style lang="scss">
 .add-form-container {
+  form {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+
+      select {
+        padding: 5px;
+        margin: 5px 0 5px 0;
+      }
+    }
+  }
   .con-vs-alert-primary {
     width: 98%;
     margin: 10px;

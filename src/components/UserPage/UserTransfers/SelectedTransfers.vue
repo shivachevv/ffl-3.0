@@ -2,7 +2,7 @@
   <div class="transfers-container">
     <div class="tr-cont">
       <span class="transfers-in" v-for="(t, i) in transferedIn" :key="i"
-        >{{ t.name }}{{ i === transferedIn.length - 1 ? "" : ", " }}</span
+        >{{ t.name }} - {{t.position}}{{ i === transferedIn.length - 1 ? "" : ", " }}</span
       >
       <img
         class="green"
@@ -12,10 +12,10 @@
     </div>
     <div class="tr-cont">
       <span class="transfers-in" v-for="(t, i) in transferedOut" :key="i"
-        >{{ t.name }}{{ i === transferedOut.length - 1 ? "" : ", " }}</span
+        >{{ t.name }} - {{t.position}}{{ i === transferedOut.length - 1 ? "" : ", " }}</span
       >
       <img
-        class="green"
+        class="red"
         :src="`http://ff-legends.com/team-kits/tr-red.png`"
         alt
       />

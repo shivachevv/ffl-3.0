@@ -2,8 +2,18 @@
   <div class="players-edit-container">
     <h1 class="section-header">Edit Players personal details section</h1>
     <!-- CREATE NEW PLAYER BUTTON and POPUP -->
-    <vs-popup class="holamundo" title="Create new player!" :active.sync="showPopup" v-if="players">
-      <AddPlayerForm :players="players" @updatedPlayers="players = $event" />
+    <vs-popup
+      class="holamundo"
+      title="Create new player!"
+      :active.sync="showPopup"
+      v-if="players"
+    >
+      <AddPlayerForm
+        :players="players"
+        @updatedPlayers="players = $event"
+        :leagueSelected="leagueSelected"
+        :teamSelected="teamSelected"
+      />
     </vs-popup>
     <vs-button
       class="add-player"
@@ -12,7 +22,8 @@
       type="relief"
       size="large"
       @click.prevent="openAddPlayerPopup"
-    >Add New Player</vs-button>
+      >Add New Player</vs-button
+    >
 
     <!-- LEAGUES -->
     <div class="leagues-container" v-if="players">
@@ -20,35 +31,50 @@
         v-for="l in Object.keys(players)"
         :key="l"
         @click.prevent="selectLeagueHandler(l)"
-        :class="{selected: leagueSelected === l}"
+        :class="{ selected: leagueSelected === l }"
         class="edit-player-menu-item"
       >
-        <img
-          :src="require(`@/assets/images/user-transfers/leagues/${makeLeagueToImg(l)}.png`)"
+        <!-- <img
+          :src="
+            require(`@/assets/images/user-transfers/leagues/${makeLeagueToImg(
+              l
+            )}.png`)
+          "
           :alt="l"
+        /> -->
+        <img
+          :src="`http://ff-legends.com/team-logos/${makeLeagueToImg(l)}.png`"
+          alt="league"
         />
       </a>
     </div>
     <!-- TEAMS -->
     <div class="teams-container" v-if="players && leagueSelected">
       <a
-        v-for="(t,i) in Object.keys(players[leagueSelected])"
+        v-for="(t, i) in Object.keys(players[leagueSelected])"
         :key="i"
         @click.prevent="selectTeamHandler(t)"
         class="edit-player-menu-item"
-        :class="{selected: teamSelected === t}"
-      >{{t}}</a>
+        :class="{ selected: teamSelected === t }"
+        >{{ t }}</a
+      >
     </div>
     <!-- PLAYERS -->
-    <div class="players-container" v-if="players && leagueSelected && teamSelected">
+    <div
+      class="players-container"
+      v-if="players && leagueSelected && teamSelected"
+    >
       <div class="players-names">
         <a
-          v-for="p in Object.values(players[leagueSelected][teamSelected])"
+          v-for="p in sortedPlayers(
+            Object.values(players[leagueSelected][teamSelected])
+          )"
           :key="p.id"
           @click.prevent="selectPlayerHandler(p)"
           class="edit-player-menu-item"
-          :class="{selected: playerSelected === p}"
-        >{{p.name}} - {{p.position}}</a>
+          :class="{ selected: playerSelected === p }"
+          >{{ p.name }} - {{ p.position }}</a
+        >
       </div>
 
       <!-- EDIT FORM -->
@@ -56,18 +82,57 @@
         <form @submit.prevent="editPlayerFormHandler">
           <label>
             Country:
-            <vs-select
+            <select
+              v-model="playerEdited.country"
+              @change="playerEdited.club = ''"
+            >
+              <option :key="l" :value="l" v-for="l in Object.keys(players)">{{
+                l
+              }}</option>
+            </select>
+            <!-- <vs-select
               :label="playerSelected.country"
               v-model="playerEdited.country"
               icon
               @change="playerEdited.club = ''"
             >
-              <vs-select-item :key="l" :value="l" :text="l" v-for="l in Object.keys(players)" />
-            </vs-select>
+              <vs-select-item
+                :key="l"
+                :value="l"
+                :text="l"
+                v-for="l in Object.keys(players)"
+              />
+            </vs-select> -->
           </label>
           <label>
             Club:
-            <vs-select
+            <select
+              v-if="players[playerEdited.country]"
+              :label="playerSelected.club"
+              v-model="playerEdited.club"
+            >
+              <option
+                :key="l"
+                :value="l"
+                v-for="l in Object.keys(players[playerEdited.country])"
+                >{{ l }}</option
+              >
+            </select>
+
+            <select
+              v-else
+              :label="playerSelected.club"
+              v-model="playerEdited.club"
+              icon
+            >
+              <option
+                :key="l"
+                :value="l"
+                v-for="l in Object.keys(players[leagueSelected])"
+                >{{ l }}</option
+              >
+            </select>
+            <!-- <vs-select
               v-if="players[playerEdited.country]"
               :label="playerSelected.club"
               v-model="playerEdited.club"
@@ -81,14 +146,19 @@
               />
             </vs-select>
 
-            <vs-select v-else :label="playerSelected.club" v-model="playerEdited.club" icon>
+            <vs-select
+              v-else
+              :label="playerSelected.club"
+              v-model="playerEdited.club"
+              icon
+            >
               <vs-select-item
                 :key="l"
                 :value="l"
                 :text="l"
                 v-for="l in Object.keys(players[leagueSelected])"
               />
-            </vs-select>
+            </vs-select> -->
           </label>
           <label>
             Name:
@@ -100,24 +170,47 @@
           </label>
           <label>
             Position:
-            <vs-select :label="playerSelected.position" v-model="playerEdited.position" icon>
-              <vs-select-item :key="pos" :value="pos" :text="pos" v-for="pos in positions" />
-            </vs-select>
+            <select
+              :label="playerSelected.position"
+              v-model="playerEdited.position"
+            >
+              <option :key="pos" :value="pos" v-for="pos in positions">{{
+                pos
+              }}</option>
+            </select>
+            <!-- <vs-select
+              :label="playerSelected.position"
+              v-model="playerEdited.position"
+              icon
+            >
+              <vs-select-item
+                :key="pos"
+                :value="pos"
+                :text="pos"
+                v-for="pos in positions"
+              />
+            </vs-select> -->
           </label>
           <label>
             Available:
             <input type="checkbox" v-model="playerEdited.available" />
           </label>
-          <span :style="`color:${playerSelected.available ? 'green' : 'red'}`">Currently player {{playerSelected.available ? 'IS' : 'is NOT'}} available!</span>
+          <span :style="`color:${playerSelected.available ? 'green' : 'red'}`"
+            >Currently player
+            {{ playerSelected.available ? "IS" : "is NOT" }} available!</span
+          >
 
-          <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Player</vs-button>
+          <vs-button color="#59A95D" button="submit" type="relief" size="large"
+            >Edit Player</vs-button
+          >
           <vs-button
             color="danger"
             button="button"
             type="relief"
             size="large"
             @click.prevent="deletePlayerHandler(playerSelected.id)"
-          >Delete Player</vs-button>
+            >Delete Player</vs-button
+          >
         </form>
 
         <vs-alert
@@ -125,7 +218,8 @@
           title="Update finished!"
           active="true"
           color="success"
-        >Player succesfully updated!</vs-alert>
+          >Player succesfully updated!</vs-alert
+        >
       </div>
     </div>
   </div>
@@ -165,7 +259,7 @@ export default {
       return v
         .toLowerCase()
         .split(" ")
-        .join("_");
+        .join("-");
     },
     selectLeagueHandler(l) {
       this.teamSelected = "";
@@ -213,8 +307,11 @@ export default {
         body: JSON.stringify(payload)
       })
         .then(response => response.json())
-        .then(data => {
+        .then(async data => {
           console.log("Success:", data);
+          this.$vs.loading();
+          this.deselectPlayer()
+          this.players = await getAllPlayersDataCathegorized();
           this.success = true;
         })
         .catch(error => {
@@ -272,6 +369,14 @@ export default {
             console.error("Error:", error);
           });
       };
+    },
+    sortedPlayers(arr) {
+      return arr.sort((a, b) => {
+        return a.position.localeCompare(b.position);
+      });
+    },
+    deselectPlayer() {
+      return (this.playerSelected = "");
     }
   },
   computed: {},
@@ -297,6 +402,9 @@ export default {
 </script>
 
 <style lang="scss">
+select {
+  width: 50%;
+}
 .players-edit-container {
   width: 100%;
   display: flex;
@@ -391,7 +499,7 @@ export default {
     margin: 20px 0 0 0;
 
     .players-names {
-      width: 15%;
+      width: 25%;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -402,7 +510,6 @@ export default {
       padding: 5px 10px;
 
       a.edit-player-menu-item {
-        padding: 0 5px;
         width: 100%;
         transition: all 0.3s;
         display: flex;

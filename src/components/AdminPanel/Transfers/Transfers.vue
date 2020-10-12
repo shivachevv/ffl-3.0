@@ -291,7 +291,6 @@ export default {
         }
         // return x === _out ? _in : x;
       });
-      console.log(result);
       return result;
     },
     updateTransferStatus(tr, status) {
