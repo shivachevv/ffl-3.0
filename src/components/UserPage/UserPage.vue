@@ -103,7 +103,32 @@ export default {
       }
     }
   },
+  watch: {
+    // loggedUser(nv){
+    //   if (nv) {
+    //     const WCStatus =  this.loggedUser.rounds[`r${this.currentRound}`].wildCard
+    //     this.wildcard = WCStatus
+    //     console.log(this.wildcard);
+    //   }
+    // },
+    fetchCurrentRound(nv) {
+      if (nv && this.players) {
+        this.$vs.loading.close();
+      }
+    },
+    players(nv) {
+      if (nv) {
+        this.$vs.loading.close();
+      }
+    },
+    users(nv) {
+      if (nv && this.players) {
+        this.$vs.loading.close();
+      }
+    }
+  },
   created() {
+    this.$vs.loading();
     this.fetchUsers();
     this.fetchCurrentRound();
     // this.fetchPlayers();
@@ -131,21 +156,20 @@ export default {
     justify-content: flex-start;
     margin: 0 0 0 20px;
   }
-
-  //POPUP STYLES
-  .vs-popup {
-    width: 50% !important;
-    .vs-popup--content {
-      font-size: 0.9em !important;
-      -webkit-transition: all 0.23s ease 0.1s !important;
-      transition: all 0.23s ease 0.1s !important;
-      overflow: auto !important;
-      max-height: calc(100vh - 100px) !important;
-      padding: 0px !important;
-      width: 100% !important;
-      margin: 0px !important;
-      background-color: #e0e0e0;
-    }
+} //POPUP STYLES
+.vs-popup {
+  width: 50% !important;
+  .vs-popup--content {
+    font-size: 0.9em !important;
+    -webkit-transition: all 0.23s ease 0.1s !important;
+    transition: all 0.23s ease 0.1s !important;
+    overflow: auto !important;
+    max-height: calc(100vh - 100px) !important;
+    padding: 0px !important;
+    width: 100% !important;
+    margin: 0px !important;
+    background-color: red!important;
+    // background-color: #e0e0e0;
   }
 }
 

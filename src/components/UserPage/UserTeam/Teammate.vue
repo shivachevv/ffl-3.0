@@ -8,25 +8,25 @@
     </div>
     <div class="player-stats-cont">
       <div class="name-cont">
-        <span class="pos">{{player.position}}</span>
-        <span class="name">{{player.name}}</span>
+        <span class="pos">{{ player.position }}</span>
+        <span class="name">{{ player.name }}</span>
         <a href="#" class="player-stats">
           <img src="@/assets/images/user-page/computer.png" alt />
         </a>
       </div>
-      <div class="pts">{{player.points[`r${currentRound}`].roundPts}}</div>
+      <div class="pts">{{calculatedPlayerPts}}</div>
     </div>
-    <!-- <span v-if="player.isCpt && !isTripple" class="captain">C</span>
-    <span v-else-if="player.isCpt && isTripple" class="captain">SC</span> -->
+    <span v-if="isCap && !isTripple && !isVCap" class="captain">C</span>
+    <span v-if="!isCap && !isTripple && isVCap" class="captain">VC</span>
+    <span v-if="isCap && isTripple && !isVCap" class="captain">SC</span>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "Teammate",
   props: {
-    currentRound: {
+    tmpRndShow: {
       type: Number,
       required: true
     },
@@ -34,18 +34,43 @@ export default {
       type: Object,
       required: true
     },
-    isTripple:{
-        type:Boolean,
+    isTripple: {
+      type: Boolean
+    },
+    isCap: {
+      type: Boolean
+    },
+    isVCap: {
+      type: Boolean
+    },
+    isVCActive: {
+      type: Boolean
     }
   },
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    calculatedPlayerPts() {
+      const { isTripple, isCap, isVCap, isVCActive, player, tmpRndShow } = this;
+      const pts = Number(player.points[`r${tmpRndShow}`].roundPts);
+      const multiplier = isTripple ? 3 : 2;
+      if (isCap && !isVCap && !isTripple && !isVCActive) {
+        return pts * multiplier;
+      } else if (isCap && !isVCap && isTripple && !isVCActive) {
+        return pts * multiplier;
+      } else if (!isCap && isVCap && !isTripple && isVCActive) {
+        return pts * multiplier;
+      } else if (!isCap && isVCap && isTripple && isVCActive) {
+        return pts * multiplier;
+      } else {
+        return pts
+      }
+    }
+  },
   methods: {},
   watch: {},
-  created() {
-  }
+  created() {}
 };
 </script>
 
@@ -62,7 +87,8 @@ export default {
 .player-shirt img {
   width: 35%;
   padding: 0 0 5px 0;
-transition: all 0.3s;}
+  transition: all 0.3s;
+}
 
 .player-stats-cont {
   width: 100%;
@@ -85,8 +111,8 @@ transition: all 0.3s;}
   transition: all 0.1s;
 }
 .teammate:hover img {
-    transform: scale(1.1);
-  }
+  transform: scale(1.1);
+}
 
 .gk:hover .player-stats-cont::after,
 .dl1:hover .player-stats-cont::after,

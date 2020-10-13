@@ -64,7 +64,12 @@
           >Captain and Vice Captain cannot be the same player!</vs-alert
         >
 
-        <vs-select label="Choose your Captain!" v-model="nextRnd.cpt" icon>
+        <vs-select
+          class="cpt-field"
+          label="Choose your Captain!"
+          v-model="nextRnd.cpt"
+          icon
+        >
           <vs-select-item
             :value="p"
             :text="players[p].name"
@@ -73,6 +78,7 @@
           />
         </vs-select>
         <vs-select
+          class="cpt-field"
           label="Choose your Vice Captain!"
           v-model="nextRnd.viceCpt"
           icon
@@ -326,15 +332,13 @@ export default {
   font-size: 1.25rem;
   padding: 0px 0px 0 20px;
   position: relative;
-}
-
-.countdown-cont img {
-  width: 45px;
-}
-
-.countdown-cont span {
-  color: #d3d3d3;
-  width: 350px;
+  img {
+    width: 45px;
+  }
+  span {
+    color: #d3d3d3;
+    width: 350px;
+  }
 }
 
 .captain-selected {
@@ -385,6 +389,9 @@ export default {
       position: absolute;
       left: 10px;
       width: 36px;
+    }
+    .cpt-field {
+      margin: 10px 0 0 0;
     }
   }
 

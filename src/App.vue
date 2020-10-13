@@ -51,6 +51,20 @@ export default {
 </script>
 
 <style lang="scss">
+.vs-popup {
+  width: 50% !important;
+  .vs-popup--content {
+    font-size: 0.9em !important;
+    -webkit-transition: all 0.23s ease 0.1s !important;
+    transition: all 0.23s ease 0.1s !important;
+    overflow: auto !important;
+    max-height: calc(100vh - 100px) !important;
+    padding: 0px !important;
+    width: 100% !important;
+    margin: 0px !important;
+    background-color: #e0e0e0!important;
+  }
+}
 $breakpoints: (
   phone: 320px,
   tablet: 768px,

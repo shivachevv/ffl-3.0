@@ -2,25 +2,28 @@
   <div class="league-last5 sha hover">
     <div class="last5-heading up">
       <div>
-        <img :src="require(`@/assets/images/home/last5.png`)" alt="last5-logo`" />
+        <img
+          :src="require(`@/assets/images/home/last5.png`)"
+          alt="last5-logo`"
+        />
       </div>
       <h2>Last 5 transfers</h2>
     </div>
     <div class="transfers-container" v-if="last5TransfersReady">
-      <div class="transfer" v-for="(tr,i) in last5TransfersReady" :key="i">
-        <p class="up arr">{{users[tr.team].userTeam}}</p>
+      <div class="transfer" v-for="(tr, i) in last5TransfersReady" :key="i">
+        <p class="up arr">{{ users[tr.team].userTeam }}</p>
         <div class="transfer-details">
-          <span class="tr-round up">R{{tr.round}}</span>
+          <span class="tr-round up">R{{ tr.round }}</span>
           <span class="tr-in">
-            {{players[tr.transferIn].name}}
+            {{ players[tr.transferIn].name }}
             <br />
-            <span>{{players[tr.transferIn].club}}</span>
+            <span>{{ players[tr.transferIn].club }}</span>
           </span>
-          <span class="tr-pos up">{{tr.position}}</span>
+          <span class="tr-pos up">{{ tr.position }}</span>
           <span class="tr-out">
-            {{players[tr.transferOut].name}}
+            {{ players[tr.transferOut].name }}
             <br />
-            <span>{{players[tr.transferOut].club}}</span>
+            <span>{{ players[tr.transferOut].club }}</span>
           </span>
         </div>
       </div>
@@ -72,6 +75,16 @@ export default {
         })
         .sort((a, b) => {
           return new Date(b.timeMade) - new Date(a.timeMade);
+        })
+        .filter(x => {
+          if (x.status !== "cancelled" && x.status !== "pending") {
+            return x
+          }
+        })
+        .filter((x, i) => {
+          if (i <= 4) {
+            return x;
+          }
         });
 
       return destructured;

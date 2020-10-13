@@ -1,9 +1,9 @@
 <template>
-  <section class="standings-container" id="card">
+  <section class="standings-container" id="card" v-if="standings">
     <div class="st-header-container">
       <p class="standings-header up">
         Standings
-        <span>{{selectedLeagueObj.name}}</span>
+        <span>{{ selectedLeagueObj.name }}</span>
       </p>
     </div>
     <table class="standings-table front">
@@ -29,21 +29,28 @@
         <router-link
           :to="`team-details/${users[t[0]].userLogo}`"
           tag="tr"
-          :class="{first : i === 0, secthi : i === 1 || i === 2, grey : i > 2 }"
-          v-for="(t,i) in Object.entries(standings[`r${currentRound}`][selectedLeagueObj.id])"
+          :class="{ first: i === 0, secthi: i === 1 || i === 2, grey: i > 2 }"
+          v-for="(t, i) in sortedStandings"
           :key="t[0]"
         >
-          <td class="table-num">{{i + 1}}</td>
+          <td class="table-num">{{ i + 1 }}</td>
           <td class="up table-name">
-            <img :src="require(`@/assets/images/team-logos/logo1.png`)" :alt="`${users[t[0]].userTeam} logo`" />
-            {{users[t[0]].userTeam}}
-            <span>{{users[t[0]].email}}</span>
+            <img
+              :src="require(`@/assets/images/team-logos/logo1.png`)"
+              :alt="`${users[t[0]].userTeam} logo`"
+            />
+            {{ users[t[0]].userTeam }}
+            <span>{{ users[t[0]].email }}</span>
           </td>
-          <td class="up table-total">{{t[1].total}}</td>
-          <td class="up table-rnd">{{t[1].lastRndTotal}}</td>
+          <td class="up table-total">{{ t[1].total }}</td>
+          <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>
           <td class="up table-move">
             <img
-              :src="require(`@/assets/images/home/team-mov/${movement(t[1].movement)}.png`)"
+              :src="
+                require(`@/assets/images/home/team-mov/${movement(
+                  t[1].movement
+                )}.png`)
+              "
               :alt="`${t[1].movement} logo`"
             />
           </td>
@@ -81,12 +88,13 @@ export default {
     }
   },
   computed: {
-    // ...mapGetters(['currentRound']),
-    // standingsRdy() {
-    //   // return 'test'
-    //   // console.log('test');
-    //   // return standingsHelper(this.standings, this.leagues, this.players, this.users, this.currentRound)
-    // }
+    sortedStandings() {
+      return Object.entries(
+        this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
+      ).sort((a, b) => {
+        return b[1].total - a[1].total
+      });
+    }
   },
   methods: {
     // ...mapActions(['fetchCurrentRound']),

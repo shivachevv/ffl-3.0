@@ -30,7 +30,7 @@ const syncPointsHelper = async (pts, players, id) => {
                 threeAllowed: pts[id].threeAllowed ? pts[id].threeAllowed : 0,
                 yellowCards: pts[id].yellowCards ? pts[id].yellowCards : 0
             }
-
+                console.log(mappedID);
             const { position } = players[mappedID]
             const roundPts = pointsCalculator(
                 position,

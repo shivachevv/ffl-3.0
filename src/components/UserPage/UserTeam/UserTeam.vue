@@ -10,16 +10,16 @@
           href="#"
           class="prev up"
           @click.prevent="prevRnd()"
-          :class="{inactiveBtn:isShowingFirstRnd}"
+          :class="{ inactiveBtn: isShowingFirstRnd }"
         >
           Previous
           <div>
             <img src="@/assets/images/user-page/left-arrow.png" alt />
           </div>
         </a>
-        <span class="round up">Round {{tmpRndShow}}</span>
+        <span class="round up">Round {{ tmpRndShow }}</span>
         <a
-          :class="{inactiveBtn:isShowingLastRnd}"
+          :class="{ inactiveBtn: isShowingLastRnd }"
           href="#"
           class="next up"
           @click.prevent="nextRnd()"
@@ -36,17 +36,20 @@
     <div class="team" v-if="rndShow">
       <!------------------ TEAMMATE  ----------------->
       <Teammate
-        v-for="(pl,i) in Object.entries(rndShow.team)"
+        v-for="(pl, i) in Object.entries(rndShow.team)"
         :class="pl[0]"
         :player="players[pl[1]]"
         :isTripple="rndShow.superCpt === pl[1]"
-        :currentRound="currentRound"
+        :isCap="rndShow.cpt === pl[1]"
+        :isVCap="rndShow.viceCpt === pl[1]"
+        :isVCActive="isVCActive()"
+        :tmpRndShow="tmpRndShow"
         :key="i"
         @click.prevent.native="playerPopupHandler(pl[1])"
       ></Teammate>
 
       <div class="round-total-points up">
-        {{rndShowTotal}}
+        {{ rndShowTotal }}
         <br />points
       </div>
 
@@ -96,7 +99,8 @@ export default {
     rndShow: {
       get: function() {
         if (this.user) {
-          return this.user.rounds[`r${this.currentRound}`];
+          return this.user.rounds[`r${this.tmpRndShow}`];
+          // return this.user.rounds[`r${this.currentRound}`];
         } else {
           return 1;
         }
@@ -125,19 +129,20 @@ export default {
     },
     playerPopupHandler(p) {
       return this.$emit("playerPopupHandler", p);
-    }
-  },
-  watch: {
-    // userPts(nv) {
-    //   this.tmpRndShow = nv.length;
-    // },
-    // user(nv) {
-    //   this.fetchUserPts(nv.teamCode);
-    // }
-  },
-  filters: {
-    playerClassFilter: function(v) {
-      return v.toLowerCase();
+    },
+    isVCActive() {
+      const isLast = this.tmpRndShow === this.currentRound;
+      if (!isLast) {
+        const hasCptPlayed =
+          this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
+            .roundStats.starter ||
+          this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
+            .roundStats.sub;
+
+          return !hasCptPlayed
+      } else {
+        return false
+      }
     }
   },
   created() {},
