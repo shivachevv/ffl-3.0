@@ -19,7 +19,7 @@
     </div>
 
     <!-- GROUP A -->
-    <section class="group-a" >
+    <section class="group-a">
       <!-- <div class="group-left">
         <img src="images/group-a.png" alt="Group A" srcset="" />
       </div> -->
@@ -184,16 +184,6 @@
               - bye</span
             >
           </div> -->
-
-          
-
-            
-
-          
-
-          
-
-          
         </div>
       </div>
       <!-- <div class="group-right">
@@ -205,7 +195,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import cupStandingsHelper from '../../utils/cupStandingsHelper'
+import cupStandingsHelper from "../../utils/cupStandingsHelper";
 
 export default {
   name: "Cup",
@@ -213,22 +203,34 @@ export default {
   props: {},
   data() {
     return {
-      selectedGroup: undefined
+      selectedGroup: undefined,
+      cupStandings: undefined
     };
   },
   computed: {
     ...mapGetters(["cup"]),
-    cupStandings(){
-        const result = cupStandingsHelper(this.cup)
-
-        console.log(result);
-        return 'test'
-    }
+    // cupStandings() {
+    //   if (this.cup) {
+    //     const result = cupStandingsHelper(this.cup);
+    //     console.log(result);
+    //     return result;
+    //   } else {
+    //     return "test";
+    //   }
+    // }
   },
   methods: {
     ...mapActions(["fetchCup"]),
     groupSelectionHandler(v) {
       return (this.selectedGroup = v);
+    }
+  },
+  watch: {
+    cup(nv) {
+      if (nv) {
+        this.cupStandings = cupStandingsHelper(nv);
+        console.log(this.cupStandings);
+      }
     }
   },
   async created() {
