@@ -82,6 +82,11 @@
             @click.prevent="switchComponent"
             :class="{selected: chosenComponent === 'CupSquadSelect'}"
           >CupSquadSelect</button>
+          <button
+            class="menu-item-link"
+            @click.prevent="switchComponent"
+            :class="{selected: chosenComponent === 'CupMatchPoints'}"
+          >CupMatchPoints</button>
         </div>
         <a href class="menu-item-section" @click.prevent="showSectionHandler('matching')">Matching</a>
         <div class="admin-menu-item" v-if="showMatching">
@@ -113,6 +118,7 @@ import Leagues from "./Leagues/Leagues";
 import H2HLeague from "./H2HLeague/H2HLeague";
 import CupGroupsAndRounds from "./Cup/CupGroupsAndRounds";
 import CupSquadSelect from "./Cup/CupSquadSelect";
+import CupMatchPoints from "./Cup/CupMatchPoints";
 import Matching from "./Matching/Matching";
 
 export default {
@@ -129,6 +135,7 @@ export default {
     H2HLeague,
     CupGroupsAndRounds,
     CupSquadSelect,
+    CupMatchPoints,
     Matching
   },
   data() {

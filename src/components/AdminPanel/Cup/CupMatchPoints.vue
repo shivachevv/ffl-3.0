@@ -1,6 +1,6 @@
 <template>
   <div class="cup-section-container" v-if="users">
-    <h1 class="section-header">Cup Squad Selection</h1>
+    <h1 class="section-header">Cup Match Points</h1>
 
     <!-- CREATE NEW CUP GROUP BUTTON and POPUP -->
     <!-- <vs-popup class="holamundo" title="Create new group!" :active.sync="showPopup1">
@@ -20,7 +20,7 @@
       button="submit"
       type="relief"
       size="normal"
-      @click.prevent="test"
+      @click.prevent="createH2HRound"
       >TEST</vs-button
     >
 
@@ -44,7 +44,7 @@
       title="Update finished!"
       active="true"
       color="success"
-      >Team Squad successfully updated!</vs-alert
+      >Team Points successfully updated!</vs-alert
     >
     <vs-alert :active.sync="error" closable close-icon="close">{{
       errorMsg
@@ -111,144 +111,80 @@
         </div>
       </div>
 
+      <!-- TEAM 1 -->
+
       <div v-if="selectedMatch && players" class="squad-selection-container">
-        <!-- TEAM ! -->
-        <div class="team-squad">
+        <form class="team-squad" @submit.prevent="submitPointsHandler('home')">
           <span>Team of {{ users[selectedMatch.team1.id].userTeam }}</span>
-          <a
-            v-for="player in matchSquadArray('home')"
+          <div
+            v-for="player in Object.entries(selectedMatch.team1.squad)"
             :key="player[0]"
-            @click.prevent="addPlayerToCupSquadHandler(player, 'home')"
-            :class="{
-              selected: isPlayerInSquad(players[player[1]].id, cupSquadHome)
-            }"
-            >{{ player[0] }}: {{ players[player[1]].name }}</a
+            class="player-points"
           >
+            <span
+              >{{ player[0].toUpperCase() }}:
+              {{ players[player[1].id].name }}</span
+            >
+            <input
+              type="number"
+              :placeholder="`Last synced: ${player[1].pts}`"
+              v-model="cupPointsSquadHome[player[0]]"
+            />
+          </div>
+
           <vs-button
+            class="submit-btn"
             color="#59A95D"
             button="submit"
             type="relief"
             size="large"
-            @click.prevent="editTeamSquadHandler(cupSquadHome, 'home')"
-            >Submit team 1</vs-button
+            >Submit Points Team 1</vs-button
           >
-        </div>
+        </form>
 
         <!-- TEAM 2 -->
-        <div class="team-squad">
+
+        <form class="team-squad" @submit.prevent="submitPointsHandler('away')">
           <span>Team of {{ users[selectedMatch.team2.id].userTeam }}</span>
-          <a
-            v-for="player in matchSquadArray('away')"
+          <div
+            v-for="player in Object.entries(selectedMatch.team2.squad)"
             :key="player[0]"
-            @click.prevent="addPlayerToCupSquadHandler(player, 'away')"
-            :class="{
-              selected: isPlayerInSquad(players[player[1]].id, cupSquadAway)
-            }"
-            >{{ player[0] }}: {{ players[player[1]].name }} </a
+            class="player-points"
           >
+            <span
+              >{{ player[0].toUpperCase() }}:
+              {{ players[player[1].id].name }}</span
+            >
+            <input
+              type="number"
+              :placeholder="`Last synced: ${player[1].pts}`"
+              v-model="cupPointsSquadAway[player[0]]"
+            />
+          </div>
+
           <vs-button
+            class="submit-btn"
             color="#59A95D"
             button="submit"
             type="relief"
             size="large"
-            @click.prevent="editTeamSquadHandler(cupSquadAway, 'away')"
-            >Submit team 2</vs-button
+            >Submit Points Team 2</vs-button
           >
-        </div>
+        </form>
       </div>
-      <!-- <vs-popup class="holamundo" title="Create new round!" :active.sync="showPopup2">
-        <AddCupRoundForm
-          :group="cupGroups[selectedGroup.name]"
-          :users="users"
-          @updatedCupGroups="cupGroups = $event"
-        /> 
-      </vs-popup>-->
-      <!-- <vs-button
-        class="add-league"
-        color="#59A95D"
-        button="button"
-        type="relief"
-        size="large"
-        @click.prevent="openAddGroupRoundPopup"
-      >Create New Cup Round</vs-button>-->
-
-      <!-- <form
-        @submit.prevent="editCupRoundFormHandler"
-        class="cup-group-details-edit"
-        v-if="selectedRound"
-      >
-
-        <vs-input
-          label="Which play-round will be held during??"
-          placeholder="Round number"
-          v-model="selectedRound.roundHeld"
-          type="number"
-      />-->
-      <!-- MATCHES -->
-      <!-- <div
-          v-for="match in Object.keys(selectedRound).length -1"
-          :key="match"
-          class="match-container"
-      >-->
-      <!-- TEAM 1 -->
-      <!-- <vs-select
-            :label="`Match ${match}. Team 1`"
-            icon
-            placeholder="Select team"
-            v-model="selectedRound[`match${match}`].team1.id"
-          >
-            <vs-select-item
-              :key="u"
-              :value="u"
-              :text="users[u].userTeam"
-              v-for="u in selectedGroup.teams"
-            />
-      </vs-select>-->
-
-      <!-- TEAM 2 -->
-      <!-- <vs-select
-            :label="`Match ${match}. Team 2`"
-            icon
-            placeholder="Select team"
-            v-model="selectedRound[`match${match}`].team2.id"
-          >
-            <vs-select-item
-              :key="u"
-              :value="u"
-              :text="users[u].userTeam"
-              v-for="u in selectedGroup.teams"
-            />
-          </vs-select>
-      </div>-->
-      <!-- MATCHES END -->
-      <!-- <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Round</vs-button>
-      </form>-->
     </div>
   </div>
 </template>
 
 <script>
-// import AddCupGroupForm from "./AddCupGroupForm";
-// import AddCupRoundForm from "./AddCupRoundForm";
-// import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 import { DATA_URL } from "../../../common";
-// import getAllLeagues from "../../../utils/getAllLeagues";
-// import { getCurrentRound } from "../../../utils/getCurrentRound";
 import getAllUsers from "../../../utils/getAllUsers";
 import getAllCupGroups from "../../../utils/getAllCupGroups";
 import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
-// import uploadAllPlayers from "../../../utils/uploadAllPlayers";
-// import { getAllPlayersDataNormal } from '../../../utils/getAllPlayersData';
-// import makeNewLeague from "../../../models/League";
-// import makeNewTransfer from "../../../models/Transfer";
-// import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
-  name: "CupSquadSelect",
-  components: {
-    // AddCupGroupForm,
-    // AddCupRoundForm
-  },
+  name: "CupMatchPoints",
+  components: {},
   data() {
     return {
       cupGroups: undefined,
@@ -266,48 +202,39 @@ export default {
       selectedMatchNum: undefined,
       selectedMatch: undefined,
       cupSquadHome: {},
-      cupSquadAway: {}
+      cupSquadAway: {},
+      cupPointsSquadHome: {},
+      cupPointsSquadAway: {}
     };
   },
   methods: {
-    isPlayerInSquad(player, squad) {
-      if (this.cupSquadHome && this.cupSquadAway) {
-        let result =  Object.values(squad)
-          .map(x => {
-            return x.id;
-          })
-          .includes(player);
-          return result
-      } else return false;
+    submitPointsHandler(type) {
+      const points =
+        type === "home" ? this.cupPointsSquadHome : this.cupPointsSquadAway;
+      const team = type === "home" ? this.cupSquadHome : this.cupSquadAway;
+      const merged = this.mergePtsWithTeam(points, team);
+
+      this.$vs.dialog({
+        color: "success",
+        title: "Confirm Points edit!",
+        text: this.showSuccessMsgPts(merged, type),
+        accept: () => {
+          this.fetchUpdatedPts(merged, type);
+        }
+      });
     },
-    editTeamSquadHandler(team, teamNumber) {
-      if (this.isEditedTeamSquadOK(team)) {
-        this.$vs.dialog({
-          color: "success",
-          title: `Confirm ${teamNumber} Squad Edit`,
-          text: this.showSuccessMsgSquad(team, teamNumber),
-          accept: () => {
-            this.fetchUpdatedSquad(team, teamNumber);
-          }
-        });
-      } else {
-        this.error = true;
-        this.errorMsg = "Please select all positions!";
+    mergePtsWithTeam(points, team) {
+      let merged = {};
+      for (const pos in team) {
+        const player = team[pos];
+        if (points[pos]) {
+          merged[pos] = player;
+          merged[pos].pts = Number(points[pos]);
+        } else {
+          merged[pos] = player;
+        }
       }
-    },
-    addPlayerToCupSquadHandler(player, teamNumber) {
-      const pos =
-        player[0].length === 3 ? player[0].substring(0, 2) : player[0];
-      const id = player[1];
-      const playerObject = {
-        id,
-        pts: 0
-      };
-      if (teamNumber === "home") {
-        this.$set(this.cupSquadHome, pos, playerObject);
-      } else {
-        this.$set(this.cupSquadAway, pos, playerObject);
-      }
+      return merged;
     },
     selectMatchHandler(match, i) {
       this.selectedMatch = match;
@@ -319,88 +246,7 @@ export default {
         this.cupSquadAway = match.team2.squad;
       }
     },
-    openAddCupGroupPopup() {
-      return (this.showPopup1 = true);
-    },
-    openAddGroupRoundPopup() {
-      return (this.showPopup2 = true);
-    },
-    editCupGroupFormHandler() {
-      if (this.isEditedCupGroupOK()) {
-        this.$vs.dialog({
-          color: "success",
-          title: "Confirm Edit",
-          text: this.showSuccessMsg(this.selectedGroup),
-          accept: () => {
-            this.fetchUpdatedLeague(this.selectedGroup);
-          }
-        });
-      } else {
-        this.error = true;
-        this.errorMsg = "Please enter group name and members!";
-      }
-    },
-    editCupRoundFormHandler() {
-      if (this.isEditedCupRoundOK()) {
-        this.$vs.dialog({
-          color: "success",
-          title: "Confirm Edit",
-          text: this.showSuccessMsgRnd(this.selectedRound),
-          accept: () => {
-            this.fetchUpdatedRound(this.selectedRound, this.selectedRoundNum);
-          }
-        });
-      } else {
-        this.error = true;
-        this.errorMsg = "Please enter round matches correctly!";
-      }
-    },
-    fetchUpdatedLeague(payload) {
-      return fetch(`${DATA_URL}cup/${payload.name}.json`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(response => response.json())
-        .then(async data => {
-          console.log("Success:", data);
-          this.success = true;
-          this.$vs.loading();
-          this.cupGroups = await getAllCupGroups();
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          this.error = true;
-          this.errorMsg = error;
-        });
-    },
-    fetchUpdatedRound(payload, rnd) {
-      const group = this.selectedGroup.name;
-      return fetch(`${DATA_URL}cup/${group}/rounds/${rnd}.json`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(response => response.json())
-        .then(async data => {
-          console.log("Success:", data);
-          this.success = true;
-          this.$vs.loading();
-          this.cupGroups = await getAllCupGroups();
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          this.error = true;
-          this.errorMsg = error;
-        });
-    },
-    fetchUpdatedSquad(payload, teamNumber) {
+    fetchUpdatedPts(payload, teamNumber) {
       const group = this.selectedGroup.name;
       const rnd = this.selectedRoundNum;
       const match = this.selectedMatchNum;
@@ -429,70 +275,21 @@ export default {
           this.errorMsg = error;
         });
     },
-    showSuccessMsg({ name, teams }) {
-      return `You are about to edit group ${name}! 
-      Users:
-      ${Object.values(teams)
-        .map(team => {
-          return `${this.users[team].userTeam}`;
-        })
-        .join(", ")}`;
-    },
-    showSuccessMsgRnd(rnd) {
-      return `You are about to edit the round! 
-      Matches:
-      ${Object.values(rnd)
-        .map((match, i) => {
-          if (typeof match !== "string") {
-            const roundLabel = `Match ${i + 1}: `;
-            return `${roundLabel} ${this.users[match.team1.id].userTeam} - ${
-              this.users[match.team2.id].userTeam
-            }`;
-          }
-        })
-        .join(", ")}`;
-    },
-    showSuccessMsgSquad(team, teamNumber) {
-      return `You are about to edit the squad for ${teamNumber} team! 
+    showSuccessMsgPts(team, teamNumber) {
+      const teamName =
+        teamNumber === "home"
+          ? this.users[this.selectedMatch.team1.id].userTeam
+          : this.users[this.selectedMatch.team2.id].userTeam;
+      return `You are about to edit the squad for ${teamName} team! 
       Players:
       ${Object.entries(team)
         .map(player => {
           const pos = player[0];
           const name = this.players[player[1].id].name;
-          return `${pos}: ${name}`;
+          const pts = player[1].pts;
+          return `${pos}: ${name} - ${pts} pts`;
         })
         .join(", ")}`;
-    },
-    isEditedCupGroupOK() {
-      if (this.selectedGroup.name && this.selectedGroup.teams.length) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    isEditedCupRoundOK() {
-      const { selectedRound } = this;
-      let flag = true;
-      Object.keys(selectedRound).forEach(matchId => {
-        if (matchId !== "roundHeld") {
-          const match = selectedRound[matchId];
-          if (match.team1.id === "" || match.team2.id === "") {
-            flag = false;
-          }
-        }
-      });
-      return flag;
-    },
-    isEditedTeamSquadOK(team) {
-      if (Object.keys(team).length === 8) {
-        return true;
-      }
-      return false;
-    },
-    removeUserFromGroup(u) {
-      return (this.selectedGroup.teams = this.selectedGroup.teams.filter(x => {
-        return x !== u;
-      }));
     },
     selectGroupHandler(r) {
       this.selectedMatch = undefined;
@@ -515,18 +312,11 @@ export default {
       });
       return result;
     },
-    matchSquadArray(type) {
-      const teamNumber = type === "home" ? 1 : 2;
-      const result = Object.entries(
-        this.users[this.selectedMatch[`team${teamNumber}`].id].rounds[
-          `r${this.selectedRound.roundHeld}`
-        ].team
-      );
-      return result;
-    },
     deselectCupSquads() {
       this.cupSquadHome = {};
       this.cupSquadAway = {};
+      this.cupPointsSquadHome = {};
+      this.cupPointsSquadAway = {};
       return;
     }
     // createEditedUsers(leagueId, leagueTeams) {
@@ -1084,7 +874,7 @@ export default {
         justify-content: flex-start;
         align-items: flex-start;
 
-        span {
+        & > span {
           font-weight: bold;
           width: 100%;
           padding: 0 0 10px 0;
@@ -1093,21 +883,25 @@ export default {
           border-bottom: 1px solid black;
         }
 
-        a {
-          margin: 3px 0 3px 0;
-          padding: 4px;
+        .player-points {
           width: 100%;
-          cursor: pointer;
-          transition: all 0.3s;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          /* padding: 5px 0; */
+          margin: 5px 0;
 
-          &:hover {
-            background-color: #59a95d;
+          input {
+            width: 40%;
+            height: 30px;
+            font-weight: bold;
+            padding: 5px;
           }
-          &.selected {
-            background-color: #356538;
-            color: white;
-            border-radius: 5px;
-          }
+        }
+
+        .submit-btn {
+          margin: 15px 0 0 0;
         }
       }
     }

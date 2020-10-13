@@ -42,7 +42,7 @@
       </div>
       <!-- MATCHES END -->
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create Group</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create Round</vs-button>
     </form>
   </div>
 </template>

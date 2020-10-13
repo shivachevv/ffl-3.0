@@ -4,7 +4,7 @@ import Home from "../components/Home/Home.vue";
 import Login from "../components/Login/Login";
 import Register from "../components/Register/Register";
 import UserPage from "../components/UserPage/UserPage";
-// import UserTransfers from "../components/UserPage/UserTransfers/UserTransfers";
+import Cup from "../components/Cup/Cup";
 import GetAllPlayers from "../components/GetAllPlayers";
 
 import AdminPanel from "../components/AdminPanel/AdminPanel";
@@ -92,6 +92,12 @@ const routes = [{
   path: '/admin',
   name: 'admin',
   component: AdminPanel,
+},
+{
+  path: '/cup',
+  name: 'cup',
+  props: true,
+  component: Cup,
 },
 {
   path: '*',

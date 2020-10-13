@@ -8,6 +8,7 @@ import currentRound from './modules/currentRound'
 import users from './modules/users'
 import standings from './modules/standings'
 import transfers from './modules/transfers'
+import cup from './modules/cup'
 import loggedUser from './modules/loggedUser'
 
 Vue.use(Vuex);
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     users,
     standings,
     transfers,
-    loggedUser
+    loggedUser,
+    cup
   }
 });
