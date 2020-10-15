@@ -52,7 +52,7 @@ export default {
 
 <style lang="scss">
 .vs-popup {
-  width: 50% !important;
+  width: 60% !important;
   .vs-popup--content {
     font-size: 0.9em !important;
     -webkit-transition: all 0.23s ease 0.1s !important;

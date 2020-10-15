@@ -98,6 +98,11 @@ const routes = [{
   name: 'cup',
   props: true,
   component: Cup,
+  meta: { title: 'FFL CUP' },
+  beforeEnter(to, from, next){
+    document.title = to.meta.title
+    next()
+  }
 },
 {
   path: '*',

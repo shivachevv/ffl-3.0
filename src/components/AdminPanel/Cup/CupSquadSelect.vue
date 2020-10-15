@@ -144,8 +144,8 @@
             :class="{
               selected: isPlayerInSquad(players[player[1]].id, cupSquadAway)
             }"
-            >{{ player[0] }}: {{ players[player[1]].name }} </a
-          >
+            >{{ player[0] }}: {{ players[player[1]].name }}
+          </a>
           <vs-button
             color="#59A95D"
             button="submit"
@@ -272,12 +272,12 @@ export default {
   methods: {
     isPlayerInSquad(player, squad) {
       if (this.cupSquadHome && this.cupSquadAway) {
-        let result =  Object.values(squad)
+        let result = Object.values(squad)
           .map(x => {
             return x.id;
           })
           .includes(player);
-          return result
+        return result;
       } else return false;
     },
     editTeamSquadHandler(team, teamNumber) {
@@ -299,9 +299,32 @@ export default {
       const pos =
         player[0].length === 3 ? player[0].substring(0, 2) : player[0];
       const id = player[1];
+      const stats = {
+        assists: 0,
+        cleanSheet: 0,
+        clearanceOffLine: 0,
+        errorLeadToGoal: 0,
+        goals: 0,
+        lastManTackle: 0,
+        manOfTheMatch: 0,
+        ownGoals: 0,
+        penaltyGoals: 0,
+        penaltyMissed: 0,
+        penaltySaved: 0,
+        ratingOver85: 0,
+        redCards: 0,
+        saves: 0,
+        shotsOnPost: 0,
+        starter: 0,
+        sub: 0,
+        teamVictory: 0,
+        threeAllowed: 0,
+        yellowCards: 0
+      };
       const playerObject = {
         id,
-        pts: 0
+        pts: 0,
+        stats
       };
       if (teamNumber === "home") {
         this.$set(this.cupSquadHome, pos, playerObject);

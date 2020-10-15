@@ -3,17 +3,38 @@
     <h1 class="section-header">Cup Match Points</h1>
 
     <!-- CREATE NEW CUP GROUP BUTTON and POPUP -->
-    <!-- <vs-popup class="holamundo" title="Create new group!" :active.sync="showPopup1">
-      <AddCupGroupForm :users="users" @updatedCupGroups="cupGroups = $event" />
-    </vs-popup>-->
-    <!-- <vs-button
-      class="add-league"
-      color="#59A95D"
-      button="button"
-      type="relief"
-      size="large"
-      @click.prevent="openAddCupGroupPopup"
-    >Create New Cup Group</vs-button>-->
+    <vs-popup
+      v-if="selectedStatsPlayer && selectedGroup && selectedRoundNum && selectedMatchNum"
+      class="holamundo"
+      :title="`Add stats for ${players[selectedStatsPlayer[1].id].name}`"
+      :active.sync="homeStatsPopup"
+    >
+      <AddPlayerStatsForm
+        :players="players"
+        :player="selectedStatsPlayer"
+        :group="selectedGroup.name"
+        :round="selectedRoundNum"
+        :match="selectedMatchNum"
+        team="team1"
+        @updatedCupGroups="cupGroups = $event"
+      />
+    </vs-popup>
+    <vs-popup
+      v-if="selectedStatsPlayer && selectedGroup && selectedRoundNum && selectedMatchNum"
+      class="holamundo"
+      :title="`Add stats for ${players[selectedStatsPlayer[1].id].name}`"
+      :active.sync="awayStatsPopup"
+    >
+      <AddPlayerStatsForm
+        :players="players"
+        :player="selectedStatsPlayer"
+        :group="selectedGroup.name"
+        :round="selectedRoundNum"
+        :match="selectedMatchNum"
+        team="team2"
+        @updatedCupGroups="cupGroups = $event"
+      />
+    </vs-popup>
 
     <vs-button
       color="#59A95D"
@@ -121,6 +142,14 @@
             :key="player[0]"
             class="player-points"
           >
+            <vs-button
+              color="#59A95D"
+              button="button"
+              type="relief"
+              size="small"
+              @click.prevent="openPlayerStatsPopup('home', player)"
+              >Stats</vs-button
+            >
             <span
               >{{ player[0].toUpperCase() }}:
               {{ players[player[1].id].name }}</span
@@ -151,6 +180,14 @@
             :key="player[0]"
             class="player-points"
           >
+            <vs-button
+              color="#59A95D"
+              button="button"
+              type="relief"
+              size="small"
+              @click.prevent="openPlayerStatsPopup('away', player)"
+              >Stats</vs-button
+            >
             <span
               >{{ player[0].toUpperCase() }}:
               {{ players[player[1].id].name }}</span
@@ -177,6 +214,7 @@
 </template>
 
 <script>
+import AddPlayerStatsForm from "./AddPlayerStatsForm";
 import { DATA_URL } from "../../../common";
 import getAllUsers from "../../../utils/getAllUsers";
 import getAllCupGroups from "../../../utils/getAllCupGroups";
@@ -184,7 +222,9 @@ import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 
 export default {
   name: "CupMatchPoints",
-  components: {},
+  components: {
+    AddPlayerStatsForm
+  },
   data() {
     return {
       cupGroups: undefined,
@@ -196,18 +236,28 @@ export default {
       success: false,
       error: false,
       errorMsg: "",
-      showPopup1: false,
-      showPopup2: false,
+      homeStatsPopup: false,
+      awayStatsPopup: false,
       selectedRoundNum: undefined,
       selectedMatchNum: undefined,
       selectedMatch: undefined,
       cupSquadHome: {},
       cupSquadAway: {},
       cupPointsSquadHome: {},
-      cupPointsSquadAway: {}
+      cupPointsSquadAway: {},
+      selectedStatsPlayer: undefined
     };
   },
   methods: {
+    openPlayerStatsPopup(type, player) {
+      this.selectedStatsPlayer = undefined;
+      this.selectedStatsPlayer = player;
+      if (type === "home") {
+        return (this.homeStatsPopup = true);
+      } else {
+        return (this.awayStatsPopup = true);
+      }
+    },
     submitPointsHandler(type) {
       const points =
         type === "home" ? this.cupPointsSquadHome : this.cupPointsSquadAway;
