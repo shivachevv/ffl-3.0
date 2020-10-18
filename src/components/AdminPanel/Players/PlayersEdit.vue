@@ -87,7 +87,7 @@
               @change="playerEdited.club = ''"
             >
               <option :key="l" :value="l" v-for="l in Object.keys(players)">{{
-                l
+                countryMap[l]
               }}</option>
             </select>
             <!-- <vs-select
@@ -227,7 +227,7 @@
 
 <script>
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
-import { teamCodes, DATA_URL } from "../../../common";
+import { teamCodes, DATA_URL, countryMap } from "../../../common";
 import AddPlayerForm from "./AddPlayerForm";
 
 export default {
@@ -249,10 +249,11 @@ export default {
         name: "",
         position: "",
         shirt: "",
-        available:""
+        available: ""
       },
       positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
-      success: false
+      success: false,
+      countryMap: countryMap
     };
   },
   methods: {
@@ -293,7 +294,8 @@ export default {
       if (_new["club"]) {
         result["shirt"] = teamCodes[_new["club"]];
       }
-      result.available = typeof _new.available === 'boolean' ? _new.available : _old.available;
+      result.available =
+        typeof _new.available === "boolean" ? _new.available : _old.available;
       return result;
     },
     showSuccessMsg({ club, country, name, position }) {
@@ -312,7 +314,7 @@ export default {
         .then(async data => {
           console.log("Success:", data);
           this.$vs.loading();
-          this.deselectPlayer()
+          this.deselectPlayer();
           this.players = await getAllPlayersDataCathegorized();
           this.success = true;
         })
@@ -322,7 +324,7 @@ export default {
     },
     editPlayerFormHandler() {
       const payload = this.mergePlayers(this.playerEdited, this.playerSelected);
-  console.log(payload);
+      console.log(payload);
       if (this.players[payload.country][payload.club]) {
         this.$vs.dialog({
           color: "success",

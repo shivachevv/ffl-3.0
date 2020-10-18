@@ -19,7 +19,7 @@
           placeholder="Select a league"
         >
           <option :key="l" :value="l" v-for="l in Object.keys(players)">{{
-            l
+            countryMap[l]
           }}</option>
         </select>
       </label>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { teamCodes, DATA_URL } from "../../../common";
+import { teamCodes, DATA_URL, countryMap } from "../../../common";
 import { addPlayerPts, makeNewPlayer } from "../../../models/Player";
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { v4 as uuidv4 } from "uuid";
@@ -116,7 +116,8 @@ export default {
       positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
       error: false,
       errorMsg: "",
-      success: false
+      success: false,
+      countryMap: countryMap
     };
   },
   methods: {

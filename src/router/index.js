@@ -6,6 +6,7 @@ import Register from "../components/Register/Register";
 import UserPage from "../components/UserPage/UserPage";
 import Cup from "../components/Cup/Cup";
 import H2H from "../components/H2H/H2H";
+import Transfers from "../components/Transfers/Transfers";
 import GetAllPlayers from "../components/GetAllPlayers";
 
 import AdminPanel from "../components/AdminPanel/AdminPanel";
@@ -111,6 +112,17 @@ const routes = [{
   props: true,
   component: H2H,
   meta: { title: 'FFL: H2H League' },
+  beforeEnter(to, from, next){
+    document.title = to.meta.title
+    next()
+  }
+},
+{
+  path: '/transfers',
+  name: 'transfers',
+  props: true,
+  component: Transfers,
+  meta: { title: 'FFL: Transfers' },
   beforeEnter(to, from, next){
     document.title = to.meta.title
     next()

@@ -158,6 +158,17 @@ export const teamCodes = {
     "Gil Vicente FC": 155
 }
 
+export const countryMap = {
+    "Primeira Liga": "Portugal",
+    "Serie A": "Italy",
+    "Premier League": "England",
+    "Ligue 1": "France",
+    "Superlig": "Turkey",
+    "La Liga": "Spain",
+    "Bundesliga": "Germany",
+    "Eredivisie": "Netherlands"
+}
+
 export const playersMapped = {
     "2987": "a661433b-98fa-4fa7-9b4f-6d70d4f3b3e1",
     "3281": "cfd5a8a2-7289-44aa-a607-da26522e9c1d",
