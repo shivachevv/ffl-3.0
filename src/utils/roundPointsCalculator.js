@@ -25,7 +25,9 @@ const roundPointsCalculator = (round, rndNum, players, isCup = false) => {
         } else if (id === viceCpt && !hasCptPlayed) {
             total += players[id].points[`r${rndNum}`].roundPts * cptMultiplier
         } else {
-            total += players[id].points[`r${rndNum}`].roundPts
+            if (players[id]) {
+                total += players[id].points[`r${rndNum}`].roundPts
+            }
         }
     })
 

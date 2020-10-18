@@ -40,49 +40,12 @@
         <img src="images/group-a.png" alt="Group A" srcset="" />
       </div> -->
       <div class="group-center">
-        <div class="group-standings">
-          <!-- HEADER -->
-          <div class="standings-header sha">
-            <span class="up position">Pos</span>
-            <span class="up team">Team</span>
-            <span class="up games">Games</span>
-            <span class="up win-draw-lose">W/D/L</span>
-            <span class="up goal-diff">Goal Diff</span>
-            <span class="up goal-diff-total">+ / -</span>
-            <span class="up points">Pts</span>
-          </div>
-
-          <!-- TEAM 1 -->
-
-          <router-link
-            :to="`/team-details/${users[team[0]].userLogo}`"
-            tag="a"
-            class="team-stats first-places sha"
-            v-for="(team, place) in sortStandingsTeams(
-              cupStandings[selectedGroup.name]
-            )"
-            :key="team[0]"
-          >
-            <span class="up position">{{ place + 1 }}.</span>
-            <span class="up team"
-              ><a href="" class="clickable">{{
-                users[team[0]].userTeam
-              }}</a></span
-            >
-            <span class="up games">{{ team[1].games }}</span>
-            <span class="up win-draw-lose"
-              >{{ team[1].wdl.win }}/{{ team[1].wdl.draw }}/{{
-                team[1].wdl.loss
-              }}</span
-            >
-            <span class="up goal-diff"
-              >{{ team[1].for }} - {{ team[1].against }}</span
-            >
-            <span class="up goal-diff-total">{{ team[1].goaldiff }}</span>
-            <span class="up points">{{ team[1].pts }}</span>
-          </router-link>
-        </div>
-
+        <Standings
+          v-if="cupStandings[selectedGroup.name]"
+          :standings="cupStandings[selectedGroup.name]"
+          :users="users"
+          :title="`Group ${selectedGroup.name}`"
+        />
         <!-- GROUP MATCHES -->
 
         <div class="group-matches sha">
@@ -161,11 +124,13 @@
 import { mapGetters, mapActions } from "vuex";
 import cupStandingsHelper from "../../utils/cupStandingsHelper";
 import CupMatchPopup from "./CupMatchPopup";
+import Standings from '../H2H/Standings'
 
 export default {
   name: "Cup",
   components: {
-    CupMatchPopup
+    CupMatchPopup,
+    Standings
   },
   props: {},
   data() {
@@ -251,9 +216,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 con-vs-popup .vs-popup {
-    width: 70% !important;
-  }
-
+  width: 70% !important;
+}
 
 .cup-container {
   width: 100%;
@@ -380,94 +344,94 @@ con-vs-popup .vs-popup {
   align-items: center;
 }
 
-.group-standings {
-  width: 100%;
-  font-size: 0.875rem;
-}
+// .group-standings {
+//   width: 100%;
+//   font-size: 0.875rem;
+// }
 
-.standings-header {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #3c474d;
-  border-bottom: 2px solid #893e40;
-  color: #d3d3d3;
-  text-align: center;
-}
+// .standings-header {
+//   width: 100%;
+//   height: 40px;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+//   background-color: #3c474d;
+//   border-bottom: 2px solid #893e40;
+//   color: #d3d3d3;
+//   text-align: center;
+// }
 
-.team-stats {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #d3d3d3;
-  color: #3c474d;
-  margin: 0 0 5px 0;
-  text-align: start;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+// .team-stats {
+//   width: 100%;
+//   height: 40px;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+//   background-color: #d3d3d3;
+//   color: #3c474d;
+//   margin: 0 0 5px 0;
+//   text-align: start;
+//   cursor: pointer;
+//   transition: all 0.2s;
+// }
 
-.team-stats:hover {
-  background-color: #bbbbbb;
-  transform: scale(1.02);
-}
+// .team-stats:hover {
+//   background-color: #bbbbbb;
+//   transform: scale(1.02);
+// }
 
-.first-places {
-  background-color: #bcc4c8;
-  border-left: 5px solid #893e40;
-  transition: all 0.3s;
-}
+// .first-places {
+//   background-color: #bcc4c8;
+//   border-left: 5px solid #893e40;
+//   transition: all 0.3s;
+// }
 
-.first-places:hover {
-  background-color: #a6aeb3;
-}
+// .first-places:hover {
+//   background-color: #a6aeb3;
+// }
 
-.position {
-  width: 7%;
-  text-align: center;
-}
+// .position {
+//   width: 7%;
+//   text-align: center;
+// }
 
-.team {
-  width: 30%;
-  text-align: start;
-}
+// .team {
+//   width: 30%;
+//   text-align: start;
+// }
 
-.team a {
-  color: #3c474d;
-  text-decoration: none;
-  transition: all 0.2s;
-}
+// .team a {
+//   color: #3c474d;
+//   text-decoration: none;
+//   transition: all 0.2s;
+// }
 
-.team a:hover {
-  color: #3c474d;
-  text-decoration: underline;
-}
+// .team a:hover {
+//   color: #3c474d;
+//   text-decoration: underline;
+// }
 
-.games {
-  width: 10%;
-  text-align: center;
-}
+// .games {
+//   width: 10%;
+//   text-align: center;
+// }
 
-.win-draw-lose {
-  width: 15%;
-  text-align: center;
-}
+// .win-draw-lose {
+//   width: 15%;
+//   text-align: center;
+// }
 
-.goal-diff {
-  width: 10%;
-  text-align: center;
-}
+// .goal-diff {
+//   width: 10%;
+//   text-align: center;
+// }
 
-.points {
-  width: 7%;
-  text-align: center;
-}
+// .points {
+//   width: 7%;
+//   text-align: center;
+// }
 
 /******** GAMEWEEKS *********************/
 .group-matches {

@@ -9,6 +9,7 @@ import users from './modules/users'
 import standings from './modules/standings'
 import transfers from './modules/transfers'
 import cup from './modules/cup'
+import h2h from './modules/h2h'
 import loggedUser from './modules/loggedUser'
 
 Vue.use(Vuex);
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     standings,
     transfers,
     loggedUser,
-    cup
+    cup,
+    h2h
   }
 });

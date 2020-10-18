@@ -248,7 +248,8 @@ export default {
         id: "",
         name: "",
         position: "",
-        shirt: ""
+        shirt: "",
+        available:""
       },
       positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
       success: false
@@ -292,6 +293,7 @@ export default {
       if (_new["club"]) {
         result["shirt"] = teamCodes[_new["club"]];
       }
+      result.available = typeof _new.available === 'boolean' ? _new.available : _old.available;
       return result;
     },
     showSuccessMsg({ club, country, name, position }) {
@@ -320,7 +322,7 @@ export default {
     },
     editPlayerFormHandler() {
       const payload = this.mergePlayers(this.playerEdited, this.playerSelected);
-
+  console.log(payload);
       if (this.players[payload.country][payload.club]) {
         this.$vs.dialog({
           color: "success",

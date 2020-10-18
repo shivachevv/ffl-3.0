@@ -61,20 +61,25 @@ const actions = {
             isMyTeam: false
         },
         {
-            title: "Player Stats",
-            path: "/player-stats",
+            title: "H2H",
+            path: "/h2h",
             isMyTeam: false
         },
+        // {
+        //     title: "Player Stats",
+        //     path: "/player-stats",
+        //     isMyTeam: false
+        // },
         {
             title: "Rules & Prizes",
             path: "/rules-prizes",
             isMyTeam: false
         },
-        {
-            title: "Stats",
-            path: "/stats",
-            isMyTeam: false
-        },
+        // {
+        //     title: "Stats",
+        //     path: "/stats",
+        //     isMyTeam: false
+        // },
         {
             title: "Admin",
             path: "/admin",

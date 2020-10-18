@@ -1,10 +1,12 @@
-import { playersMapped } from "../common";
+// import { playersMapped } from "../common";
 import { getCurrentRound } from "../utils/getCurrentRound";
+import getMatching from "../utils/getMatching";
 import pointsCalculator from '../utils/pointsCalculator'
 
 const syncPointsHelper = async (pts, players, id) => {
     const round = id ? id : await getCurrentRound()
 
+    const playersMapped = await getMatching()
     Object.keys(pts).forEach(id => {
         if (playersMapped[id]) {
             const mappedID = playersMapped[id]
@@ -30,24 +32,25 @@ const syncPointsHelper = async (pts, players, id) => {
                 threeAllowed: pts[id].threeAllowed ? pts[id].threeAllowed : 0,
                 yellowCards: pts[id].yellowCards ? pts[id].yellowCards : 0
             }
-                console.log(mappedID);
-            const { position } = players[mappedID]
-            const roundPts = pointsCalculator(
-                position,
-                ...Object.values(playerStats)
-            )
 
-            players[mappedID].points[`r${round}`] = {
-                roundPts,
-                roundStats: playerStats
+            if (players[mappedID]) {
+                const { position } = players[mappedID]
+                const roundPts = pointsCalculator(
+                    position,
+                    ...Object.values(playerStats)
+                )
+
+                players[mappedID].points[`r${round}`] = {
+                    roundPts,
+                    roundStats: playerStats
+                }
             }
-
         }
-
-
     })
 
     return players
 }
 
 export default syncPointsHelper
+
+
