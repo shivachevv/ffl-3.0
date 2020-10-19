@@ -12,7 +12,7 @@
     <div class="transfers-container" v-if="last5TransfersReady">
       <div class="transfer" v-for="(tr, i) in last5TransfersReady" :key="i">
         <p class="up arr">{{ users[tr.team].userTeam }}</p>
-        <div class="transfer-details">
+        <router-link :to="`/team-details/${users[tr.team].userLogo}`" class="transfer-details">
           <span class="tr-round up">R{{ tr.round }}</span>
           <span class="tr-in">
             {{ players[tr.transferIn].name }}
@@ -25,7 +25,7 @@
             <br />
             <span>{{ players[tr.transferOut].club }}</span>
           </span>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
