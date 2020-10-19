@@ -5,6 +5,7 @@
     </div>
 
     <LeagueBtn
+    used="home"
       v-for="(l,i) in leagues"
       :key="i"
       :title="l.name"

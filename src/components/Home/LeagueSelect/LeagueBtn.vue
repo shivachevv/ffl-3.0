@@ -1,5 +1,10 @@
 <template>
-  <div class="choose-lg-container sha" @click="selectLeagueHandler(id)">
+  <div 
+  class="sha" 
+  :class="{home_choose_lg_container: used === 'home', transfers_choose_lg_container: used === 'transfers' }" 
+  @click="selectLeagueHandler(id)"
+  
+  >
     <img :src="require(`@/assets/images/home/${logo}.png`)" :alt="`${title} logo`" />
     <p class="up">{{title}}</p>
   </div>
@@ -20,7 +25,12 @@ export default {
     id: {
       type: String,
       required: true
-    }
+    },
+    used: {
+      type: String,
+      required: true
+    },
+
   },
   methods: {
     selectLeagueHandler(x) {
@@ -36,7 +46,7 @@ $dark-grey: #1b2e32;
 $light-grey: #d3d3d3;
 $dark-red: #9d5659;
 
-.choose-lg-container {
+.home_choose_lg_container {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -63,6 +73,42 @@ $dark-red: #9d5659;
     text-align: center;
     text-decoration: none;
     color: $dark-grey;
+    transition: all 0.2s;
+
+    &:hover {
+      padding: 10px;
+    }
+  }
+}
+.transfers_choose_lg_container {
+  width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 20px 5px 0 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 5px;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  img {
+    width: 30%;
+    margin: 10px;
+  }
+  p {
+    font-size: 1rem;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    border-top: 2px solid #1b2e32;
+    border-bottom: 2px solid #1b2e32;
+    width: 90%;
+    text-align: center;
+    text-decoration: none;
+    color: #1b2e32;
     transition: all 0.2s;
 
     &:hover {
