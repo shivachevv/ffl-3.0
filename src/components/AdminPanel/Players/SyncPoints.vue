@@ -277,7 +277,7 @@ export default {
           this.users,
           round
         );
-
+        console.log(standings);
         this.fetchUpdatedPlayersObject(updatedPlayers);
         this.fetchUpdatedStandingsObject(standings);
       } else {

@@ -12,7 +12,10 @@
     <div class="transfers-container" v-if="last5TransfersReady">
       <div class="transfer" v-for="(tr, i) in last5TransfersReady" :key="i">
         <p class="up arr">{{ users[tr.team].userTeam }}</p>
-        <router-link :to="`/team-details/${users[tr.team].userLogo}`" class="transfer-details">
+        <router-link
+          :to="`/team-details/${users[tr.team].userLogo}`"
+          class="transfer-details"
+        >
           <span class="tr-round up">R{{ tr.round }}</span>
           <span class="tr-in">
             {{ players[tr.transferIn].name }}
@@ -64,12 +67,16 @@ export default {
       }
       const destructured = [...Object.values(this.transfers)]
         .map(x => {
-          const obj = Object.values(x)[0];
+          const obj = Object.values(x);
           return [...Object.values(obj)];
         })
         .flat()
+        .map(x => {
+          return [...Object.values(x)][0];
+        })
         .filter(x => {
           if (this.selectedLeagueObj.teams.includes(x.team)) {
+            // console.log(x);  
             return x;
           }
         })
@@ -78,7 +85,7 @@ export default {
         })
         .filter(x => {
           if (x.status !== "cancelled" && x.status !== "pending") {
-            return x
+            return x;
           }
         })
         .filter((x, i) => {

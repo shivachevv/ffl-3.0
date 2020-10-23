@@ -9,12 +9,11 @@ const roundPointsCalculator = (round, rndNum, players, isCup = false) => {
     //     hasCptPlayed = false
     // }
     
-    
+    // console.log(cpt, players[cpt]);
     const hasCptPlayed = cpt ?
         !!players[cpt].points[`r${rndNum}`].roundStats.starter || !!players[cpt].points[`r${rndNum}`].roundStats.sub
         :
         false
-    // const cptMultiplier = superCpt ? 3 : 2
 
     const cptMultiplier = isCup ? 1 : superCpt ? 3 : 2
 

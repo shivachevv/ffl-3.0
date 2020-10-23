@@ -11,6 +11,7 @@ const H2H = () => import("../components/H2H/H2H");
 const Transfers = () => import("../components/Transfers/Transfers");
 const RulesAndPrizes = () => import("../components/Rules/Rules");
 const GetAllPlayers = () => import("../components/GetAllPlayers");
+const tactics = () => import("../components/tactics");
 const AdminPanel = () => import("../components/AdminPanel/AdminPanel");
 const NotFound = () => import("../components/common/NotFound");
 // import Login from "../components/Login/Login";
@@ -85,7 +86,7 @@ const routes = [{
         const teamName = to.params.id
         const users = await getAllUsers()
         const teamId = Object.values(users).filter(u => {
-          return u.userTeam === teamName
+          return u.userLogo === teamName
         })[0].uid
         if (teamId === user.uid) {
           next()
@@ -102,6 +103,11 @@ const routes = [{
   path: '/getallplayers',
   name: 'getallplayers',
   component: GetAllPlayers
+},
+{
+  path: '/tactics',
+  name: 'tactics',
+  component: tactics
 },
 {
   path: '/admin',

@@ -36,11 +36,11 @@
           <td class="table-num">{{ i + 1 }}</td>
           <td class="up table-name">
             <img
-              :src="require(`@/assets/images/team-logos/logo1.png`)"
+              :src="require(`@/assets/images/team-logos/${users[t[0]].userLogo}.png`)"
               :alt="`${users[t[0]].userTeam} logo`"
             />
             {{ users[t[0]].userTeam }}
-            <span>{{ users[t[0]].email }}</span>
+            <span>{{ users[t[0]].name }}</span>
           </td>
           <td class="up table-total">{{ t[1].total }}</td>
           <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>

@@ -1,5 +1,5 @@
 <template>
-  <main v-if="user && users && loggedUser && currentRound && players">
+  <main v-if="user && users && currentRound && players">
     <div class="main-container">
       <!---------------- USER TEAM SECTION -------------------------------------->
       <UserTeam

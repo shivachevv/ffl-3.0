@@ -29,7 +29,7 @@
             :key="u"
             :value="u"
             :text="users[u].userTeam"
-            v-for="u in Object.keys(users)"
+            v-for="u in sortedUsers"
           />
         </vs-select>
 
@@ -44,7 +44,7 @@
             :key="u"
             :value="u"
             :text="users[u].userTeam"
-            v-for="u in Object.keys(users)"
+            v-for="u in sortedUsers"
           />
         </vs-select>
       </div>
@@ -260,7 +260,16 @@ export default {
   },
   computed: {
     newRoundNumber(){
-      return Number(Object.keys(this.h2hrounds).length + 1)
+      if (this.h2hrounds) {
+        return Number(Object.keys(this.h2hrounds).length + 1)
+      } else {
+        return 1
+      }
+    },
+    sortedUsers(){
+      return Object.keys(this.users).sort((a,b)=>{
+        return this.users[a].userTeam.localeCompare(this.users[b].userTeam)
+      })
     }
   },
   watch: {

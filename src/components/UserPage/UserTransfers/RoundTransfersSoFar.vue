@@ -1,5 +1,5 @@
 <template>
-  <div class="transfers-container">
+  <div class="transfers-container" v-if="roundTransfers">
     <h2>Transfers submitted for round {{ currentRound }}</h2>
     <div class="tr-cont" v-for="(t, i) in roundTransfers" :key="i">
       <span>{{ t.position }}</span>
@@ -58,6 +58,9 @@ export default {
     ...mapGetters(["transfers"]),
     roundTransfers() {
       if (this.transfers && this.loggedUser && this.currentRound) {
+        if (!this.transfers[`r${this.currentRound}`]) {
+          return undefined;
+        }
         return this.transfers[`r${this.currentRound}`][this.loggedUser.uid];
       } else {
         return undefined;

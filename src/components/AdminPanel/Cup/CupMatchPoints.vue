@@ -41,7 +41,7 @@
       button="submit"
       type="relief"
       size="normal"
-      @click.prevent="createH2HRound"
+      @click.prevent="test"
       >TEST</vs-button
     >
 
@@ -249,6 +249,15 @@ export default {
     };
   },
   methods: {
+    test(){
+      let result = {}
+      for (const id in this.players) {
+          const player = this.players[id];
+          result[id] = player
+          result[id].points = {}
+      }
+      console.log(JSON.stringify(result));
+    },
     openPlayerStatsPopup(type, player) {
       this.selectedStatsPlayer = undefined;
       this.selectedStatsPlayer = player;

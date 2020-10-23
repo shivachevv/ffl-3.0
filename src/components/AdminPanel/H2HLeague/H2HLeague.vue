@@ -3,7 +3,11 @@
     <h1 class="section-header">Head to Head League Section</h1>
 
     <!-- CREATE NEW PLAYER BUTTON and POPUP -->
-    <vs-popup class="holamundo" title="Create new round!" :active.sync="showPopup">
+    <vs-popup
+      class="holamundo"
+      title="Create new round!"
+      :active.sync="showPopup"
+    >
       <AddH2HRoundForm
         :h2hrounds="h2hrounds"
         :users="users"
@@ -17,15 +21,17 @@
       type="relief"
       size="large"
       @click.prevent="openAddH2HRoundPopup"
-    >Create New H2H Round</vs-button>
+      >Create New H2H Round</vs-button
+    >
 
     <vs-button
       color="#59A95D"
       button="submit"
       type="relief"
       size="normal"
-      @click.prevent="createH2HRound"
-    >TEST</vs-button>
+      @click.prevent="test"
+      >TEST</vs-button
+    >
 
     <!-- <div class="league-selection">
       <vs-alert
@@ -48,14 +54,15 @@
       </label>
     </div>-->
 
-    <div class="rounds">
+    <div class="rounds" v-if="h2hrounds">
       <a
         href
-        v-for="rnd in Object.keys(h2hrounds)"
+        v-for="rnd in sortedRounds"
         :key="rnd"
         @click.prevent="selectRoundHandler(rnd)"
-        :class="{selected: rnd === selectedRoundNum}"
-      >{{rnd}}</a>
+        :class="{ selected: rnd === selectedRoundNum }"
+        >{{ rnd }}</a
+      >
     </div>
     <!-- NOTIFICATIONS -->
     <vs-alert
@@ -63,11 +70,18 @@
       title="Update finished!"
       active="true"
       color="success"
-    >H2H Round successfully updated!</vs-alert>
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+      >H2H Round successfully updated!</vs-alert
+    >
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
 
     <!-- EDIT FORM -->
-    <form @submit.prevent="editH2HFormHandler" class="h2h-league-details-edit" v-if="selectedRound">
+    <form
+      @submit.prevent="editH2HFormHandler"
+      class="h2h-league-details-edit"
+      v-if="selectedRound"
+    >
       <vs-input
         label="Which play-round will be held during??"
         placeholder="Round number"
@@ -105,7 +119,9 @@
         </vs-select>
       </div>
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit H2H League</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large"
+        >Edit H2H League</vs-button
+      >
     </form>
   </div>
 </template>
@@ -149,13 +165,19 @@ export default {
       error: false,
       errorMsg: "",
       showPopup: false,
-      selectedUser: undefined
-      //   newCpt: "",
+      selectedUser: undefined,
+      
       //   newViceCpt: "",
       //   roundTotal: 0
     };
   },
   methods: {
+    test(){
+      for (const user in this.users) {
+          console.log(this.users[user].userTeam," - ", user);
+          
+        }
+    },
     createH2HRound() {
       uploadAllPlayers();
       // const payload = {
@@ -629,7 +651,13 @@ export default {
     //   return (this.roundTotal = total);
     // }
   },
-  computed: {},
+  computed: {
+    sortedRounds(){
+      return Object.keys(this.h2hrounds).sort((a,b)=>{
+        return Number(a.substring(1)) - Number(b.substring(1))
+      })
+    }
+  },
   watch: {
     h2hrounds(nv) {
       if (nv && this.users) {
@@ -655,7 +683,7 @@ export default {
     }
   },
   async created() {
-    this.$vs.loading();
+    // this.$vs.loading();
     this.h2hrounds = await getAllH2HRounds();
     this.users = await getAllUsers();
     // this.players = await getAllPlayersDataNormal()
@@ -733,3 +761,28 @@ export default {
   }
 }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

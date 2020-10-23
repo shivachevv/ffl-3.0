@@ -1,8 +1,8 @@
 <template>
-  <div class="rounds-container" v-if="currentRound && players">
+  <div class="rounds-container" v-if="players">
     <h1 class="section-header">Rounds section</h1>
     <div class="rounds">
-      <span>Current Round: {{currentRound}}</span>
+      <span>Current Round: {{ currentRound }}</span>
       <div class="round-buttons">
         <!-- <button @click.prevent="deleteRndHandler">Delete Round</button> -->
         <vs-button
@@ -11,7 +11,8 @@
           type="relief"
           size="normal"
           @click.prevent="addRndHandler"
-        >Add Round</vs-button>
+          >Add Round</vs-button
+        >
       </div>
       <vs-button
         color="#59A95D"
@@ -19,20 +20,23 @@
         type="relief"
         size="normal"
         @click.prevent="createUpdatedH2HObject"
-      >TEST</vs-button>
+        >TEST</vs-button
+      >
     </div>
     <vs-alert
       v-if="success"
       title="Update finished!"
       active="true"
       color="success"
-    >Successfully added new round: {{currentRound}}</vs-alert>
+      >Successfully added new round: {{ currentRound }}</vs-alert
+    >
     <vs-alert
       v-if="error"
       title="An Error occured!"
       active="true"
       color="danger"
-    >There was an error: {{errorMsg}}</vs-alert>
+      >There was an error: {{ errorMsg }}</vs-alert
+    >
   </div>
 </template>
 
@@ -136,24 +140,6 @@ export default {
     },
     createUpdatedUsersObject() {
       let copy = JSON.parse(JSON.stringify(this.users));
-      // const testTeam = {
-      //   "gk":  "c6752392-58b2-4855-ae56-613e90da8b85",
-      //   "dl1": "c68a8f35-04b3-4f9c-95a1-54019718a20a",
-      //   "dl2": "c69044ec-eec1-4fbc-a142-6d2d5ff605e7",
-      //   "dc1": "c6969c32-f562-4fc5-8550-59e43be4a6af",
-      //   "dc2": "c69ba8a6-24c1-4481-81d1-1097c61c498d",
-      //   "dr1": "c6c3803a-3f95-42c6-aed3-92ca9df5229b",
-      //   "dr2": "c6c3cb72-6687-443e-9ebc-b14a8498e889",
-      //   "ml1": "c6c42c26-f723-4837-89c7-e51920920695",
-      //   "ml2": "c6d8a167-0434-42dc-aa20-36bd6e6ae772",
-      //   "mc1": "c6e6f895-6b06-4db3-8fa4-cc0ac147d50f",
-      //   "mc2": "c6e75a96-0847-45e4-81ad-3b16acb4365b",
-      //   "mr1": "c6eae752-380a-4bf8-a84f-ac6b3090bb62",
-      //   "mr2": "c6ed5493-b615-40ec-9281-3b46eb0ee128",
-      //   "st1": "c6fb9cea-7699-4102-95b3-e329017a2c9b",
-      //   "st2": "c70172ea-875a-4220-84d0-95ec0bef6a34",
-      //   "st3": "c711ea51-accb-478a-919c-36103ab3412a"
-      // };
 
       Object.keys(copy).forEach(id => {
         const team = this.createNextRndTeam(copy[id]);
@@ -162,16 +148,6 @@ export default {
         const viceCpt = this.createNextRndCaptains(copy[id], "viceCpt");
         const superCpt = this.createNextRndSuperCpt(copy[id]);
 
-        // if (Object.prototype.hasOwnProperty.call(copy[id], "rounds")) {
-        //   console.log(1);
-        //   copy[id]["rounds"][`r${this.currentRound}`].transfersAvail = 2;
-        //   copy[id]["rounds"][`r${this.currentRound}`].transfersMade = 1;
-        // } else {
-        //   console.log(2);
-        //   copy[id]["rounds"] = {};
-        //   copy[id]["rounds"][`r${this.currentRound}`].transfersAvail = 2;
-        //   copy[id]["rounds"][`r${this.currentRound}`].transfersMade = 1;
-        // }
         if (copy[id]["rounds"]) {
           copy[id]["rounds"][`r${this.currentRound + 1}`] = addUserRound(
             team,
@@ -192,6 +168,36 @@ export default {
         }
       });
       return copy;
+
+      // const testTeam = {
+      //   "gk":  "c6752392-58b2-4855-ae56-613e90da8b85",
+      //   "dl1": "c68a8f35-04b3-4f9c-95a1-54019718a20a",
+      //   "dl2": "c69044ec-eec1-4fbc-a142-6d2d5ff605e7",
+      //   "dc1": "c6969c32-f562-4fc5-8550-59e43be4a6af",
+      //   "dc2": "c69ba8a6-24c1-4481-81d1-1097c61c498d",
+      //   "dr1": "c6c3803a-3f95-42c6-aed3-92ca9df5229b",
+      //   "dr2": "c6c3cb72-6687-443e-9ebc-b14a8498e889",
+      //   "ml1": "c6c42c26-f723-4837-89c7-e51920920695",
+      //   "ml2": "c6d8a167-0434-42dc-aa20-36bd6e6ae772",
+      //   "mc1": "c6e6f895-6b06-4db3-8fa4-cc0ac147d50f",
+      //   "mc2": "c6e75a96-0847-45e4-81ad-3b16acb4365b",
+      //   "mr1": "c6eae752-380a-4bf8-a84f-ac6b3090bb62",
+      //   "mr2": "c6ed5493-b615-40ec-9281-3b46eb0ee128",
+      //   "st1": "c6fb9cea-7699-4102-95b3-e329017a2c9b",
+      //   "st2": "c70172ea-875a-4220-84d0-95ec0bef6a34",
+      //   "st3": "c711ea51-accb-478a-919c-36103ab3412a"
+      // };
+
+      // if (Object.prototype.hasOwnProperty.call(copy[id], "rounds")) {
+      //   console.log(1);
+      //   copy[id]["rounds"][`r${this.currentRound}`].transfersAvail = 2;
+      //   copy[id]["rounds"][`r${this.currentRound}`].transfersMade = 1;
+      // } else {
+      //   console.log(2);
+      //   copy[id]["rounds"] = {};
+      //   copy[id]["rounds"][`r${this.currentRound}`].transfersAvail = 2;
+      //   copy[id]["rounds"][`r${this.currentRound}`].transfersMade = 1;
+      // }
     },
     createUpdatedPlayersObject() {
       let copy = JSON.parse(JSON.stringify(this.players));
@@ -218,12 +224,17 @@ export default {
             0,
             ...playerStatsEmptyValues
           );
-          const stats = player["points"][`r${this.currentRound}`].roundStats;
-          const currentTotalPts = this.currentPlayerTotalPts(
-            player.position,
-            stats
-          );
-          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts;
+
+          if (this.currentRound !== 0) {
+            const stats = player["points"][`r${this.currentRound}`].roundStats;
+            const currentTotalPts = this.currentPlayerTotalPts(
+              player.position,
+              stats
+            );
+            player["points"][
+              `r${this.currentRound}`
+            ].roundPts = currentTotalPts;
+          }
         }
       });
 
@@ -233,6 +244,26 @@ export default {
     //   console.log(this.h2hrounds);
     // },
     createNextRndTeam(user) {
+      if (this.currentRound === 0) {
+        return {
+          gk: "",
+          dl1: "",
+          dl2: "",
+          dc1: "",
+          dc2: "",
+          dr1: "",
+          dr2: "",
+          ml1: "",
+          ml2: "",
+          mc1: "",
+          mc2: "",
+          mr1: "",
+          mr2: "",
+          st1: "",
+          st2: "",
+          st3: ""
+        };
+      }
       const current = user["rounds"][`r${this.currentRound}`].team;
       const next = user["rounds"][`r${this.currentRound}`].nextRndInfo.team;
       return next ? next : current;
@@ -240,6 +271,9 @@ export default {
       // return {}
     },
     createNextRndTransfers(user) {
+      if (this.currentRound === 0) {
+        return 1
+      }
       const avail = user["rounds"][`r${this.currentRound}`].transfersAvail;
       const made = user["rounds"][`r${this.currentRound}`].transfersMade;
       return avail - made === 0 ? 1 : 2;
@@ -247,6 +281,9 @@ export default {
       // return 1;
     },
     createNextRndCaptains(user, rank) {
+      if (this.currentRound === 0) {
+        return ""
+      }
       const current = user["rounds"][`r${this.currentRound}`][rank];
       const next = user["rounds"][`r${this.currentRound}`].nextRndInfo[rank];
       return next ? next : current;
@@ -254,6 +291,9 @@ export default {
       // return
     },
     createNextRndSuperCpt(user) {
+      if (this.currentRound === 0) {
+        return false
+      }
       return user["rounds"][`r${this.currentRound}`].nextRndInfo.superCpt;
       // console.log(user);
       // return false
@@ -287,17 +327,17 @@ export default {
   computed: {},
   watch: {
     players(nv) {
-      if (nv && this.currentRound && this.users) {
+      if (nv && this.users) {
         this.$vs.loading.close();
       }
     },
-    currentRound(nv) {
-      if (nv && this.players && this.users) {
-        this.$vs.loading.close();
-      }
-    },
+    // currentRound(nv) {
+    //   if (nv && this.players && this.users) {
+    //     this.$vs.loading.close();
+    //   }
+    // },
     users(nv) {
-      if (nv && this.players && this.currentRound) {
+      if (nv && this.players) {
         this.$vs.loading.close();
       }
     },

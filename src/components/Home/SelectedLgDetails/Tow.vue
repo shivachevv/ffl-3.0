@@ -7,8 +7,13 @@
       <h2>Team of the week</h2>
     </div>
     <div class="tow-points" v-for="team in towRdy" :key="team[0]">
-      <router-link :to="`/team-details/${users[team[0]].userLogo}`" tag="h2" class="tow up">{{users[team[0]].userTeam}}</router-link>
-      <span class="tow-points-number">{{team[1].lastRndTotal}} pts</span>
+      <router-link
+        :to="`/team-details/${users[team[0]].userLogo}`"
+        tag="h2"
+        class="tow up"
+        >{{ users[team[0]].userTeam }}</router-link
+      >
+      <span class="tow-points-number">{{ team[1].lastRndTotal }} pts</span>
     </div>
   </div>
 </template>
@@ -45,8 +50,12 @@ export default {
       ).sort((a, b) => {
         return b[1].lastRndTotal - a[1].lastRndTotal;
       });
-
-      return tow;
+      const highest = Number(tow[0][1].lastRndTotal);
+      return tow.filter(x => {
+        if (x[1].lastRndTotal === highest) {
+          return x;
+        }
+      });
     }
   },
   created() {}

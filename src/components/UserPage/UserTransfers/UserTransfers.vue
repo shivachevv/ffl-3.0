@@ -259,7 +259,7 @@ export default {
         console.log("ERROR", error);
       }
     },
-    fetchNewTransfers(_in, _out) {
+    async fetchNewTransfers(_in, _out) {
       const sort = arr => {
         return arr.sort((a, b) => {
           return a.position.localeCompare(b.position);
@@ -269,9 +269,14 @@ export default {
       const sortedOut = sort(_out);
       for (let i = 0; i < sortedIn.length; i++) {
         const player = sortedIn[i];
-        const userTransfers = this.transfers[`r${this.currentRound}`][
-          this.loggedUser.uid
-        ];
+
+        const isFirstTransfer = this.transfers ? this.transfers[`r${this.currentRound}`] : false
+        const userTransfers = this.transfers
+          ? isFirstTransfer
+            ? this.transfers[`r${this.currentRound}`][this.loggedUser.uid]
+            : undefined
+          : undefined;
+        
         const transferNumber = userTransfers
           ? Object.keys(userTransfers).length + 1
           : 1;
@@ -283,7 +288,7 @@ export default {
           player.id
         );
 
-        fetch(
+        await fetch(
           `${DATA_URL}transfers/r${this.currentRound}/${this.loggedUser.uid}/t${transferNumber}.json`,
           {
             method: "PATCH",
@@ -296,7 +301,7 @@ export default {
         )
           .then(response => response.json())
           .then(async () => {
-            this.fetchTransfers();
+            await this.fetchTransfers();
             // console.log("Success:", data);
             //   this.success = true;
             // this.$vs.loading();
@@ -381,7 +386,7 @@ export default {
       }
     },
     fetchUpdatedTeam(payload) {
-      console.log("team", payload, `${this.updatedURL}nextRndInfo/team.json`);
+      // console.log("team", payload, `${this.updatedURL}nextRndInfo/team.json`);
       return fetch(`${this.updatedURL}nextRndInfo/team.json`, {
         method: "PATCH",
         mode: "cors",
@@ -482,12 +487,12 @@ export default {
       if (nv) {
         this.$vs.loading.close();
       }
-    },
-    users(nv) {
-      if (nv && this.players) {
-        this.$vs.loading.close();
-      }
     }
+    // users(nv) {
+    //   if (nv && this.players) {
+    //     this.$vs.loading.close();
+    //   }
+    // }
   },
   created() {
     this.$vs.loading();

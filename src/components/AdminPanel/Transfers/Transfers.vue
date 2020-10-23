@@ -264,7 +264,7 @@ export default {
     },
     updateTransferCounts(tr, action) {
       const [, transfer] = tr;
-      const number = action === "confirmed" ? 1 : -1;
+      const number = action === "confirmed" ? 0 : -1;
       return (
         this.users[transfer.team].rounds[`r${this.selectedRound}`]
           .transfersMade + number

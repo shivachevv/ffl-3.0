@@ -8,11 +8,15 @@
         v-for="l in Object.keys(players)"
         :key="l"
         @click.prevent="selectLeagueHandler(l)"
-        :class="{selected: leagueSelected === l}"
+        :class="{ selected: leagueSelected === l }"
         class="points-player-menu-item"
       >
         <img
-          :src="require(`@/assets/images/user-transfers/leagues/${makeLeagueToImg(l)}.png`)"
+          :src="
+            require(`@/assets/images/user-transfers/leagues/${makeLeagueToImg(
+              l
+            )}.png`)
+          "
           :alt="l"
         />
       </a>
@@ -20,56 +24,70 @@
     <!-- TEAMS -->
     <div class="teams-container" v-if="players && leagueSelected">
       <a
-        v-for="(t,i) in Object.keys(players[leagueSelected])"
+        v-for="(t, i) in Object.keys(players[leagueSelected])"
         :key="i"
         @click.prevent="selectTeamHandler(t)"
         class="points-player-menu-item"
-        :class="{selected: teamSelected === t}"
-      >{{t}}</a>
+        :class="{ selected: teamSelected === t }"
+        >{{ t }}</a
+      >
     </div>
 
     <!-- PLAYERS -->
-    <div class="players-container" v-if="players && leagueSelected && teamSelected">
+    <div
+      class="players-container"
+      v-if="players && leagueSelected && teamSelected"
+    >
       <div class="players-names">
         <vs-alert
           v-if="success"
           title="Update finished!"
           active="true"
           color="success"
-        >Player succesfully updated!</vs-alert>
+          >Player succesfully updated!</vs-alert
+        >
 
-        <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+        <vs-alert :active.sync="error" closable close-icon="close">{{
+          errorMsg
+        }}</vs-alert>
 
         <div class="edit-player-menu-header">
           <span>Players</span>
-          <span v-for="i in currentRound" :key="i">{{i}}</span>
+          <span v-for="i in currentRound" :key="i">{{ i }}</span>
         </div>
         <div
           v-for="p in Object.values(players[leagueSelected][teamSelected])"
           :key="p.id"
           class="edit-player-menu-item"
         >
-          <a>{{p.name}} - {{p.position}}</a>
+          <a>{{ p.name }} - {{ p.position }}</a>
           <a
-            v-for="(rnd,i) in sortedRounds(Object.entries(p.points))"
+            v-for="(rnd, i) in sortedRounds(Object.entries(p.points))"
             :key="i"
             @click.prevent="selectPlayerRoundHandler(p, rnd[1], i + 1)"
-          >{{rnd[1].roundPts}}</a>
+            >{{ rnd[1].roundPts }}</a
+          >
         </div>
 
         <vs-popup
           v-if="playerSelected && roundSelected"
           class="holamundo"
-          :title="'Edit stats of ' + playerSelected.name + ' for round ' + roundSelected.round + '!'"
+          :title="
+            'Edit stats of ' +
+              playerSelected.name +
+              ' for round ' +
+              roundSelected.round +
+              '!'
+          "
           :active.sync="showPopup"
         >
-          <h2 class="popup-header">Points: {{selectedPlayerPts}}</h2>
+          <h2 class="popup-header">Points: {{ selectedPlayerPts }}</h2>
           <form @submit.prevent="submitPlayerRoundStatsHandler">
             <label
               v-for="stat in Object.entries(roundSelected.roundData.roundStats)"
               :key="stat[0]"
             >
-              {{stat[0]}}:
+              {{ stat[0] }}:
               <vs-input
                 :label-placeholder="stat[1]"
                 type="number"
@@ -77,7 +95,13 @@
                 color="dark"
               />
             </label>
-            <vs-button color="#59A95D" button="submit" type="relief" size="large">Update Stats</vs-button>
+            <vs-button
+              color="#59A95D"
+              button="submit"
+              type="relief"
+              size="large"
+              >Update Stats</vs-button
+            >
           </form>
         </vs-popup>
       </div>
@@ -86,10 +110,17 @@
 </template>
 
 <script>
-import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
+import {
+  cathegorizePlayers,
+  getAllPlayersDataNormal
+} from "../../../utils/getAllPlayersData";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
 import pointsCalculator from "../../../utils/pointsCalculator";
 import { DATA_URL } from "../../../common";
+// import getStandings from '../../../utils/getStandings';
+import getAllLeagues from '../../../utils/getAllLeagues';
+import standingsHelper from '../../../utils/standingsHelper';
+import getAllUsers from '../../../utils/getAllUsers';
 
 export default {
   name: "PlayersPoints",
@@ -98,6 +129,8 @@ export default {
     return {
       currentRound: undefined,
       players: undefined,
+      standings: undefined,
+      leagues: undefined,
       leagueSelected: "",
       teamSelected: "",
       playerSelected: "",
@@ -106,7 +139,7 @@ export default {
       playerSelectedStats: {},
       success: false,
       error: false,
-      errorMsg: ""
+      errorMsg: "",
     };
   },
   methods: {
@@ -114,7 +147,7 @@ export default {
       return v
         .toLowerCase()
         .split(" ")
-        .join("_");
+        .join("-");
     },
     selectLeagueHandler(l) {
       this.teamSelected = "";
@@ -168,13 +201,42 @@ export default {
         .then(response => response.json())
         .then(async () => {
           this.$vs.loading();
-          this.players = await getAllPlayersDataCathegorized();
+          const tmpPlayers = await getAllPlayersDataNormal();
+          this.players = cathegorizePlayers(tmpPlayers);
+          // TO IMPLEMENT STANDINGS CALCULATIONS
+          // FOR PREVIOUS AND CURRENT RND
+          const previousStandings = standingsHelper(undefined, this.leagues, tmpPlayers, this.users, this.currentRound - 1)
+          // console.log('previous', previousStandings);
+          const currentStandings = standingsHelper(previousStandings, this.leagues, tmpPlayers, this.users, this.currentRound)
+          // console.log(previousStandings, currentStandings);
+          this.fetchUpdatedStandingsObject(currentStandings, this.currentRound)
           this.success = true;
         })
         .catch(error => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
+        });
+    },
+    fetchUpdatedStandingsObject(payload, round) {
+      return fetch(`${DATA_URL}standings/r${round}.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async () => {
+          console.log("Success!");
+          // this.standings = data
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          this.$vs.loading.close();
+          this.error = true;
+          this.errorMsg = err;
         });
     },
     sortedRounds(arr) {
@@ -228,8 +290,12 @@ export default {
   },
   async created() {
     this.$vs.loading();
-    this.players = await getAllPlayersDataCathegorized();
+    const tmpPlayers = await getAllPlayersDataNormal();
+    this.players = cathegorizePlayers(tmpPlayers);
     this.currentRound = await getCurrentRound();
+    // this.standings = await getStandings()
+    this.leagues = await getAllLeagues()
+    this.users = await getAllUsers()
   }
 };
 </script>

@@ -178,7 +178,11 @@ export default {
   computed: {
     userRoundStats() {
       if (this.user && this.currentRound) {
-        return this.user.rounds[`r${this.currentRound}`].nextRndInfo;
+        let result = this.user.rounds[`r${this.currentRound}`].nextRndInfo;
+        if (!result.team) {
+          result.team = this.user.rounds[`r${this.currentRound}`].team
+        }
+        return result
       } else {
         return undefined;
       }
@@ -293,6 +297,26 @@ export default {
   justify-content: flex-start;
   align-items: center;
   margin: 20px 0 0 0;
+
+
+  .please-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  h2 {
+    width: 100%;
+    font-size: 1.4rem;
+    border-top: 1px solid #3c474d;
+    padding: 20px;
+    text-align: center;
+  }
+  img {
+    width: 30%;
+    margin: 0 0 20px 0;
+  }
+}
 }
 
 .prep-header {
