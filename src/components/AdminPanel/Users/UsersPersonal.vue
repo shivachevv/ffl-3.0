@@ -3,6 +3,14 @@
     <h1 class="section-header">Edit User Personal Details Section</h1>
 
     <div class="user-selection">
+      <!-- <vs-button
+        color="#59A95D"
+        button="submit"
+        type="relief"
+        size="normal"
+        @click.prevent="test"
+        >TEST</vs-button
+      > -->
       <label>
         Users:
         <vs-select v-if="users" v-model="userSelected" icon>
@@ -20,20 +28,31 @@
       title="Update finished!"
       active="true"
       color="success"
-    >User succesfully updated!</vs-alert>
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+      >User succesfully updated!</vs-alert
+    >
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
 
     <!-- USER SELECTED -->
     <div class="user-details" v-if="userSelected">
-      <h2>Selected User: {{userSelected.email}}</h2>
+      <h2>Selected User: {{ userSelected.email }}</h2>
       <form @submit.prevent="editUserFormHandler">
         <label>
           Email:
-          <vs-input :label-placeholder="userSelected.email" v-model="userEdited.email" icon />
+          <vs-input
+            :label-placeholder="userSelected.email"
+            v-model="userEdited.email"
+            icon
+          />
         </label>
         <label>
           User Team Name:
-          <vs-input :label-placeholder="userSelected.userTeam" v-model="userEdited.userTeam" icon />
+          <vs-input
+            :label-placeholder="userSelected.userTeam"
+            v-model="userEdited.userTeam"
+            icon
+          />
         </label>
         <label>
           User Age:
@@ -46,15 +65,27 @@
         </label>
         <label>
           User Favourite Team:
-          <vs-input :label-placeholder="userSelected.favTeam" v-model="userEdited.favTeam" icon />
+          <vs-input
+            :label-placeholder="userSelected.favTeam"
+            v-model="userEdited.favTeam"
+            icon
+          />
         </label>
         <label>
           User Location:
-          <vs-input :label-placeholder="userSelected.location" v-model="userEdited.location" icon />
+          <vs-input
+            :label-placeholder="userSelected.location"
+            v-model="userEdited.location"
+            icon
+          />
         </label>
         <label>
           User Motto:
-          <vs-input :label-placeholder="userSelected.motto" v-model="userEdited.motto" icon />
+          <vs-input
+            :label-placeholder="userSelected.motto"
+            v-model="userEdited.motto"
+            icon
+          />
         </label>
         <label>
           User Ocupation:
@@ -66,18 +97,22 @@
         </label>
         <label>
           <input type="checkbox" v-model="userEdited.isAdmin" />
-          User Admin Rights. Currently user is {{userSelected.isAdmin ? '' : 'NOT'}} an admin!
+          User Admin Rights. Currently user is
+          {{ userSelected.isAdmin ? "" : "NOT" }} an admin!
         </label>
 
         <div class="buttons">
-          <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit User</vs-button>
+          <vs-button color="#59A95D" button="submit" type="relief" size="large"
+            >Edit User</vs-button
+          >
           <vs-button
             color="danger"
             button="button"
             type="relief"
             size="large"
             @click.prevent="deleteUserHandler(userSelected.uid)"
-          >Delete User</vs-button>
+            >Delete User</vs-button
+          >
         </div>
       </form>
     </div>
@@ -103,6 +138,47 @@ export default {
     };
   },
   methods: {
+    // async test() {
+    //   // const copy = JSON.parse(JSON.stringify(this.players));
+    //   let counter = 0;
+    //   for (const id in this.users) {
+    //     const user = this.users[id];
+    //     const league = user.league;
+    //     const team1 = Object.values(user.rounds[`r2`].team);
+    //     // const team2 = Object.values(user.rounds[`r2`].nextRndInfo.team)
+    //     // console.log(team1);
+    //     for (let i = 0; i < team1.length; i++) {
+    //       const player = team1[i];
+    //       if (player) {
+    //         const payload = {
+    //           [league]: false
+    //         };
+    //         console.log(league, player);
+    //         // console.log(payload);
+
+    //         await fetch(`${DATA_URL}players/${player}/available/.json`, {
+    //           method: "PATCH",
+    //           mode: "cors",
+    //           headers: {
+    //             "Content-Type": "application/json"
+    //           },
+    //           body: JSON.stringify(payload)
+    //         })
+    //           .then(response => response.json())
+    //           .then(data => {
+    //             console.log("Success:", data);
+    //           })
+    //           .catch(error => {
+    //             console.error("Error:", error);
+    //           });
+
+    //         // const playerReady = await response.json();
+    //         counter++;
+    //         console.log(counter);
+    //       }
+    //     }
+    //   }
+    // },
     editUserFormHandler() {
       const merged = this.mergeUsers(this.userEdited, this.userSelected);
       const {

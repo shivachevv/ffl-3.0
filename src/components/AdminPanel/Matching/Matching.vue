@@ -9,7 +9,7 @@
       button="submit"
       type="relief"
       size="normal"
-      @click.prevent="reverseUpdatedMatching"
+      @click.prevent="test"
       >TEST</vs-button
     >
     <vs-alert
@@ -301,7 +301,7 @@ export default {
     padding: 5px;
     transition: all 0.3s;
     border-radius: 5px;
-    
+
     &:hover {
       background-color: #afafaf;
     }
