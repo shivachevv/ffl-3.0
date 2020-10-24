@@ -163,12 +163,15 @@ export default {
         await this.updateTransferStatus(tr, "confirmed");
         const team = this.editTeamForNextRnd(tr);
         const count = this.updateTransferCounts(tr, "confirmed");
+        const userLeague = this.users[tr[1].team].league;
+
         await this.uploadUserTransfersCount(count, tr);
         await this.uploadUserUpdatedTeam(team, tr);
         await this.updatePlayerAvailableStatus(
           tr[1].transferIn,
           tr[1].transferOut,
-          "confirmed"
+          "confirmed",
+          userLeague
         );
 
         this.success = true;
@@ -185,12 +188,15 @@ export default {
     async cancelTransfer(tr) {
       try {
         const count = this.updateTransferCounts(tr, "cancelled");
+        const userLeague = this.users[tr[1].team].league;
+
         await this.updateTransferStatus(tr, "cancelled");
         await this.uploadUserTransfersCount(count, tr);
         await this.updatePlayerAvailableStatus(
           tr[1].transferIn,
           tr[1].transferOut,
-          "cancelled"
+          "cancelled",
+          userLeague
         );
 
         this.success = true;
@@ -320,21 +326,21 @@ export default {
           // this.errorMsg = error;
         });
     },
-    updatePlayerAvailableStatus(idIn, idOut, action) {
+    updatePlayerAvailableStatus(idIn, idOut, action, userLeague) {
       const statusIn = action === "confirmed" ? false : true;
       const statusOut = action === "confirmed" ? true : false;
       const payloadIn = {
-        available: statusIn
+        [userLeague]: statusIn
       };
       const payloadOut = {
-        available: statusOut
+        [userLeague]: statusOut
       };
       this.fetchNewPlayerAvailableStatus(idIn, payloadIn);
       this.fetchNewPlayerAvailableStatus(idOut, payloadOut);
     },
     fetchNewPlayerAvailableStatus(playerId, payload) {
       console.log(playerId, payload);
-      return fetch(`${DATA_URL}players/${playerId}.json`, {
+      return fetch(`${DATA_URL}players/${playerId}/available/.json`, {
         method: "PATCH",
         mode: "cors",
         headers: {

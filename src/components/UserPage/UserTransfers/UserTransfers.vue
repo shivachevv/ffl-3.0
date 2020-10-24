@@ -81,6 +81,9 @@ export default {
     transfersMadeSoFar() {
       return this.loggedUser.rounds[`r${this.currentRound}`].transfersMade;
     },
+    userLeague() {
+      return this.loggedUser.league;
+    },
     updatedURL() {
       return `${DATA_URL}users/${this.loggedUser.uid}/rounds/r${this.currentRound}/`;
     },
@@ -159,7 +162,7 @@ export default {
       for (let i = 0; i < transfers.length; i++) {
         const player = transfers[i];
         const response = await fetch(
-          `${DATA_URL}players/${player.id}/available.json`
+          `${DATA_URL}players/${player.id}/available/${this.userLeague}.json`
         );
         const isAvailable = await response.json();
         if (!isAvailable) {
@@ -270,13 +273,15 @@ export default {
       for (let i = 0; i < sortedIn.length; i++) {
         const player = sortedIn[i];
 
-        const isFirstTransfer = this.transfers ? this.transfers[`r${this.currentRound}`] : false
+        const isFirstTransfer = this.transfers
+          ? this.transfers[`r${this.currentRound}`]
+          : false;
         const userTransfers = this.transfers
           ? isFirstTransfer
             ? this.transfers[`r${this.currentRound}`][this.loggedUser.uid]
             : undefined
           : undefined;
-        
+
         const transferNumber = userTransfers
           ? Object.keys(userTransfers).length + 1
           : 1;
@@ -360,10 +365,10 @@ export default {
         });
     },
     fetchUpdatedPlayerStatus(transfers) {
-      const payload = { available: false };
+      const payload = { [this.userLeague]: false };
       for (let i = 0; i < transfers.length; i++) {
         const player = transfers[i];
-        fetch(`${DATA_URL}players/${player.id}.json`, {
+        fetch(`${DATA_URL}players/${player.id}/available/.json`, {
           method: "PATCH",
           mode: "cors",
           headers: {

@@ -98,7 +98,7 @@ export default {
     padding: 0 0 0 10px;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     // background-color: #9fa5a9;
     position: relative;
 

@@ -191,14 +191,26 @@
               />
             </vs-select> -->
           </label>
-          <label>
-            Available:
-            <input type="checkbox" v-model="playerEdited.available" />
+          <label v-for="league in Object.keys(leagues)" :key="league">
+            <input
+              type="checkbox"
+              @click="selectPlayerAvailability($event, league)"
+            />
+            <span
+              :style="
+                `color:${playerSelected.available[league] ? 'green' : 'red'}`
+              "
+              >Current status {{ leagues[league] }}:
+              {{ playerSelected.available[league] ? "IS" : "NOT" }}
+              available!</span
+            >
+            <span
+              v-if="typeof playerEditedAvail[league] === 'boolean'"
+              :style="`color:${playerEditedAvail[league] ? 'green' : 'red'}`"
+              >New status {{ leagues[league] }}:
+              {{ playerEditedAvail[league] ? "IS" : "NOT" }} available!</span
+            >
           </label>
-          <span :style="`color:${playerSelected.available ? 'green' : 'red'}`"
-            >Currently player
-            {{ playerSelected.available ? "IS" : "is NOT" }} available!</span
-          >
 
           <vs-button color="#59A95D" button="submit" type="relief" size="large"
             >Edit Player</vs-button
@@ -237,6 +249,10 @@ export default {
   },
   data() {
     return {
+      leagues: {
+        "33c46ff1-1756-41a1-a80f-01b2f4fb4b3c": "Pele",
+        "60e2f9e6-af52-4b5e-8918-94d9c79fd1c4": "Maradona"
+      },
       showPopup: false,
       players: undefined,
       leagueSelected: "",
@@ -248,15 +264,19 @@ export default {
         id: "",
         name: "",
         position: "",
-        shirt: "",
-        available: ""
+        shirt: ""
       },
+      playerEditedAvail: {},
       positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
       success: false,
       countryMap: countryMap
     };
   },
   methods: {
+    selectPlayerAvailability(e, league) {
+      const result = e.target.checked;
+      return this.$set(this.playerEditedAvail, league, result);
+    },
     makeLeagueToImg(v) {
       return v
         .toLowerCase()
@@ -280,6 +300,7 @@ export default {
         position: "",
         shirt: ""
       };
+      this.deselectPlayerAvail();
       return (this.playerSelected = p);
     },
     mergePlayers(_new, _old) {
@@ -294,8 +315,12 @@ export default {
       if (_new["club"]) {
         result["shirt"] = teamCodes[_new["club"]];
       }
-      result.available =
-        typeof _new.available === "boolean" ? _new.available : _old.available;
+      Object.keys(this.leagues).forEach(l => {
+        result.available[l] =
+          typeof this.playerEditedAvail[l] === "boolean"
+            ? this.playerEditedAvail[l]
+            : _old.available[l];
+      });
       return result;
     },
     showSuccessMsg({ club, country, name, position }) {
@@ -381,6 +406,9 @@ export default {
     },
     deselectPlayer() {
       return (this.playerSelected = "");
+    },
+    deselectPlayerAvail() {
+      return (this.playerEditedAvail = {});
     }
   },
   computed: {},
@@ -559,7 +587,7 @@ select {
         align-items: flex-start;
 
         & > label {
-          width: 30%;
+          width: 50%;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
@@ -575,6 +603,12 @@ select {
           & > div {
             font-weight: bold;
             margin: 0px;
+          }
+
+          input[type="checkbox"] {
+            margin: 0 10px 0 0;
+            width: 20px;
+            height: 20px;
           }
         }
         button {

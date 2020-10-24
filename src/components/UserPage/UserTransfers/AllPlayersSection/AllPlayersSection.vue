@@ -120,7 +120,7 @@
         <div
           class="player"
           :class="{
-            notavailableplayer: !p.available,
+            notavailableplayer: !p.available[userLeague],
             takenplayer: positionIsNotNeeded(transferedOutInfo, p.position),
             selectedplayer: transferedIn.includes(p)
           }"
@@ -185,7 +185,7 @@ export default {
   watch: {},
   computed: {
     userLeague() {
-      return this.user.teamCode < 11 ? "league1" : "league2";
+      return this.user.league
     },
     leagues() {
       return Object.keys(this.playersCathegorized);
@@ -249,7 +249,7 @@ export default {
       // console.log(p);
       if (
         this.transferedIn.length < this.transferedOutInfo.length &&
-        p.available
+        p.available[this.userLeague]
       ) {
         return this.$emit("makeTransferIn", p);
       } else if (this.transferedIn.includes(p)) {
