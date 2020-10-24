@@ -133,6 +133,9 @@ export default {
     isVCActive() {
       const isLast = this.tmpRndShow === this.currentRound;
       if (!isLast) {
+        if (!this.players[this.rndShow.cpt]) {
+          return true
+        }
         const hasCptPlayed =
           this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
             .roundStats.starter ||
