@@ -333,6 +333,7 @@ export default {
       }
     },
     selectMatchHandler(match, i) {
+      this.deselectCupSquads()
       this.selectedMatch = match;
       this.selectedMatchNum = i + 1;
       if (match.team1.squad) {

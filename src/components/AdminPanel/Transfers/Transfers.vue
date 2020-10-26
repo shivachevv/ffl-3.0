@@ -239,11 +239,11 @@ export default {
           // this.errorMsg = error;
         });
     },
-    uploadUserUpdatedTeam(team, tr) {
+    async uploadUserUpdatedTeam(team, tr) {
       const payload = {
         team
       };
-      return fetch(
+      return await fetch(
         `${DATA_URL}users/${tr[1].team}/rounds/r${this.selectedRound}/nextRndInfo.json`,
         {
           method: "PATCH",
@@ -256,7 +256,7 @@ export default {
       )
         .then(response => response.json())
         .then(async data => {
-          console.log("Success:", data);
+          console.log("SuccessTeam:", data);
           // this.success = true;
           // this.deselectUser();
           // this.$vs.loading();
