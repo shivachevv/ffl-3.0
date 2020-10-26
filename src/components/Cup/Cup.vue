@@ -79,10 +79,13 @@
                 alt=""
                 srcset=""
               />
-              <span class="score"
+              <span class="score" v-if="match.team1.squad && match.team2.squad"
                 >{{ calculateTeamPts(match.team1.squad) }} -
                 {{ calculateTeamPts(match.team2.squad) }}</span
               >
+              <span class="score" v-else
+                > - </span>
+
               <img
                 :src="
                   require(`@/assets/images/team-logos/${
@@ -124,7 +127,7 @@
 import { mapGetters, mapActions } from "vuex";
 import cupStandingsHelper from "../../utils/cupStandingsHelper";
 import CupMatchPopup from "./CupMatchPopup";
-import Standings from '../H2H/Standings'
+import Standings from "../H2H/Standings";
 
 export default {
   name: "Cup",

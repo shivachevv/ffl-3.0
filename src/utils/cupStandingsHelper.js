@@ -32,43 +32,45 @@ const cupStandingsHelper = (cupData) => {
                 if (typeof match === "object") {
                     let team1Total
                     let team2Total
-                    Object.values(match).forEach((team, i) => {
+                    if (match.team1.squad && match.team2.squad) {
+                        Object.values(match).forEach((team, i) => {
 
-                        const teamTotal = sumPts(team.squad)
-                        if (i === 0) {
-                            team1Total = teamTotal
+                            const teamTotal = sumPts(team.squad)
+                            if (i === 0) {
+                                team1Total = teamTotal
+                            } else {
+                                team2Total = teamTotal
+                            }
+                        })
+                        result[groupId][match.team1.id].games++
+                        result[groupId][match.team2.id].games++
+
+                        result[groupId][match.team1.id].for += team1Total
+                        result[groupId][match.team1.id].against += team2Total
+
+                        result[groupId][match.team2.id].for += team2Total
+                        result[groupId][match.team2.id].against += team1Total
+
+                        result[groupId][match.team1.id].goaldiff += team1Total - team2Total
+                        result[groupId][match.team2.id].goaldiff += team2Total - team1Total
+
+                        if (team1Total > team2Total) {
+                            result[groupId][match.team1.id].pts += 3
+                            result[groupId][match.team1.id].wdl.win++
+
+                            result[groupId][match.team2.id].wdl.loss++
+                        } else if (team2Total > team1Total) {
+                            result[groupId][match.team2.id].pts += 3
+                            result[groupId][match.team2.id].wdl.win++
+
+                            result[groupId][match.team1.id].wdl.loss++
                         } else {
-                            team2Total = teamTotal
+                            result[groupId][match.team1.id].pts++
+                            result[groupId][match.team2.id].pts++
+
+                            result[groupId][match.team2.id].wdl.draw++
+                            result[groupId][match.team1.id].wdl.draw++
                         }
-                    })
-                    result[groupId][match.team1.id].games++
-                    result[groupId][match.team2.id].games++
-
-                    result[groupId][match.team1.id].for += team1Total
-                    result[groupId][match.team1.id].against += team2Total
-
-                    result[groupId][match.team2.id].for += team2Total
-                    result[groupId][match.team2.id].against += team1Total
-
-                    result[groupId][match.team1.id].goaldiff += team1Total - team2Total
-                    result[groupId][match.team2.id].goaldiff += team2Total - team1Total
-
-                    if (team1Total > team2Total) {
-                        result[groupId][match.team1.id].pts += 3
-                        result[groupId][match.team1.id].wdl.win++
-
-                        result[groupId][match.team2.id].wdl.loss++
-                    } else if (team2Total > team1Total) {
-                        result[groupId][match.team2.id].pts += 3
-                        result[groupId][match.team2.id].wdl.win++
-
-                        result[groupId][match.team1.id].wdl.loss++
-                    } else {
-                        result[groupId][match.team1.id].pts++
-                        result[groupId][match.team2.id].pts++
-
-                        result[groupId][match.team2.id].wdl.draw++
-                        result[groupId][match.team1.id].wdl.draw++
                     }
 
                 }
