@@ -1,5 +1,5 @@
 <template>
-  <div class="h2h-container" v-if="users && h2h && currentRound">
+  <div class="h2h-container" v-if="users && h2h && currentRound && players">
       <H2HRounds v-if="h2h" :rounds="h2h" :users="users" :currentRound="currentRound" :players="players"/>
     <div class="h2h-standings">
       <Standings v-if="standings" :standings="standings" :users="users" title="Head to Head league" />
@@ -90,7 +90,7 @@ export default {
     players(nv) {
       if (nv && this.h2h && this.users) {
         this.$vs.loading.close();
-        this.standings = standingsH2HHelper(this.h2h, this.players, this.users);
+        this.standings = standingsH2HHelper(this.h2h, this.players, this.users, this.currentRound);
       }
     },
     h2h(nv) {
@@ -100,7 +100,8 @@ export default {
           this.standings = standingsH2HHelper(
             this.h2h,
             this.players,
-            this.users
+            this.users,
+            this.currentRound
           );
         }
       }

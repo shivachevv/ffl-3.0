@@ -1,5 +1,5 @@
 <template>
-  <div class="rounds">
+  <div class="rounds" v-if="rounds && users && players && currentRound">
     <!-- <vs-tabs alignment="center" color="#873c40">
       <vs-tab label="matches"> -->
     <div class="buttons-and-labels">
@@ -51,17 +51,11 @@
         />
         <span class="score"
           >{{
-            calculateTeamPts(
-              users[match.team1].rounds[`r${selectedRound}`],
-              rounds[`r${selectedRound}`].roundHeld
-            )
+            calculateTeamPts(match.team1, rounds[`r${selectedRound}`].roundHeld)
           }}
           -
           {{
-            calculateTeamPts(
-              users[match.team2].rounds[`r${selectedRound}`],
-              rounds[`r${selectedRound}`].roundHeld
-            )
+            calculateTeamPts(match.team2, rounds[`r${selectedRound}`].roundHeld)
           }}</span
         >
         <img
@@ -153,9 +147,16 @@ export default {
           return b[1].pts - a[1].pts;
         });
     },
-    calculateTeamPts(team, roundHeld) {
+    calculateTeamPts(usedId, roundHeld) {
       if (roundHeld <= this.currentRound) {
-        return roundPointsCalculator(team, roundHeld, this.players, true);
+        const team = this.users[usedId].rounds[`r${roundHeld}`];
+        const result = roundPointsCalculator(
+          team,
+          roundHeld,
+          this.players,
+          true
+        );
+        return result;
       } else {
         return " ";
       }
