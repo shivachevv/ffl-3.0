@@ -42,48 +42,55 @@ const actions = {
         let tmp = [{
             title: "Home",
             path: "/",
-            isMyTeam: false
+            isMyTeam: false,
+            toShow: true
         },
         {
             title: loggedUser ? "My Team" : "Login",
             path: loggedUser ? `/team-details/${loggedUser.userLogo}` : "/login",
             logo: loggedUser ? loggedUser.userLogo : '',
-            isMyTeam: loggedUser ? true : false
+            isMyTeam: loggedUser ? true : false,
+            toShow: true
         },
         {
             title: "Transfers",
             path: "/transfers",
-            isMyTeam: false
+            isMyTeam: false,
+            toShow: true
         },
         {
             title: "Cup",
             path: "/cup",
-            isMyTeam: false
+            isMyTeam: false,
+            toShow: true
         },
         {
             title: "H2H",
             path: "/h2h",
-            isMyTeam: false
+            isMyTeam: false,
+            toShow: true
         },
         // {
         //     title: "Player Stats",
         //     path: "/player-stats",
-        //     isMyTeam: false
+        //     isMyTeam: false,
         // },
         {
             title: "Rules & Prizes",
             path: "/rules-prizes",
-            isMyTeam: false
+            isMyTeam: false,
+            toShow: true
         },
         // {
         //     title: "Stats",
         //     path: "/stats",
-        //     isMyTeam: false
+        //     isMyTeam: false,
         // },
         {
             title: "Admin",
             path: "/admin",
-            isMyTeam: false
+            isMyTeam: false,
+            toShow: loggedUser.uid === 'bPMzc3E7h6OnYOZQCzGJG4otli72' || loggedUser.uid === 'USEqk1zX3bg8saW9biddsDm9P4R2'
         }
         ]
         commit('setMenuLinks', tmp)

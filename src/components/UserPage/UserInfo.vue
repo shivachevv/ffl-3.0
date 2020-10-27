@@ -2,44 +2,108 @@
   <div class="user-stats" v-if="standingsStats && user">
     <div class="user-name">
       <img src="@/assets/images/user-page/user-head.png" alt="user-head" />
-      <h2 class="up">{{user.name}}</h2>
+      <h2 class="up">{{ user.name }}</h2>
+      <vs-button
+        v-if="isThisLoggedTeam"
+        type="line"
+        color="warning"
+        title="Change password!"
+        @click="openPassPopupHandler"
+        ><span class="material-icons">
+          vpn_key
+        </span></vs-button
+      >
     </div>
 
+    <vs-popup
+      class="holamundo"
+      title="Change your password"
+      :active.sync="showPopup"
+    >
+      <div class="password-change">
+        <vs-alert
+          class="pasword-element"
+          :active.sync="error"
+          closable
+          close-icon="close"
+          >{{ errorMsg }}</vs-alert
+        >
+        <vs-alert
+          class="pasword-element"
+          v-if="success"
+          title="Password updated!"
+          active="true"
+          color="success"
+          >Password updated!</vs-alert
+        >
+        <vs-input
+          class="pasword-element"
+          type="password"
+          label="Password"
+          placeholder="Old Password"
+          v-model="oldPassword"
+        />
+        <vs-input
+          class="pasword-element"
+          type="password"
+          label="Password"
+          placeholder="New Password"
+          v-model="newPassword"
+        />
+        <vs-input
+          class="pasword-element"
+          type="password"
+          label="Repeat Password"
+          placeholder="Repeat Password"
+          v-model="reNewPassword"
+        />
+
+        <vs-button
+          class="pasword-element"
+          type="relief"
+          color="success"
+          title="Change password!"
+          @click="changePassword"
+          >Change Password!</vs-button
+        >
+      </div>
+    </vs-popup>
+
     <div class="league-name">
-      <h2>League {{standingsStats.league}}</h2>
+      <h2>League {{ standingsStats.league }}</h2>
     </div>
 
     <div class="info-stat sha">
       <span class="up">Manager Age</span>
-      <span class="pts-value up">{{user.age}} years</span>
+      <span class="pts-value up">{{ user.age }} years</span>
     </div>
     <div class="info-stat sha">
       <span class="up">Location</span>
-      <span class="pts-value up">{{user.location}}</span>
+      <span class="pts-value up">{{ user.location }}</span>
     </div>
     <div class="info-stat sha">
       <span class="up">Ocupation</span>
-      <span class="pts-value up">{{user.ocupation}}</span>
+      <span class="pts-value up">{{ user.ocupation }}</span>
     </div>
     <div class="info-stat sha">
       <span class="up">Favourite Team</span>
-      <span class="pts-value up">{{user.favTeam}}</span>
+      <span class="pts-value up">{{ user.favTeam }}</span>
     </div>
     <div class="info-stat sha">
       <span class="up">Team Motto</span>
-      <span class="pts-value up">{{user.motto}}</span>
+      <span class="pts-value up">{{ user.motto }}</span>
     </div>
     <div class="total-pts sha">
       <span class="up">Total points</span>
-      <span class="pts-value">{{standingsStats.total}} pts</span>
+      <span class="pts-value">{{ standingsStats.total }} pts</span>
     </div>
     <div class="last-week-pts sha">
       <span class="up">Last week points</span>
-      <span class="last-week-pts-value">{{standingsStats.lastWeek}} pts</span>
+      <span class="last-week-pts-value">{{ standingsStats.lastWeek }} pts</span>
     </div>
     <div class="league-pos sha">
       <span class="up">League position</span>
-      <span class="league-pos-value">{{standingsStats.currentPos}}</span>
+      <span class="league-pos-value">{{ standingsStats.currentPos }}</span>
     </div>
     <div class="cup-pos sha">
       <span class="up">Cup status</span>
@@ -49,16 +113,23 @@
     </div>
     <div class="curr-round sha">
       <span class="up">Current round</span>
-      <span class="curr-round-value">Round {{currentRound}}</span>
+      <span class="curr-round-value">Round {{ currentRound }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import "material-icons/iconfont/material-icons.css";
 import { mapGetters } from "vuex";
+import * as firebase from "firebase";
+
 export default {
   name: "UserInfo",
   props: {
+    isThisLoggedTeam: {
+      type: Boolean,
+      required: true
+    },
     user: {
       type: Object,
       required: true
@@ -68,6 +139,17 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      showPopup: false,
+      oldPassword: "",
+      newPassword: "",
+      reNewPassword: "",
+      error: false,
+      errorMsg: "",
+      success: false
+    };
+  },
   computed: {
     ...mapGetters(["standings", "leagues"]),
     standingsStats() {
@@ -76,11 +158,11 @@ export default {
 
         const userLeagueId = Object.keys(lastRndStandings).filter(leagueId => {
           if (Object.keys(lastRndStandings[leagueId]).includes(this.user.uid)) {
-
             return leagueId;
           }
         })[0];
-        const userStandingsStats = lastRndStandings[userLeagueId][this.user.uid]
+        const userStandingsStats =
+          lastRndStandings[userLeagueId][this.user.uid];
         return {
           total: userStandingsStats.total,
           lastWeek: userStandingsStats.lastRndTotal,
@@ -90,10 +172,62 @@ export default {
       } else {
         return "Loading";
       }
+    },
+    doPasswordsMatch() {
+      return (
+        this.newPassword === this.reNewPassword && this.newPassword.length > 0
+      );
     }
   },
-  methods: {},
-  created() {}
+  methods: {
+    changePassword() {
+      const reauthenticate = currentPassword => {
+        const user = firebase.auth().currentUser;
+        const cred = firebase.auth.EmailAuthProvider.credential(
+          user.email,
+          currentPassword
+        );
+        return user.reauthenticateWithCredential(cred);
+      };
+
+      if (this.doPasswordsMatch) {
+        reauthenticate(this.oldPassword)
+          .then(() => {
+            const user = firebase.auth().currentUser;
+            user
+              .updatePassword(this.newPassword)
+              .then(() => {
+                console.log("Password updated!");
+                this.success = true;
+              })
+              .catch(error => {
+                console.log(error);
+                (this.error = true), (this.errorMsg = error);
+              });
+          })
+          .catch(error => {
+            console.log(error);
+            (this.error = true), (this.errorMsg = error);
+          });
+      } else {
+        this.error = true;
+        this.errorMsg = "The two passwords do not match!";
+      }
+    },
+    openPassPopupHandler() {
+      return (this.showPopup = true);
+    }
+  },
+  created() {},
+  watch: {
+    success(nv) {
+      if (nv === true) {
+        setTimeout(() => {
+          this.success = false;
+        }, 2000);
+      }
+    }
+  }
 };
 </script>
 
@@ -125,7 +259,7 @@ export default {
   height: 100px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   background-color: #3c474d;
   color: #f1f0f1;
@@ -136,7 +270,7 @@ export default {
 .user-name img {
   width: 60px;
   height: 60px;
-  position: absolute;
+  // position: absolute;
   left: 20px;
 }
 
@@ -204,5 +338,18 @@ export default {
 
 .cup-pos-value img {
   width: 20px;
+}
+
+.password-change {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+
+  .pasword-element {
+    margin: 10px 0 10px 0;
+  }
 }
 </style>

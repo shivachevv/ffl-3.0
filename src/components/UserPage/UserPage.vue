@@ -11,7 +11,7 @@
 
       <!---------------- USER DETAILS -------------------------------------->
       <section class="user-details">
-        <UserInfo :user="user" :currentRound="currentRound"></UserInfo>
+        <UserInfo :user="user" :currentRound="currentRound" :isThisLoggedTeam="isThisLoggedTeam"></UserInfo>
 
         <!---------------- MATCH PREPARATION -------------------------------------->
 

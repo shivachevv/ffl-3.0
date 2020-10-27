@@ -2,21 +2,33 @@
   <footer v-if="leagues && menuLinks && users">
     <div class="footer-logo">
       <img src="@/assets/images/footer/footer-logo.png" alt />
-      <router-link class="up" to="/" target="blank">fantasy legends</router-link>
+      <router-link class="up" to="/" target="blank"
+        >fantasy legends</router-link
+      >
     </div>
 
-    <div v-for="league in leagues" :key="league.id" :class="`footer-${league.name.toLowerCase()}`">
-      <h2 class="up">{{league.name}} league</h2>
+    <div
+      v-for="league in leagues"
+      :key="league.id"
+      :class="`footer-${league.name.toLowerCase()}`"
+    >
+      <h2 class="up">{{ league.name }} league</h2>
       <router-link
         v-for="team in league.teams"
         :key="team"
         :to="`/team-details/${users[team].userLogo}`"
-      >{{users[team].userTeam}}</router-link>
+        >{{ users[team].userTeam }}</router-link
+      >
     </div>
 
     <div class="footer-cat">
       <h2 class="up">Categories</h2>
-      <router-link v-for="link in menuLinks" :key="link.title" :to="link.path">{{link.title}}</router-link>
+      <router-link
+        v-for="link in filteredLinks"
+        :key="link.title"
+        :to="link.path"
+        >{{ link.title }}</router-link
+      >
     </div>
 
     <div class="footer-fb">
@@ -24,7 +36,8 @@
         class="up"
         href="https://www.facebook.com/groups/292412975320252"
         target="blank"
-      >Follow the legends</a>
+        >Follow the legends</a
+      >
       <a href="https://www.facebook.com/groups/292412975320252" target="blank">
         <img src="@/assets/images/footer/fb.png" alt />
       </a>
@@ -38,11 +51,15 @@ import { mapGetters } from "vuex";
 export default {
   name: "Footer",
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
-    ...mapGetters(["leagues", "menuLinks", "users"])
+    ...mapGetters(["leagues", "menuLinks", "users"]),
+    filteredLinks() {
+      return this.menuLinks.filter(x => {
+        return x.toShow;
+      });
+    }
   }
 };
 </script>

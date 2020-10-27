@@ -36,18 +36,25 @@ Vue.use(VueRouter);
 const routes = [{
   path: "/",
   name: "Home",
-  component: Home
+  component: Home,
+  meta: { title: 'FFL: Home' },
+  beforeEnter(to, from, next) {
+    document.title = to.meta.title
+    next()
+  }
 },
 {
   path: '/login',
   name: 'login',
   component: Login,
   props: true,
+  meta: { title: 'FFL: Login' },
   beforeEnter(to, from, next) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         next('/')
       } else {
+        document.title = to.meta.title
         next()
       }
     });
@@ -58,11 +65,13 @@ const routes = [{
   name: 'register',
   component: Register,
   props: true,
+  meta: { title: 'FFL: Register' },
   beforeEnter(to, from, next) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         next('/')
       } else {
+        document.title = to.meta.title
         next()
       }
     });
@@ -72,7 +81,11 @@ const routes = [{
   path: '/team-details/:id',
   component: UserPage,
   props: true,
-  name: "UserPage"
+  name: "UserPage",
+  beforeEnter(to, from, next) {
+    document.title = 'My Team'
+    next()
+  }
 },
 {
   path: '/transfers/:id',
@@ -80,6 +93,7 @@ const routes = [{
     import(/* webpackChunkName: "user-transfers" */ "../components/UserPage/UserTransfers/UserTransfers"),
   name: 'mytransfers',
   props: true,
+  meta: { title: 'FFL: Transfers' },
   beforeEnter(to, from, next) {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
@@ -89,6 +103,7 @@ const routes = [{
           return u.userLogo === teamName
         })[0].uid
         if (teamId === user.uid) {
+          document.title = to.meta.title + user.userTeam
           next()
         } else {
           next('/')
@@ -112,14 +127,19 @@ const routes = [{
 {
   path: '/admin',
   name: 'admin',
+  meta: { title: 'FFL: Admin Panel' },
   component: AdminPanel,
+  beforeEnter(to, from, next) {
+    document.title = to.meta.title
+    next()
+  }
 },
 {
   path: '/cup',
   name: 'cup',
   props: true,
   component: Cup,
-  meta: { title: 'FFL: CUP' },
+  meta: { title: 'FFL: Cup' },
   beforeEnter(to, from, next) {
     document.title = to.meta.title
     next()
@@ -161,7 +181,12 @@ const routes = [{
 {
   path: '*',
   name: 'not-found',
-  component: NotFound
+  meta: { title: 'FFL: Page not found' },
+  component: NotFound,
+  beforeEnter(to, from, next) {
+    document.title = to.meta.title
+    next()
+  }
 }
   // ,
   // {

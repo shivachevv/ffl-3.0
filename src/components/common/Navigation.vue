@@ -8,7 +8,7 @@
 
     <ul class="navigation">
       <li class="nav-links up" v-for="link in menuLinks" :key="link.title">
-        <router-link v-if="link.path" :to="link.path">
+        <router-link v-if="link.path && link.toShow" :to="link.path">
           {{link.title}}
           <!-- <img
             v-if="link.isMyTeam && link.title !== 'Logout'"
