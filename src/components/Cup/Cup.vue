@@ -45,6 +45,7 @@
           :standings="cupStandings[selectedGroup.name]"
           :users="users"
           :title="`Group ${selectedGroup.name}`"
+          type="cup"
         />
         <!-- GROUP MATCHES -->
 

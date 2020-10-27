@@ -2,7 +2,7 @@
   <div class="h2h-container" v-if="users && h2h && currentRound && players">
       <H2HRounds v-if="h2h" :rounds="h2h" :users="users" :currentRound="currentRound" :players="players"/>
     <div class="h2h-standings">
-      <Standings v-if="standings" :standings="standings" :users="users" title="Head to Head league" />
+      <Standings v-if="standings" :standings="standings" :users="users" title="Head to Head league" type="h2h"/>
     </div>
   </div>
 </template>

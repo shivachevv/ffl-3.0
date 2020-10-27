@@ -1,7 +1,7 @@
 <template>
   <div class="group-standings">
     <!-- HEADER -->
-    <h2 class="header up">{{title}} standings</h2>
+    <h2 class="header up">{{ title }} standings</h2>
     <!-- TABLE HEADER -->
     <div class="standings-header sha">
       <span class="up position">Pos</span>
@@ -19,7 +19,11 @@
       :to="`/team-details/${users[team[0]].userLogo}`"
       tag="a"
       class="team-stats sha"
-      :class="{ first_place: place === 0, second_place: place === 1, third_place: place === 2 }"
+      :class="{
+        first_place: place === 0,
+        second_place: place === 1,
+        third_place: type === 'cup' ? place === 2 || place === 3 : place === 2
+      }"
       v-for="(team, place) in sortStandingsTeams(standings)"
       :key="team[0]"
     >
@@ -43,14 +47,17 @@
 </template>
 
 <script>
-
 export default {
   name: "Standings",
   components: {},
   props: {
-    title:{
-      type:String,
-      required:true
+    type: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
     },
     standings: {
       type: Object,
