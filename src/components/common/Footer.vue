@@ -66,6 +66,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 /***************** FOOTER *******************/
 
 footer {
@@ -129,6 +131,7 @@ footer {
 .footer-cat h2 {
   color: #ffffff;
   margin: 0 0 10px;
+  text-align: center;
 }
 
 .footer-pele a,
@@ -145,5 +148,121 @@ footer {
 .footer-maradona a:hover,
 .footer-cat a:hover {
   text-decoration: underline;
+}
+
+@media #{$mobile} {
+  footer {
+    margin: 10px 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, auto);
+    padding: 10px 0 10px 0;
+    // height: 350px;
+    font-size: 0.9rem;
+
+
+    
+  }
+
+  .footer-logo {
+    margin: 0 20px 0 20px;
+    grid-column: 1 / span 3;
+    grid-row: 1 / span 1;
+    justify-self: flex-start;
+  }
+
+  .footer-fb {
+    grid-column: 4 / span 3;
+    grid-row: 1 / span 1;
+    justify-self: flex-end;
+  }
+
+  .footer-pele {
+    grid-column: 1 / span 2;
+    grid-row: 2 / span 1;
+  }
+
+  .footer-maradona {
+    grid-column: 3 / span 2;
+    grid-row: 2 / span 1;
+  }
+
+  .footer-cat {
+    grid-column: 5 / span 2;
+    grid-row: 2 / span 1;
+  }
+
+  .footer-pele,
+  .footer-maradona,
+  .footer-cat {
+    // height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* align-items: center; */
+    align-self: flex-start;
+    border-left: 1px solid #60666a;
+    margin: 10px 0;
+    padding: 0px;
+  }
+
+  .footer-pele a,
+  .footer-maradona a,
+  .footer-cat a {
+    margin: 3px 0;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  .footer-logo img,
+  .footer-fb img {
+    width: 30px;
+  }
+
+  .footer-logo img {
+    margin: 0px 10px 0 10px;
+  }
+
+  .footer-fb img {
+    margin: 0px 10px 0 10px;
+  }
+
+  .footer-logo,
+  .footer-fb {
+    margin: 0px;
+  }
+
+  .footer-logo a,
+  .footer-fb a {
+    margin: 0px;
+  }
+
+  .no-stand-pele,
+  .no-stand-mar {
+    padding: 10px;
+  }
+
+  .no-stand-pele > img,
+  .no-stand-mar > img {
+    width: 100%;
+  }
+
+  .no-stand-pele a,
+  .no-stand-mar a {
+    font-size: 1.5rem;
+  }
+
+  .no-stand-mar a img,
+  .no-stand-pele a img {
+    top: 30%;
+  }
+
+  .no-stand-pele a img {
+    left: 0px;
+  }
+
+  .no-stand-mar a img {
+    right: 0px;
+  }
 }
 </style>

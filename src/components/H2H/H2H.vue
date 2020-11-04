@@ -1,8 +1,20 @@
 <template>
   <div class="h2h-container" v-if="users && h2h && currentRound && players">
-      <H2HRounds v-if="h2h" :rounds="h2h" :users="users" :currentRound="currentRound" :players="players"/>
+    <H2HRounds
+      v-if="h2h"
+      :rounds="h2h"
+      :users="users"
+      :currentRound="currentRound"
+      :players="players"
+    />
     <div class="h2h-standings">
-      <Standings v-if="standings" :standings="standings" :users="users" title="Head to Head league" type="h2h"/>
+      <Standings
+        v-if="standings"
+        :standings="standings"
+        :users="users"
+        title="Head to Head league"
+        type="h2h"
+      />
     </div>
   </div>
 </template>
@@ -90,7 +102,12 @@ export default {
     players(nv) {
       if (nv && this.h2h && this.users) {
         this.$vs.loading.close();
-        this.standings = standingsH2HHelper(this.h2h, this.players, this.users, this.currentRound);
+        this.standings = standingsH2HHelper(
+          this.h2h,
+          this.players,
+          this.users,
+          this.currentRound
+        );
       }
     },
     h2h(nv) {
@@ -122,7 +139,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
+@import "../../common/breakpoints.scss";
 
 con-vs-popup .vs-popup {
   width: 70% !important;
@@ -138,12 +155,11 @@ con-vs-popup .vs-popup {
   position: relative;
   margin: 20px 0 0 0;
 
-  
-
-  .h2h-standings{
-      width: 50%;
+  .h2h-standings {
+    width: 50%;
+    @media #{$mobile} {
+      width: 98%;
+    }
   }
 }
-
-
 </style>

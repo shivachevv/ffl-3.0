@@ -1,30 +1,59 @@
 <template>
   <div class="slider-container" v-if="bestTeamReady">
-    <h2>FFL BEST TEAM FOR ROUND {{currentRound - 1}}</h2>
-    <carousel :navigationEnabled="true" :perPage="4" :paginationSize="10" :paginationPadding="10">
+    <h2>FFL BEST TEAM FOR ROUND {{ currentRound - 1 }}</h2>
+    <carousel
+      :navigationEnabled="true"
+      :perPage="4"
+      :paginationSize="10"
+      :paginationPadding="10"
+    >
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.GK" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.GK"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.DL" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.DL"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.DC" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.DC"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.DR" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.DR"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.ML" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.ML"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.MC" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.MC"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.MR" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.MR"
+        />
       </slide>
       <slide>
-        <BestTeamPlayer :currentRound="currentRound" :player="bestTeamReady.ST" />
+        <BestTeamPlayer
+          :currentRound="currentRound"
+          :player="bestTeamReady.ST"
+        />
       </slide>
     </carousel>
   </div>
@@ -52,8 +81,7 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     bestTeamReady() {
@@ -78,18 +106,23 @@ export default {
   },
   methods: {
     playerPopupHandler(p) {
-      return this.$emit('playerPopupHandler', p)
+      return this.$emit("playerPopupHandler", p);
     }
   }
 };
 </script>
 
 <style lang="scss">
+@import "../../../common/breakpoints.scss";
+
 .slider-container {
   width: 100%;
   background-color: #5c745c;
   border-radius: 10px;
   margin: 20px 0 0 0;
+  @media #{$mobile} {
+    margin: 10px 0 0 0;
+  }
   //   overflow: hidden;
 
   h2 {
@@ -102,6 +135,10 @@ export default {
     background-color: rgb(15 53 16);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+
+    @media #{$mobile} {
+      padding: 10px 0 10px 0;
+    }
   }
 
   .VueCarousel {
@@ -120,10 +157,14 @@ export default {
           background-color: darken(#4e585e4d, 20) !important;
         }
       }
+
+      @media #{$mobile} {
+      display:none;
+    }
     }
     .VueCarousel-pagination {
       .VueCarousel-dot-container {
-        margin: 0px;
+        margin: 0px!important;
       }
     }
   }

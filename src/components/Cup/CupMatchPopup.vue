@@ -56,25 +56,24 @@
           />
           <h2 class="popup-team1-team">{{ users[match.team1.id].userTeam }}</h2>
         </div>
-        <div class="popup-stats-name">
+        <!-- <div class="popup-stats-name">
           <img
             :src="require(`@/assets/images/cup/spartan-head.png`)"
             alt="spartan-head"
             srcset=""
           />
-          <!-- <h3 class="popup-team1-name">Петър Панковски</h3> -->
           <router-link
             :to="`/team-details/${users[match.team1.id].userLogo}`"
             class="popup-name1-link animated heartBeat infinite slow"
           >
-            team
+            {{users[match.team1.id].name}}
             <img
               :src="require(`@/assets/images/cup/user-info.png`)"
               alt="user-info"
               srcset=""
             />
           </router-link>
-        </div>
+        </div> -->
 
         <div class="popup-players-team1 up">
           <div class="popup-players-header">
@@ -90,7 +89,7 @@
             v-for="(player, i) in Object.entries(match.team1.squad)"
             :key="`${i}1`"
           >
-            <span class="popup-player-position">{{ player[0] }}</span>
+            <span class="popup-player-position up">{{ player[0] }}</span>
             <span class="team1-gk-name">{{ players[player[1].id].name }}</span>
             <span class="team1-gk-pts">{{ player[1].pts }} pts</span>
           </div>
@@ -132,7 +131,7 @@
           <img
             :src="
               require(`@/assets/images/team-logos/${
-                users[match.team1.id].userLogo
+                users[match.team2.id].userLogo
               }.png`)
             "
             alt="T1 Logo"
@@ -140,25 +139,24 @@
           />
           <h2 class="popup-team2-team">{{ users[match.team2.id].userTeam }}</h2>
         </div>
-        <div class="popup-stats-name">
+        <!-- <div class="popup-stats-name">
           <img
             :src="require(`@/assets/images/cup/spartan-head.png`)"
             alt="spartan-head"
             srcset=""
           />
-          <!-- <h3 class="popup-team1-name">Петър Панковски</h3> -->
           <router-link
             :to="`/team-details/${users[match.team2.id].userLogo}`"
             class="popup-name1-link animated heartBeat infinite slow"
           >
-            team
+            {{users[match.team2.id].name}}
             <img
               :src="require(`@/assets/images/cup/user-info.png`)"
               alt="user-info"
               srcset=""
             />
           </router-link>
-        </div>
+        </div> -->
 
         <div class="popup-players-team2 up">
           <div class="popup-players-header">
@@ -174,7 +172,7 @@
             v-for="(player, i) in Object.entries(match.team2.squad)"
             :key="`${i}2`"
           >
-            <span class="popup-player-position">{{ player[0] }}</span>
+            <span class="popup-player-position up">{{ player[0] }}</span>
             <span class="team2-gk-name">{{ players[player[1].id].name }}</span>
             <span class="team2-gk-pts">{{ player[1].pts }} pts</span>
           </div>
@@ -302,16 +300,12 @@ export default {
     }
   },
   methods: {
-    // calculatedStatsTotals(type) {
-
-    // },
     calculatedTotalPts(type) {
       const team = type === "home" ? "team1" : "team2";
       return Object.values(this.match[team].squad).reduce((acc, player) => {
         return acc + Number(player.pts);
       }, 0);
     }
-
     // ...mapActions(["fetchPopupData"]),
     // close() {
     //   return this.$emit("popupClose", false);
@@ -320,8 +314,10 @@ export default {
   created() {
     // this.fetchPopupData(this.player);
   },
-  destroyed() {
-    // this.fetchPopupData("");
+  watch: {
+    match(){
+      // console.log(nv);
+    }
   },
   directives: {
     // clickOutside
@@ -331,6 +327,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
 /********************************************************
 ************** POPUP **********************************/
 .con-vs-popup .vs-popup {
@@ -342,8 +339,10 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  //   position: absolute;
-  //   top: 50px;
+  @media #{$mobile} {
+    width: 100%;
+    flex-direction: column;
+  }
 
   .popup-field {
     // padding: 10px 0 0 0;
@@ -360,6 +359,10 @@ export default {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(8, 1fr);
     position: relative;
+    @media #{$mobile} {
+      width: 100%;
+    }
+
     .teammate {
       width: 100%;
       display: flex;
@@ -469,6 +472,10 @@ export default {
     justify-content: flex-start;
     align-items: flex-start;
     position: relative;
+    @media #{$mobile} {
+      width: 100%;
+      margin: 5px 0 0 0;
+    }
 
     .popup-stats-team1,
     .popup-stats-team2 {
@@ -498,6 +505,9 @@ export default {
           position: absolute;
           left: 10px;
           width: 7%;
+          @media #{$mobile} {
+            display: none;
+          }
         }
       }
 
@@ -558,8 +568,6 @@ export default {
           padding: 10px 5px;
         }
       }
-
-      
     }
 
     .popup-stats-team2 {
@@ -573,7 +581,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
       width: 100%;
-    //   padding: 10px 20px;
+      //   padding: 10px 20px;
 
       .popup-players-header {
         display: flex;
@@ -634,6 +642,10 @@ export default {
           border-radius: 100%;
           text-align: center;
           font-size: 0.75rem;
+          @media #{$mobile} {
+            width: 20px;
+            height: 20px;
+          }
         }
 
         .team1-gk-name,
@@ -654,6 +666,10 @@ export default {
         .team2-st-name {
           text-align: start;
           width: 65%;
+          @media #{$mobile} {
+            font-size: 0.9rem;
+            margin: 0 0 0 10px;
+          }
         }
 
         .team1-gk-pts,

@@ -134,7 +134,7 @@ export default {
       const isLast = this.tmpRndShow === this.currentRound;
       if (!isLast) {
         if (!this.players[this.rndShow.cpt]) {
-          return true
+          return true;
         }
         const hasCptPlayed =
           this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
@@ -142,9 +142,9 @@ export default {
           this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
             .roundStats.sub;
 
-          return !hasCptPlayed
+        return !hasCptPlayed;
       } else {
-        return false
+        return false;
       }
     }
   },
@@ -155,6 +155,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 /********************  USER TEAM **********************/
 .user-team {
   height: 900px;
@@ -165,6 +167,11 @@ export default {
   justify-content: flex-start;
   background-color: #d3d3d3;
   overflow: hidden;
+
+  @media #{$mobile} {
+    width: 95%;
+    align-items: center;
+  }
 }
 
 /**************  ROUND CHANGE ********************/
@@ -184,8 +191,20 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+
+  @media #{$mobile} {
+    width: 100%;
+    justify-content: space-evenly;
+  }
 }
 
+.prev {
+  text-align: right;
+}
+
+.next {
+  text-align: left;
+}
 .prev,
 .next {
   display: inline-block;
@@ -200,14 +219,10 @@ export default {
   font-weight: bold;
   position: relative;
   transition: all 0.3s;
-}
-
-.prev {
-  text-align: right;
-}
-
-.next {
-  text-align: left;
+  @media #{$mobile} {
+    width: 25%;
+    text-align: center;
+  }
 }
 
 .prev:hover,
@@ -231,6 +246,10 @@ export default {
   top: 11px;
   left: 11px;
   z-index: 10;
+
+  @media #{$mobile} {
+    display: none;
+  }
 }
 
 .next img {
@@ -239,6 +258,10 @@ export default {
   top: 11px;
   right: 11px;
   z-index: 10;
+
+  @media #{$mobile} {
+    display: none;
+  }
 }
 
 .prev div,
@@ -264,6 +287,10 @@ export default {
   transition: all 0.3s;
   opacity: 0;
   z-index: 0;
+
+  @media #{$mobile} {
+    display: none;
+  }
 }
 
 .prev div::after {
@@ -298,6 +325,13 @@ export default {
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
   position: relative;
+
+  @media #{$mobile} {
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    grid-template-columns: repeat(8, 1fr);
+    margin: 26px 0 0 0;
+  }
 }
 
 .gk,
@@ -328,81 +362,129 @@ export default {
 .gk {
   grid-row: 11 / span 2;
   grid-column: 5 / span 2;
+  @media #{$mobile} {
+    grid-column: 4 / span 2;
+  }
 }
 
 .dl1 {
   grid-row: 7 / span 2;
   grid-column: 2 / span 2;
+  @media #{$mobile} {
+    grid-column: 1 / span 2;
+  }
 }
 
 .dl2 {
   grid-row: 9 / span 2;
   grid-column: 2 / span 2;
+  @media #{$mobile} {
+    grid-column: 1 / span 2;
+  }
 }
 
 .dc1 {
   grid-row: 8 / span 2;
   grid-column: 4 / span 2;
+  @media #{$mobile} {
+    grid-column: 3 / span 2;
+  }
 }
 
 .dc2 {
   grid-row: 8 / span 2;
   grid-column: 6 / span 2;
+  @media #{$mobile} {
+    grid-column: 5 / span 2;
+  }
 }
 
 .dr1 {
   grid-row: 7 / span 2;
   grid-column: 8 / span 2;
+  @media #{$mobile} {
+    grid-column: 7 / span 2;
+  }
 }
 
 .dr2 {
   grid-row: 9 / span 2;
   grid-column: 8 / span 2;
+  @media #{$mobile} {
+    grid-column: 7 / span 2;
+  }
 }
 
 .ml1 {
   grid-row: 3 / span 2;
   grid-column: 2 / span 2;
+  @media #{$mobile} {
+    grid-column: 1 / span 2;
+  }
 }
 
 .ml2 {
   grid-row: 5 / span 2;
   grid-column: 2 / span 2;
+  @media #{$mobile} {
+    grid-column: 1 / span 2;
+  }
 }
 
 .mc1 {
   grid-row: 4 / span 2;
   grid-column: 4 / span 2;
+  @media #{$mobile} {
+    grid-column: 3 / span 2;
+  }
 }
 
 .mc2 {
   grid-row: 4 / span 2;
   grid-column: 6 / span 2;
+  @media #{$mobile} {
+    grid-column: 5 / span 2;
+  }
 }
 
 .mr1 {
   grid-row: 3 / span 2;
   grid-column: 8 / span 2;
+  @media #{$mobile} {
+    grid-column: 7 / span 2;
+  }
 }
 
 .mr2 {
   grid-row: 5 / span 2;
   grid-column: 8 / span 2;
+  @media #{$mobile} {
+    grid-column: 7 / span 2;
+  }
 }
 
 .st1 {
   grid-row: 1 / span 2;
   grid-column: 3 / span 2;
+  @media #{$mobile} {
+    grid-column: 2 / span 2;
+  }
 }
 
 .st2 {
   grid-row: 1 / span 2;
   grid-column: 5 / span 2;
+  @media #{$mobile} {
+    grid-column: 4 / span 2;
+  }
 }
 
 .st3 {
   grid-row: 1 / span 2;
   grid-column: 7 / span 2;
+  @media #{$mobile} {
+    grid-column: 6 / span 2;
+  }
 }
 
 .teammate {
@@ -429,6 +511,18 @@ export default {
   font-weight: bold;
   font-size: 1rem;
   margin: 0 10px 0 0;
+
+  @media #{$mobile} {
+    left: 0px;
+    width: 100%;
+    background-image: none;
+    height: 20px;
+    top: -23px;
+
+    & br {
+      display: none;
+    }
+  }
 }
 .inactiveBtn {
   opacity: 0;

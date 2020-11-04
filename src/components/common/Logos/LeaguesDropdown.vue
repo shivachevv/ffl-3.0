@@ -9,8 +9,14 @@
     </svg>
     <transition name="slide" appear>
       <div class="sub-menu" v-if="dropdownToggle">
-        <div class="menu-item" v-for="league in Object.keys(leagues)" :key="league">
-          <a href @click.prevent="selectedLeagueHandler(league)">{{leagues[league].name}}</a>
+        <div
+          class="menu-item"
+          v-for="league in Object.keys(leagues)"
+          :key="league"
+        >
+          <a href @click.prevent="selectedLeagueHandler(league)">{{
+            leagues[league].name
+          }}</a>
         </div>
       </div>
     </transition>
@@ -24,7 +30,7 @@ export default {
   name: "LeaguesDropdown",
   props: {
     leagues: Object,
-    selected:String
+    selected: String
   },
   data() {
     return {
@@ -48,6 +54,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 /****************TEAM LOGOS*****************/
 
 .logo-separator {
@@ -60,15 +68,31 @@ export default {
   height: 100%;
   background-color: #828a8d;
   cursor: pointer;
+
+  @media #{$mobile} {
+    width: 100%;
+    height: auto;
+  }
+
   a {
     text-decoration: none;
     font-weight: bold;
     color: white;
+
+    @media #{$mobile} {
+      width: 100%;
+      text-align: center;
+      padding: 10px 0 15px 0;
+    }
   }
   svg {
     position: absolute;
     top: calc(72%);
     right: calc(50% - 7px);
+
+    @media #{$mobile} {
+      top: calc(73%);
+    }
   }
   .sub-menu {
     position: absolute;

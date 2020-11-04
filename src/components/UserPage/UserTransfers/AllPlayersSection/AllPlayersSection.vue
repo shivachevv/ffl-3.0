@@ -141,15 +141,17 @@
         type="relief"
         size="large"
         @click.prevent="clearTransfersIn"
-        >Clear All Transfers In</vs-button>
-      
+        >Clear All Transfers In</vs-button
+      >
+
       <vs-button
         color="#59A95D"
         button="submit"
         type="relief"
         size="large"
         @click.prevent="submitTransfers"
-        >Submit Transfers</vs-button>
+        >Submit Transfers</vs-button
+      >
     </div>
   </section>
 </template>
@@ -185,7 +187,7 @@ export default {
   watch: {},
   computed: {
     userLeague() {
-      return this.user.league
+      return this.user.league;
     },
     leagues() {
       return Object.keys(this.playersCathegorized);
@@ -269,12 +271,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../../common/breakpoints.scss";
+
 .user-tr-cont {
   width: 30%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media #{$mobile} {
+    width: 100%;
+  }
+
   .user-tr-header {
     width: 100%;
     height: 100px;
@@ -286,10 +294,19 @@ export default {
     color: #f1f0f1;
     font-size: 1.25rem;
     position: relative;
+    @media #{$mobile} {
+      height: 50px;
+      margin: 10px 0 0 0;
+    }
+
     img {
       width: 50px;
       position: absolute;
       left: 20px;
+
+      @media #{$mobile} {
+        width: 30px;
+      }
     }
   }
 
@@ -300,6 +317,9 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    @media #{$mobile} {
+      margin: 0px;
+    }
 
     .section-header {
       width: 100%;
@@ -339,6 +359,9 @@ export default {
 
         img {
           width: 30%;
+          @media #{$mobile} {
+            width: 40%;
+          }
         }
 
         h3 {
@@ -366,6 +389,9 @@ export default {
 
         img {
           width: 30%;
+          @media #{$mobile} {
+            width: 40%;
+          }
         }
 
         h3 {
@@ -397,11 +423,14 @@ export default {
       }
       img:nth-child(2) {
         margin: 0 10px 0 10px;
-        width: 10%;
+        width: 5%;
       }
       h3 {
         margin: 0 10px 0 10px;
         font-weight: bold;
+        @media #{$mobile} {
+        font-size: 1.3rem;
+      }
       }
       a {
         justify-self: flex-end;
@@ -418,6 +447,9 @@ export default {
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+      @media #{$mobile} {
+        padding: 10px;
+      }
 
       .players-head {
         display: flex;
@@ -428,6 +460,10 @@ export default {
         padding: 5px 0 5px 0;
         margin: 0 10px 0 10px;
         border-bottom: 2px solid #3c474d;
+        @media #{$mobile} {
+          width: 100%;
+          margin: 0px;
+        }
       }
 
       .player {
@@ -440,6 +476,11 @@ export default {
         margin: 5px 0 0 0;
         border-radius: 5px;
         transition: all 0.2s;
+        @media #{$mobile} {
+          width: 100%;
+          margin: 0 5px 0 5px;
+          font-size: 1.3rem;
+        }
 
         &:hover {
           background-color: #91ca91;
@@ -458,7 +499,8 @@ export default {
         text-align: end;
       }
 
-      .takenplayer, .notavailableplayer {
+      .takenplayer,
+      .notavailableplayer {
         background-color: #b28a8b;
         cursor: not-allowed;
 

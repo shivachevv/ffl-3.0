@@ -508,11 +508,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 .main-container {
   width: 90%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
+
+  @media #{$mobile} {
+    width: 98%;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

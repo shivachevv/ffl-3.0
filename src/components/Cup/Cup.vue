@@ -4,6 +4,7 @@
     v-if="users && cup && selectedGroup && cupStandings"
   >
     <vs-popup
+      @close="deselectMatch"
       v-if="players && selectedMatch"
       class="holamundo"
       :title="
@@ -84,8 +85,7 @@
                 >{{ calculateTeamPts(match.team1.squad) }} -
                 {{ calculateTeamPts(match.team2.squad) }}</span
               >
-              <span class="score" v-else
-                > - </span>
+              <span class="score" v-else> - </span>
 
               <img
                 :src="
@@ -198,8 +198,12 @@ export default {
         });
     },
     openMatchPopupHandler(match) {
+      this.deselectMatch();
       this.selectedMatch = match;
       return (this.matchPopup = true);
+    },
+    deselectMatch() {
+      this.selectedMatch = undefined;
     }
   },
   watch: {
@@ -211,6 +215,7 @@ export default {
   },
   async created() {
     await this.fetchCup();
+    this.$vs.loading.close();
     this.selectedGroup = Object.values(this.cup)[0];
   },
   mounted() {}
@@ -219,6 +224,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 con-vs-popup .vs-popup {
   width: 70% !important;
 }
@@ -232,6 +239,9 @@ con-vs-popup .vs-popup {
   background-color: #c6c6c6;
   position: relative;
   margin: 20px 0 0 0;
+  @media #{$mobile} {
+    width: 98%;
+  }
 }
 
 .cup-menu {
@@ -241,6 +251,9 @@ con-vs-popup .vs-popup {
   justify-content: center;
   align-items: center;
   background-color: #c6c6c6;
+  @media #{$mobile} {
+    width: 100%;
+  }
 }
 
 .cup-header {
@@ -270,6 +283,9 @@ con-vs-popup .vs-popup {
   margin: 20px 0 0 0;
   color: #d3d3d3;
   font-size: 1.25rem;
+  @media #{$mobile} {
+    justify-content: space-between;
+  }
 }
 
 .cup-stages-links {
@@ -286,6 +302,10 @@ con-vs-popup .vs-popup {
   align-items: center;
   position: relative;
   transition: all 0.3s;
+  @media #{$mobile} {
+    margin: 0px;
+    width: 24%;
+  }
 }
 
 .cup-stages-links:hover {
@@ -296,6 +316,10 @@ con-vs-popup .vs-popup {
 .cup-stages-links:nth-child(2),
 .cup-stages-links:nth-child(4) {
   margin: 0 20px;
+  @media #{$mobile} {
+    margin: 0px;
+    width: 24%;
+  }
 }
 
 .selected {
@@ -346,96 +370,10 @@ con-vs-popup .vs-popup {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  @media #{$mobile} {
+    width: 100%;
+  }
 }
-
-// .group-standings {
-//   width: 100%;
-//   font-size: 0.875rem;
-// }
-
-// .standings-header {
-//   width: 100%;
-//   height: 40px;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-items: center;
-//   background-color: #3c474d;
-//   border-bottom: 2px solid #893e40;
-//   color: #d3d3d3;
-//   text-align: center;
-// }
-
-// .team-stats {
-//   width: 100%;
-//   height: 40px;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-items: center;
-//   background-color: #d3d3d3;
-//   color: #3c474d;
-//   margin: 0 0 5px 0;
-//   text-align: start;
-//   cursor: pointer;
-//   transition: all 0.2s;
-// }
-
-// .team-stats:hover {
-//   background-color: #bbbbbb;
-//   transform: scale(1.02);
-// }
-
-// .first-places {
-//   background-color: #bcc4c8;
-//   border-left: 5px solid #893e40;
-//   transition: all 0.3s;
-// }
-
-// .first-places:hover {
-//   background-color: #a6aeb3;
-// }
-
-// .position {
-//   width: 7%;
-//   text-align: center;
-// }
-
-// .team {
-//   width: 30%;
-//   text-align: start;
-// }
-
-// .team a {
-//   color: #3c474d;
-//   text-decoration: none;
-//   transition: all 0.2s;
-// }
-
-// .team a:hover {
-//   color: #3c474d;
-//   text-decoration: underline;
-// }
-
-// .games {
-//   width: 10%;
-//   text-align: center;
-// }
-
-// .win-draw-lose {
-//   width: 15%;
-//   text-align: center;
-// }
-
-// .goal-diff {
-//   width: 10%;
-//   text-align: center;
-// }
-
-// .points {
-//   width: 7%;
-//   text-align: center;
-// }
 
 /******** GAMEWEEKS *********************/
 .group-matches {
@@ -444,13 +382,16 @@ con-vs-popup .vs-popup {
   margin: 20px 0 0 0;
 }
 
-.gameweeks {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
+// .gameweeks {
+//   width: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: flex-start;
+//   align-items: center;
+//   @media #{$mobile} {
+//     width: 100%;
+//   }
+// }
 
 .matches-header {
   width: 100%;
@@ -478,6 +419,9 @@ con-vs-popup .vs-popup {
   align-items: center;
   color: #3c474d;
   position: relative;
+  @media #{$mobile} {
+    padding: 5px;
+  }
 }
 
 .gameweeks-header {
@@ -513,6 +457,9 @@ con-vs-popup .vs-popup {
 
 .gameweeks-match-wrapper .score {
   width: 10%;
+  @media #{$mobile} {
+    width: 20%;
+  }
 }
 
 .gameweeks-match-wrapper img {
@@ -522,6 +469,9 @@ con-vs-popup .vs-popup {
 .match-details {
   position: absolute;
   right: 30px;
+  @media #{$mobile} {
+    display: none;
+  }
 }
 
 .match-details img {

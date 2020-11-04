@@ -22,6 +22,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
 /*********** HEADER & NAVIGATION ***************/
 header {
   width: 100%;
@@ -30,9 +31,17 @@ header {
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
+
+  @media #{$mobile} {
+    position: inherit;
+  }
+
   > img {
     width: 100%;
     float: left;
+    @media #{$mobile} {
+      display: none;
+    }
   }
 }
 .h1-hidden {
@@ -46,6 +55,13 @@ header {
   font-size: 1.75rem;
   color: #edeaeb;
   display: none;
+  @media #{$mobile} {
+    position: inherit;
+    display: block;
+    background-color: #505559;
+    color: #c6c6c6;
+    box-shadow: 0px 5px 15px 1px rgb(58 58 58 / 75%);
+  }
 }
 
 /***********NAVIGATION END **************/

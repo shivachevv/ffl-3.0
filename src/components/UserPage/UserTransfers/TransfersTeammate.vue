@@ -5,7 +5,7 @@
     </div>
     <div class="player-stats-cont">
       <div class="name-cont">
-        <span class="pos">{{ player.pos }}</span>
+        <span class="pos">{{ player.position }}</span>
         <span class="name">{{ player.name }}</span>
         <a href="#" class="player-stats">
           <img src="@/assets/images/user-page/computer.png" alt />
@@ -95,6 +95,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 .teammate {
   transition: all 0.3s;
 }
@@ -115,6 +117,9 @@ export default {
   width: 35%;
   padding: 0 0 5px 0;
   transition: all 0.3s;
+  @media #{$mobile} {
+    width: 65%;
+  }
 }
 
 .player-stats-cont {
@@ -144,6 +149,10 @@ export default {
   height: 20px;
   line-height: 20px;
   text-align: center;
+
+  @media #{$mobile} {
+    font-size: 0.7rem;
+  }
 }
 
 .name {
@@ -163,6 +172,10 @@ export default {
   height: 20px;
   background-color: #103e10;
   padding: 3px 3px 3px;
+
+  @media #{$mobile} {
+    display: none;
+  }
 }
 
 .player-stats img {

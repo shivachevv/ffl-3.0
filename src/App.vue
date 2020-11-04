@@ -36,23 +36,94 @@ export default {
     ])
   },
   computed: {},
-  watch: {},
+  watch: {
+    leagues(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.currentRound &&
+        this.users &&
+        this.loggedUser &&
+        this.standings
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    players(nv) {
+      if (
+        nv &&
+        this.leagues &&
+        this.currentRound &&
+        this.users &&
+        this.loggedUser &&
+        this.standings
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    currentRound(nv) {
+      if (nv && this.players && this.leagues && this.users && this.standings && this.loggedUser) {
+        this.$vs.loading.close();
+      }
+    },
+    users(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.leagues &&
+        this.currentRound &&
+        this.loggedUser &&
+        this.standings
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    standings(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.leagues &&
+        this.currentRound &&
+        this.loggedUser &&
+        this.users
+      ) {
+        this.$vs.loading.close();
+      }
+    },
+    loggedUser(nv) {
+      if (
+        nv &&
+        this.players &&
+        this.leagues &&
+        this.currentRound &&
+        this.standings &&
+        this.users
+      ) {
+        this.$vs.loading.close();
+      }
+    }
+  },
   async created() {
     console.log("App");
-
+    this.$vs.loading();
     this.fetchLoggedUser();
     this.fetchStandings();
     this.fetchLeagues();
     this.fetchPlayers();
-    this.fetchCurrentRound()
-    this.fetchUsers()
+    this.fetchCurrentRound();
+    this.fetchUsers();
   }
 };
 </script>
 
 <style lang="scss">
+@import "./common/breakpoints.scss";
+
 .vs-popup {
   width: 60% !important;
+  @media #{$mobile} {
+    width: 95% !important;
+  }
   .vs-popup--content {
     font-size: 0.9em !important;
     -webkit-transition: all 0.23s ease 0.1s !important;
@@ -62,14 +133,15 @@ export default {
     padding: 0px !important;
     width: 100% !important;
     margin: 0px !important;
-    background-color: #e0e0e0!important;
+    background-color: #e0e0e0 !important;
   }
 }
-$breakpoints: (
-  phone: 320px,
-  tablet: 768px,
-  desktop: 1024px
-);
+// $breakpoints: (
+//   phone: 380px,
+//   tablet: 768px,
+//   desktop: 1300px
+// );
+
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 
 /* TRANSITION CLASSES */
@@ -268,6 +340,10 @@ html {
 
 html {
   font-size: 16px;
+
+  @media #{$mobile} {
+    font-size: 13px;
+  }
 }
 
 /*************** CONTAINER **********/
@@ -311,5 +387,9 @@ main {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+
+  @media #{$mobile} {
+    width: 100%;
+  }
 }
 </style>

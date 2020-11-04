@@ -7,14 +7,34 @@
       <span>{{ players[t.transferIn].club }}</span>
       <span>{{ players[t.transferOut].name }}</span>
       <span>{{ players[t.transferOut].club }}</span>
-      <span
+      <!-- <span
         :class="{
           pending: t.status === 'pending',
           confirmed: t.status === 'confirmed',
           cancelled: t.status === 'cancelled'
         }"
         >{{ t.status }}</span
+      > -->
+      <span
+        title="Confirmed"
+        class="material-icons"
+        v-if="t.status === 'confirmed'"
+        >check_box</span
       >
+      <span
+        title="Cancelled"
+        class="material-icons"
+        v-if="t.status === 'cancelled'"
+      >
+        highlight_off
+      </span>
+      <span
+        title="Pending"
+        class="material-icons"
+        v-if="t.status === 'pending'"
+      >
+        watch_later
+      </span>
 
       <!-- <img
         class="green"
@@ -37,6 +57,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import "material-icons/iconfont/material-icons.css";
 
 export default {
   name: "RoundTransfersSoFar",
@@ -72,6 +93,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 .transfers-container {
   width: 100%;
   display: flex;
@@ -101,37 +124,68 @@ export default {
     align-items: stretch;
     // background-color: #9fa5a9;
     position: relative;
+    @media #{$mobile} {
+      padding: 0px;
+    }
 
     span {
       padding: 7px;
       font-weight: bold;
       text-align: center;
+      @media #{$mobile} {
+        padding: 0px;
+         margin: 0px;
+      }
 
       &:nth-child(1) {
-        width: 10%;
+        width: 4%;
+        margin: 0 0 0 5px;
+        @media #{$mobile} {
+        padding: 0px;
+         margin: 0px;
+      }
       }
       &:nth-child(2) {
-        width: 20%;
+        width: 23%;
         border-bottom: 3px solid green;
         margin: 0 0 0 5px;
+        @media #{$mobile} {
+        padding: 0px;
+         margin: 0px;
+      }
       }
       &:nth-child(3) {
-        width: 20%;
+        width: 23%;
         border-bottom: 3px solid green;
         margin: 0 5px 0 0;
+        @media #{$mobile} {
+          margin: 0 0 0 1px;
+        }
       }
       &:nth-child(4) {
-        width: 20%;
+        width: 23%;
         border-bottom: 3px solid #c84c50;
         margin: 0 0 0 5px;
+        @media #{$mobile} {
+          margin: 0 0 0 1px;
+        }
       }
       &:nth-child(5) {
-        width: 20%;
+        width: 23%;
         border-bottom: 3px solid #c84c50;
         margin: 0 5px 0 0;
+        @media #{$mobile} {
+        padding: 0px;
+         margin: 0px;
+      }
       }
       &:nth-child(6) {
-        width: 10%;
+        width: 4%;
+        margin: 0 5px 0 0;
+        @media #{$mobile} {
+        padding: 0px;
+         margin: 0px 10px 0 0;
+      }
       }
     }
 

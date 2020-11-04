@@ -93,7 +93,7 @@ const routes = [{
     import(/* webpackChunkName: "user-transfers" */ "../components/UserPage/UserTransfers/UserTransfers"),
   name: 'mytransfers',
   props: true,
-  meta: { title: 'FFL: Transfers' },
+  meta: { title: 'FFL: Transfers ' },
   beforeEnter(to, from, next) {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
@@ -103,7 +103,7 @@ const routes = [{
           return u.userLogo === teamName
         })[0].uid
         if (teamId === user.uid) {
-          document.title = to.meta.title + user.userTeam
+          document.title = to.meta.title + users[teamId].userTeam
           next()
         } else {
           next('/')

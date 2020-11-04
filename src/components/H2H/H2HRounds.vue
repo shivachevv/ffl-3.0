@@ -170,6 +170,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 /**************************************************
 ****************  ROUNDS **************************/
 
@@ -179,6 +181,9 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  @media #{$mobile} {
+      width: 100%;
+    }
 
   .buttons-and-labels {
     width: 50%;
@@ -186,6 +191,9 @@ export default {
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+    @media #{$mobile} {
+      width: 100%;
+    }
   }
 
   .round-matches {
@@ -195,6 +203,9 @@ export default {
     justify-content: flex-start;
     align-items: center;
     margin: 10px 0 0 0;
+    @media #{$mobile} {
+      width: 100%;
+    }
 
     .gameweeks-match-wrapper {
       width: 100%;
@@ -220,14 +231,23 @@ export default {
 
       .score {
         width: 10%;
+        @media #{$mobile} {
+      width: 20%;
+    }
       }
 
       img {
         width: 4%;
+        @media #{$mobile} {
+      width: 7%;
+    }
       }
       .match-details {
         position: absolute;
         right: 30px;
+        @media #{$mobile} {
+      display: none;
+    }
 
         img {
           width: 20px;

@@ -84,13 +84,15 @@ export default {
     }
   },
   watch: {},
-  async created() {},
+  created() {},
   mounted() {}
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 /**************************************************
 ****************  STANDINGS **************************/
 
@@ -136,6 +138,10 @@ export default {
     text-align: start;
     cursor: pointer;
     transition: all 0.2s;
+    @media #{$mobile} {
+      font-size: 1rem;
+      font-weight: bold;
+    }
 
     &:hover {
       background-color: #bbbbbb;
@@ -205,6 +211,9 @@ export default {
   .goal-diff {
     width: 10%;
     text-align: center;
+    @media #{$mobile} {
+      width: 20%;
+    }
   }
 
   .points {

@@ -36,7 +36,11 @@
           <td class="table-num">{{ i + 1 }}</td>
           <td class="up table-name">
             <img
-              :src="require(`@/assets/images/team-logos/${users[t[0]].userLogo}.png`)"
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[t[0]].userLogo
+                }.png`)
+              "
               :alt="`${users[t[0]].userTeam} logo`"
             />
             {{ users[t[0]].userTeam }}
@@ -92,7 +96,7 @@ export default {
       return Object.entries(
         this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
       ).sort((a, b) => {
-        return b[1].total - a[1].total
+        return b[1].total - a[1].total;
       });
     }
   },
@@ -125,6 +129,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.3s;
@@ -147,6 +153,11 @@ export default {
   justify-content: flex-start;
   align-items: center;
   position: relative;
+
+  @media #{$mobile} {
+    width: 100%;
+    margin: 10px 0 0 0;
+  }
 }
 .st-header-container {
   width: 100%;
@@ -195,6 +206,9 @@ export default {
       td {
         vertical-align: middle;
         padding: 10px 10px;
+        @media #{$mobile} {
+          padding: 0px;
+        }
         span {
           display: block;
           font-size: 0.8rem;
@@ -231,6 +245,7 @@ export default {
   text-align: left;
   position: relative;
   padding: 10px 10px 10px 40px !important;
+
   a {
     color: #232f37;
   }

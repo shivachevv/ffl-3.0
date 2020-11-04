@@ -11,7 +11,11 @@
 
       <!---------------- USER DETAILS -------------------------------------->
       <section class="user-details">
-        <UserInfo :user="user" :currentRound="currentRound" :isThisLoggedTeam="isThisLoggedTeam"></UserInfo>
+        <UserInfo
+          :user="user"
+          :currentRound="currentRound"
+          :isThisLoggedTeam="isThisLoggedTeam"
+        ></UserInfo>
 
         <!---------------- MATCH PREPARATION -------------------------------------->
 
@@ -124,6 +128,23 @@ export default {
     users(nv) {
       if (nv && this.players) {
         this.$vs.loading.close();
+
+        // for (const id in nv) {
+        //   const user = nv[id];
+        //   const team = user.rounds.r10.team;
+        //   for (const iid in team) {
+        //     const player = team[iid];
+        //     // console.log(iid, pos);
+        //     const newId = iid !== "gk" ? iid.substring(0, 2) : iid;
+        //     if (this.players[player]) {
+        //       const pos = this.players[player].position;
+        //       const check = newId === pos.toLowerCase()
+        //       if (!check) {
+        //         console.log(this.players[player].name ,player, id, user.userTeam);
+        //       }
+        //     }
+        //   }
+        // }
       }
     }
   },
@@ -138,6 +159,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 // @include media("≥phone", "≤desktop") {
 //   background-color: red;
 // }
@@ -147,6 +170,12 @@ export default {
   align-items: flex-start;
   justify-content: space-between;
 
+  @media #{$mobile} {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .user-details {
     height: fit-content;
     width: 35%;
@@ -155,6 +184,11 @@ export default {
     align-items: center;
     justify-content: flex-start;
     margin: 0 0 0 20px;
+
+    @media #{$mobile} {
+      width: 96%;
+      margin: 0px;
+    }
   }
 } //POPUP STYLES
 .vs-popup {
@@ -168,7 +202,7 @@ export default {
     padding: 0px !important;
     width: 100% !important;
     margin: 0px !important;
-    background-color: red!important;
+    background-color: red !important;
     // background-color: #e0e0e0;
   }
 }

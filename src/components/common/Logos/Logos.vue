@@ -1,17 +1,31 @@
 <template>
-  <section class="logos-container" v-if="selectedLeague && users && loggedUser">
-    <div >
+  <section class="logos-container" v-if="selectedLeague && users">
+    <div>
       <div class="logo" v-for="team in leagueSelected1stHalf" :key="team">
         <router-link :to="`/team-details/${users[team].userLogo}`">
-          <img :src="require(`@/assets/images/team-logos/${users[team].userLogo}.png`)" alt="Team logo" />
+          <img
+            :src="
+              require(`@/assets/images/team-logos/${users[team].userLogo}.png`)
+            "
+            alt="Team logo"
+          />
         </router-link>
       </div>
 
       <!-- <Half :leagueSelected="leagueSelected1stHalf"></Half> -->
-      <LeaguesDropdown :leagues="this.leagues" :selected="selectedLeague" @selectedLeague="selectedLeague = $event"></LeaguesDropdown>
+      <LeaguesDropdown
+        :leagues="this.leagues"
+        :selected="selectedLeague"
+        @selectedLeague="selectedLeague = $event"
+      ></LeaguesDropdown>
       <div class="logo" v-for="team in leagueSelected2ndHalf" :key="team">
         <router-link :to="`/team-details/${users[team].userLogo}`">
-          <img :src="require(`@/assets/images/team-logos/${users[team].userLogo}.png`)" alt="Team logo" />
+          <img
+            :src="
+              require(`@/assets/images/team-logos/${users[team].userLogo}.png`)
+            "
+            alt="Team logo"
+          />
         </router-link>
       </div>
 
@@ -37,11 +51,8 @@ export default {
   },
   computed: {
     ...mapGetters(["leagues", "loggedUser", "users"]),
-    // menuLeagues(){
-
-    // }
     leagueSelected1stHalf() {
-      return this.leagues[this.selectedLeague].teams.filter((x, i) => {       
+      return this.leagues[this.selectedLeague].teams.filter((x, i) => {
         return i < this.leagues[this.selectedLeague].teams.length / 2;
       });
     },
@@ -51,18 +62,20 @@ export default {
       });
     },
     selectedLeague: {
-      get: function() {        
+      get: function() {
         if (this.loggedUser && !this.selectedLgTmp && this.leagues) {
           return Object.values(this.leagues).filter(x => {
-            if ( x.teams.includes(this.loggedUser.uid)) {
-              return x.id
+            if (x.teams.includes(this.loggedUser.uid)) {
+              return x.id;
             }
-          })[0].id
+          })[0].id;
         } else {
-          if (this.leagues){
-            return this.selectedLgTmp ? this.selectedLgTmp : Object.keys(this.leagues)[0];
+          if (this.leagues) {
+            return this.selectedLgTmp
+              ? this.selectedLgTmp
+              : Object.keys(this.leagues)[0];
           } else {
-            return undefined
+            return undefined;
           }
         }
       },
@@ -76,6 +89,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../../common/breakpoints.scss";
+
 /****************TEAM LOGOS*****************/
 .logos-container {
   width: 100%;
@@ -88,38 +103,56 @@ export default {
   -moz-box-shadow: 0px 6px 19px -8px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 6px 19px -8px rgba(0, 0, 0, 0.75);
   z-index: 999;
+
+  @media #{$mobile} {
+    height: auto;
+  }
+
   > div {
     width: 80%;
     height: 60px;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
-  }
-  img {
-    width: 40px;
-    transition: all 0.1s ease-in-out;
-  }
-}
-.logo {
-  a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-  }
-  &:hover {
-    img {
-      transform: scale(1.3);
+
+    @media #{$mobile} {
+      width: 100%;
+      height: auto;
+      flex-wrap: wrap;
     }
-    > a {
-      background-color: #9e9e9e;
-      -webkit-box-shadow: 6px 6px 17px -11px rgba(0, 0, 0, 0.43);
-      -moz-box-shadow: 6px 6px 17px -11px rgba(0, 0, 0, 0.43);
-      box-shadow: 6px 6px 17px -11px rgba(0, 0, 0, 0.43);
+
+    .logo {
+      a {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding: 10px;
+      }
+      &:hover {
+        img {
+          transform: scale(1.2);
+        }
+        > a {
+          background-color: #9e9e9e;
+          -webkit-box-shadow: 6px 6px 17px -11px rgba(0, 0, 0, 0.43);
+          -moz-box-shadow: 6px 6px 17px -11px rgba(0, 0, 0, 0.43);
+          box-shadow: 6px 6px 17px -11px rgba(0, 0, 0, 0.43);
+        }
+      }
+      img {
+        width: 40px;
+        transition: all 0.1s ease-in-out;
+
+        @media #{$mobile} {
+          width: 30px;
+          margin: 5px;
+        }
+      }
     }
   }
 }

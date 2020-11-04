@@ -1,4 +1,3 @@
-// import { playersMapped } from "../common";
 import { getCurrentRound } from "../utils/getCurrentRound";
 import getMatching from "../utils/getMatching";
 import pointsCalculator from '../utils/pointsCalculator'

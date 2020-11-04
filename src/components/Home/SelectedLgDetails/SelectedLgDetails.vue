@@ -60,6 +60,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import '../../../common/breakpoints.scss';
+
 .pele-container,
 .maradona-container {
   width: 30%;
@@ -69,6 +71,9 @@ export default {
   align-items: center;
   transition: all 0.3s;
   /*overflow:hidden;*/
+  @media #{$mobile} {
+    width: 95%;
+  }
 }
 
 .pele-container {
@@ -126,5 +131,9 @@ export default {
   /* margin: 6px 0; */
   line-height: 25px;
   text-align: center;
+
+  @media #{$mobile} {
+    text-transform: uppercase;
+  }
 }
 </style>

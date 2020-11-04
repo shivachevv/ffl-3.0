@@ -207,6 +207,7 @@ export default {
     },
     captainHandler() {
       const merged = this.mergeCaptains(this.userRoundStats, this.nextRnd);
+      console.log(merged);
       if (merged.cpt !== merged.viceCpt) {
         return this.$vs.dialog({
           color: "success",
@@ -276,6 +277,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 /********************************************************
 ***************   MATCH PREPARATION   ******************/
 // .con-vs-alert-primary {
@@ -370,6 +373,7 @@ export default {
   width: 100%;
   background-color: #184d18;
   color: lightgrey;
+  
   h2 {
     // margin: 20px 10px;
     padding: 10px 0 10px 0;
@@ -403,6 +407,10 @@ export default {
   padding: 10px 20px 0 66px;
   margin: 0 0 0 0;
   position: relative;
+
+  @media #{$mobile} {
+    padding: 10px 20px 0 60px;
+  }
 
   .form-up {
     display: flex;

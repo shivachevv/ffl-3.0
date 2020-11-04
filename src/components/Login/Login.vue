@@ -9,7 +9,7 @@
           <span class="error-msg" v-if="!$v.email.required">Email is required!</span>
           <span class="error-msg" v-else-if="!$v.email.email">Email is not valid!</span>
         </template>
-      <input type="text" placeholder="E-Mail" v-model="email" />
+      <input type="email" placeholder="E-Mail" v-model="email" />
       <template v-if="$v.password.$error">
           <span class="error-msg" v-if="!$v.password.required">Password is required!</span>
           <span class="error-msg" v-else-if="!$v.password.minLength">Password should be minimum 6 characters!</span>
@@ -72,6 +72,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 $error-clr: #ff7175;
 
 .login {
@@ -86,6 +88,9 @@ $error-clr: #ff7175;
   position: relative;
   overflow: hidden;
   transition: all 0.5s;
+  @media #{$mobile} {
+    width: 90%;
+  }
   .login-heading {
     margin: 0 0 10px 0;
     font-size: 1.5rem;

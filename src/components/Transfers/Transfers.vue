@@ -216,9 +216,13 @@
       <div class="transfers-container">
         <vs-collapse type="margin">
           <vs-collapse-item
-            v-for="(round, i) in Object.keys(dividedTransfers[selectedLeague])"
+            v-for="(round, i) in sortedRounds"
             :key="i"
           >
+          <!-- <vs-collapse-item
+            v-for="(round, i) in Object.keys(dividedTransfers[selectedLeague])"
+            :key="i"
+          > -->
             <div slot="header">Round {{ round }}</div>
 
             <div class="round-container">
@@ -240,19 +244,20 @@
               >
                 <span class="position">{{ transfer.position }}</span>
                 <span
-                title="Confirmed"
+                  title="Confirmed"
                   class="material-icons status status-confirmed"
                   v-if="transfer.status === 'confirmed'"
-                >check_box</span>
+                  >check_box</span
+                >
                 <span
-                title="Cancelled"
+                  title="Cancelled"
                   class="material-icons status status-cancelled"
                   v-if="transfer.status === 'cancelled'"
                 >
                   highlight_off
                 </span>
                 <span
-                title="Pending"
+                  title="Pending"
                   class="material-icons status status-pending"
                   v-if="transfer.status === 'pending'"
                 >
@@ -319,10 +324,16 @@ export default {
             result[teamLeague][round][user] = this.transfers[round][user];
           });
         });
-
         return result;
       }
       return "";
+    },
+    sortedRounds(){
+      return Object.keys(this.dividedTransfers[this.selectedLeague]).sort((a,b)=>{
+        const round1 = Number(a.substring(1))
+        const round2 = Number(b.substring(1))
+        return round1 - round2
+      })
     }
   },
   methods: {
@@ -342,11 +353,10 @@ export default {
         .map(x => {
           return Object.values(x).flat(1);
         })
-        .flat(1).
-        sort((a,b)=>{
-            return a.team.localeCompare(b.team)
+        .flat(1)
+        .sort((a, b) => {
+          return a.team.localeCompare(b.team);
         });
-
       return result;
     }
     // roundIntoArray(target) {
@@ -433,9 +443,24 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../common/breakpoints.scss";
+
 .vs-collapse {
   width: 100%;
+  &.vs-collapse-item--header {
+    background-color: #a3a3a3 !important;
+    box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43) !important;
+  }
+  @media #{$mobile} {
+    padding: 0px;
+  }
 }
+
+header {
+  background-color: #a3a3a3 !important;
+  box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43) !important;
+}
+
 .main-transfers-container {
   width: 90%;
   background: none;
@@ -443,6 +468,10 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+  @media #{$mobile} {
+    width: 98%;
+    flex-direction: column;
+  }
 }
 
 /******************** FILTERS SECTION **********************/
@@ -450,6 +479,10 @@ export default {
 .filters {
   width: 21%;
   padding: 20px 0 0 0;
+  @media #{$mobile} {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .filter-by-league {
@@ -790,8 +823,17 @@ select::-ms-expand {
   justify-content: flex-start;
   align-content: center;
 
+  @media #{$mobile} {
+    width: 100%;
+    margin: 20px 0 0 0;
+  }
+
   .header {
     position: relative;
+    @media #{$mobile} {
+      width: 100%;
+      margin: 0px;
+    }
 
     img {
       position: absolute;
@@ -828,6 +870,12 @@ select::-ms-expand {
       justify-content: flex-start;
       align-items: center;
       border-bottom: 2px solid #893e40;
+      @media #{$mobile} {
+        font-size: 0.8rem;
+        display: none;
+      }
+
+      
 
       .header-pos {
         width: 6%;
@@ -838,6 +886,9 @@ select::-ms-expand {
         height: 30px;
         /* margin: 9px 0 0 0; */
         background-color: #a0a5a9;
+        @media #{$mobile} {
+        height: 20px;
+      }
       }
 
       .header-team {
@@ -851,6 +902,9 @@ select::-ms-expand {
         background-color: #a0a5a9;
         border-left: 1px solid #3b464d;
         border-right: 1px solid #3b464d;
+        @media #{$mobile} {
+        height: 20px;
+      }
       }
 
       .header-in {
@@ -864,6 +918,9 @@ select::-ms-expand {
         background-color: #a0a5a9;
         //   border-left: 1px solid #3b464d;
         //   border-right: 1px solid #3b464d;
+        @media #{$mobile} {
+        height: 20px;
+      }
       }
       .header-in-club {
         width: 18%;
@@ -876,6 +933,9 @@ select::-ms-expand {
         background-color: #a0a5a9;
         border-left: 1px solid #3b464d;
         border-right: 1px solid #3b464d;
+        @media #{$mobile} {
+        height: 20px;
+      }
       }
 
       .header-out {
@@ -887,6 +947,9 @@ select::-ms-expand {
         height: 30px;
         /* margin: 9px 0 0 0; */
         background-color: #a0a5a9;
+        @media #{$mobile} {
+        height: 20px;
+      }
       }
       .header-out-club {
         width: 18%;
@@ -899,7 +962,11 @@ select::-ms-expand {
         background-color: #a0a5a9;
         border-left: 1px solid #3b464d;
         //   border-right: 1px solid #3b464d;
+        @media #{$mobile} {
+        height: 20px;
       }
+      }
+      
     }
     .trans-row {
       width: 100%;
@@ -921,6 +988,9 @@ select::-ms-expand {
         display: flex;
         justify-content: center;
         align-items: center;
+        @media #{$mobile} {
+        font-size: 0.65rem;
+      }
       }
 
       .position {
@@ -929,6 +999,9 @@ select::-ms-expand {
       .status {
         width: 6%;
         border-left: 1px solid #3b464d;
+        @media #{$mobile} {
+        font-size: 1.2rem;
+      }
       }
       .status-pending {
         color: #6d6eff;

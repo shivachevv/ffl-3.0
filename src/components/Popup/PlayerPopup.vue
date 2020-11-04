@@ -2,30 +2,35 @@
   <div v-if="player">
     <div class="popup-container sha">
       <div class="popup-name up">
-        <img :src="`http://ff-legends.com/team-kits/${player.shirt}.png`" alt="shirt" />
+        <img
+          :src="`http://ff-legends.com/team-kits/${player.shirt}.png`"
+          alt="shirt"
+        />
         <div class="popup-name-cont">
-          <span class="popup-player-name up">{{player.name}}</span>
-          <span class="popup-player-team up">{{player.club}}</span>
-          <span class="popup-player-pos up">{{player.position}}</span>
+          <span class="popup-player-name up">{{ player.name }}</span>
+          <span class="popup-player-team up">{{ player.club }}</span>
+          <span class="popup-player-pos up">{{ player.position }}</span>
         </div>
       </div>
 
       <div class="popup-points up">
         <div class="popup-points-total">
           <span class="popup-pts-name up">Total points</span>
-          <span class="popup-pts-val">{{playerPoints.total}} pts</span>
+          <span class="popup-pts-val">{{ playerPoints.total }} pts</span>
         </div>
         <div class="popup-points-per-round">
           <span class="popup-per-name up">Per round</span>
-          <span class="popup-per-val">{{playerPoints.perRound}} pts</span>
+          <span class="popup-per-val">{{ playerPoints.perRound }} pts</span>
         </div>
         <div class="popup-points-last5">
           <span class="popup-last5-name up">Last 5 rounds</span>
-          <span class="popup-last5-val">{{playerPoints.last5}} pts</span>
+          <span class="popup-last5-val">{{ playerPoints.last5 }} pts</span>
         </div>
         <div class="popup-points-last5-per-round">
           <span class="popup-last5per-name up">Last 5 per round</span>
-          <span class="popup-last5per-val">{{playerPoints.last5PerRnd}} pts</span>
+          <span class="popup-last5per-val"
+            >{{ playerPoints.last5PerRnd }} pts</span
+          >
         </div>
       </div>
 
@@ -34,18 +39,23 @@
           <tr>
             <td>Rnd</td>
             <td>Pts</td>
-            <td v-for="label in Object.keys(player.points.r1.roundStats)" :key="label">
-              <span>{{statsMap[`${label}`].short}}</span>
-              <div class="table-lable">{{statsMap[`${label}`].long}}</div>
+            <td
+              v-for="label in Object.keys(player.points.r1.roundStats)"
+              :key="label"
+            >
+              <span>{{ statsMap[`${label}`].short }}</span>
+              <div class="table-lable">{{ statsMap[`${label}`].long }}</div>
             </td>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="(rnd,i) in Object.values(player.points)" :key="i">
-            <td class="round-number">{{i + 1}}</td>
-            <td>{{rnd.roundPts}}</td>
-            <td v-for="stat in Object.entries(rnd.roundStats)" :key="stat[0]">{{stat[1]}}</td>
+          <tr v-for="(rnd, i) in sortedRounds" :key="i">
+            <td class="round-number">{{ i + 1 }}</td>
+            <td>{{ rnd.roundPts }}</td>
+            <td v-for="stat in Object.entries(rnd.roundStats)" :key="stat[0]">
+              {{ stat[1] }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -121,6 +131,15 @@ export default {
   },
   computed: {
     // ...mapGetters(["popupData"]),
+    sortedRounds() {
+      return Object.entries(this.player.points)
+        .sort((a, b) => {
+          const roundNum1 = Number(a[0].substring(1));
+          const roundNum2 = Number(b[0].substring(1));
+          return roundNum1 - roundNum2;
+        })
+        .map(x => x[1]);
+    },
     playerPoints() {
       if (this.player) {
         const roundCount = Object.values(this.player.points).length;
@@ -170,6 +189,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import '../../common/breakpoints.scss';
+
 /**********************************************************
 *************************  PLAYER POPUP SECTION **********/
 /* .popup-round-points-header:nth-child(2n+1) {
@@ -190,6 +211,13 @@ export default {
   table {
     width: 100%;
     margin: 30px 0 0 0;
+
+    @media #{$mobile} {
+    margin: 10px 0 0 0;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
     thead {
       background-color: #8eca90;
       color: #103e10;
@@ -243,7 +271,7 @@ export default {
         }
         .round-number {
           font-weight: bold;
-          background-color:darken(#e0e0e0, 5);
+          background-color: darken(#e0e0e0, 5);
         }
         td {
           height: 25px;
@@ -303,7 +331,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   font-size: 0.75rem;
   box-shadow: 5px 5px 21px -5px rgba(0, 0, 0, 0.43);
 }
@@ -311,9 +339,10 @@ export default {
   width: 25%;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+    flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   span {
     &:first-child {
       width: 100%;
@@ -335,9 +364,10 @@ export default {
   width: 25%;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+    flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   span {
     &:first-child {
       width: 100%;
@@ -359,9 +389,10 @@ export default {
   width: 25%;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+    flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   span {
     &:first-child {
       width: 100%;
@@ -383,9 +414,10 @@ export default {
   width: 25%;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+    flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   span {
     &:first-child {
       width: 100%;
