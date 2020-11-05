@@ -35,6 +35,7 @@
 
       <BestTeam
         :players="players"
+        :users="users"
         :currentRound="currentRound"
         @playerPopupHandler="playerPopupHandler($event)"
       />

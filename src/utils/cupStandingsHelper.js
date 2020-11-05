@@ -19,6 +19,7 @@ const cupStandingsHelper = (cupData) => {
             result[groupId][team].goaldiff = 0
             result[groupId][team].games = 0
             result[groupId][team].pts = 0
+            result[groupId][team].form = ''
             result[groupId][team].wdl = {
                 win: 0,
                 draw: 0,
@@ -59,17 +60,26 @@ const cupStandingsHelper = (cupData) => {
                             result[groupId][match.team1.id].wdl.win++
 
                             result[groupId][match.team2.id].wdl.loss++
+
+                            result[groupId][match.team1.id].form = result[groupId][match.team1.id].form + "W"
+                            result[groupId][match.team2.id].form = result[groupId][match.team2.id].form + "L"
                         } else if (team2Total > team1Total) {
                             result[groupId][match.team2.id].pts += 3
                             result[groupId][match.team2.id].wdl.win++
 
                             result[groupId][match.team1.id].wdl.loss++
+
+                            result[groupId][match.team2.id].form = result[groupId][match.team2.id].form + "W"
+                            result[groupId][match.team1.id].form = result[groupId][match.team1.id].form + "L"
                         } else {
                             result[groupId][match.team1.id].pts++
                             result[groupId][match.team2.id].pts++
 
                             result[groupId][match.team2.id].wdl.draw++
                             result[groupId][match.team1.id].wdl.draw++
+
+                            result[groupId][match.team1.id].form = result[groupId][match.team1.id].form + "D"
+                            result[groupId][match.team2.id].form = result[groupId][match.team2.id].form + "D"
                         }
                     }
 

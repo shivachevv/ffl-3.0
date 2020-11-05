@@ -11,7 +11,7 @@
       >Player succesfully added!</vs-alert
     >
     <form @submit.prevent="addPlayerHandler">
-      <label>
+      <label class="select">
         Country: {{ newPlayer.country }}
         <select
           label="Leagues"
@@ -28,7 +28,7 @@
         <vs-select-item :key="l" :value="l" :text="l" v-for="l in Object.keys(players)" />
       </vs-select> -->
 
-      <label v-if="newPlayer.country">
+      <label class="select" v-if="newPlayer.country">
         Club: {{ newPlayer.club }}
         <select
           v-if="newPlayer.country"
@@ -64,7 +64,7 @@
         placeholder="Insert player name"
         v-model="newPlayer.name"
       />
-      <label>
+      <label class="select">
         Position: {{ newPlayer.position }}
         <select
           label="Position"
@@ -219,14 +219,20 @@ export default {
     flex-direction: column;
     align-items: flex-start;
 
-    label {
-      width: 70%;
+    .select {
+      width: 100%;
       display: flex;
       flex-direction: column;
-
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
       select {
         padding: 5px;
-        margin: 5px 0 5px 0;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
       }
     }
   }

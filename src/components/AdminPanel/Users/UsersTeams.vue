@@ -3,7 +3,15 @@
     <h1 class="section-header">Edit User Teams Section</h1>
 
     <div class="user-selection">
-      <label>
+      <label class="select">
+        Users:
+        <select v-if="users" v-model="selectedUser" icon>
+          <option :key="u.uid" :value="u" v-for="u in Object.values(users)">{{
+            u.userTeam
+          }}</option>
+        </select>
+      </label>
+      <!-- <label>
         Users:
         <vs-select v-if="users" v-model="selectedUser" icon>
           <vs-select-item
@@ -13,41 +21,58 @@
             v-for="u in Object.values(users)"
           />
         </vs-select>
-      </label>
+      </label> -->
     </div>
     <vs-alert
       v-if="success"
       title="Update finished!"
       active="true"
       color="success"
-    >User succesfully updated!</vs-alert>
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+      >User succesfully updated!</vs-alert
+    >
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
 
     <!-- USER SELECTED -->
     <div class="user-details" v-if="selectedUser">
-      <h2>Selected User: {{selectedUser.email}}</h2>
+      <h2>Selected User: {{ selectedUser.email }}</h2>
       <div class="rounds">
         <a
           href
           v-for="rnd in currentRound"
           :key="rnd"
           @click.prevent="selectRoundHandler(rnd)"
-          :class="{selected: rnd === selectedRound}"
-        >{{rnd}}</a>
+          :class="{ selected: rnd === selectedRound }"
+          >{{ rnd }}</a
+        >
       </div>
 
       <div class="players-container" v-if="selectedRound && selectedUserTeam">
-        <h3>{{selectedUser.email}} team for round: {{selectedRound}}</h3>
+        <h3>{{ selectedUser.email }} team for round: {{ selectedRound }}</h3>
         <div class="player" v-for="player in selectedUserTeam" :key="player">
-          <span class="pos">{{players[player].position}}</span>
-          <span class="name">{{players[player].name}}</span>
-          <span class="points">{{players[player].points[`r${selectedRound}`].roundPts}} pts</span>
+          <span class="pos">{{ players[player].position }}</span>
+          <span class="name">{{ players[player].name }}</span>
+          <span class="points"
+            >{{
+              players[player].points[`r${selectedRound}`].roundPts
+            }}
+            pts</span
+          >
 
-          <span class="cap" v-if="selectedUser.rounds[`r${selectedRound}`].cpt === player">C</span>
-          <span class="vc" v-if="selectedUser.rounds[`r${selectedRound}`].viceCpt === player">VC</span>
+          <span
+            class="cap"
+            v-if="selectedUser.rounds[`r${selectedRound}`].cpt === player"
+            >C</span
+          >
+          <span
+            class="vc"
+            v-if="selectedUser.rounds[`r${selectedRound}`].viceCpt === player"
+            >VC</span
+          >
         </div>
         <div class="form-container">
-          <div class="round-total">Total Round Points: {{roundTotal}}</div>
+          <div class="round-total">Total Round Points: {{ roundTotal }}</div>
           <form @submit.prevent="changeCaptainsHandler">
             <label>
               Change Captain for the round
@@ -56,7 +81,9 @@
                   v-for="player in selectedUserTeam"
                   :key="player"
                   :value="player"
-                  :text="`${players[player].name} - ${players[player].position}`"
+                  :text="
+                    `${players[player].name} - ${players[player].position}`
+                  "
                 />
               </vs-select>
             </label>
@@ -67,15 +94,25 @@
                   v-for="player in selectedUserTeam"
                   :key="player"
                   :value="player"
-                  :text="`${players[player].name} - ${players[player].position}`"
+                  :text="
+                    `${players[player].name} - ${players[player].position}`
+                  "
                 />
               </vs-select>
             </label>
-            <vs-button color="#59A95D" button="submit" type="relief" size="normal">Update Captains</vs-button>
+            <vs-button
+              color="#59A95D"
+              button="submit"
+              type="relief"
+              size="normal"
+              >Update Captains</vs-button
+            >
           </form>
         </div>
       </div>
-      <div v-else>User does not have a team selected for round {{selectedRound}}!</div>
+      <div v-else>
+        User does not have a team selected for round {{ selectedRound }}!
+      </div>
       <!-- <form @submit.prevent="editUserTeamFormHandler">
         <label>
           Email:
@@ -149,7 +186,7 @@ export default {
       error: false,
       errorMsg: "",
       newCpt: "",
-      newViceCpt: "",
+      newViceCpt: ""
       // roundTotal: 0
     };
   },
@@ -300,7 +337,7 @@ export default {
     // },
     deselectUser() {
       this.selectedUser = "";
-    },
+    }
     // calcRoundTotalPts() {
     //   this.roundTotal = "...";
     //   const total = roundPointsCalculator(
@@ -312,7 +349,7 @@ export default {
     // }
   },
   computed: {
-    roundTotal(){
+    roundTotal() {
       return roundPointsCalculator(
         this.selectedUser.rounds[`r${this.selectedRound}`],
         this.selectedRound,
@@ -367,11 +404,20 @@ export default {
     width: 50%;
     padding: 20px 0 20px 20px;
 
-    label {
-      font-weight: bold;
-      display: inline-block;
-      div {
-        margin: 10px 0 0 0;
+    .select {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
+      select {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
       }
     }
   }

@@ -21,7 +21,10 @@
     >
     <h3>Unmatched players: {{ Object.keys(emptyMatching).length }}</h3>
     <div class="player" v-for="player in emptyMatching" :key="player">
-      <div class="player-name-club">
+      <div
+        class="player-name-club"
+        :class="{ selected: checkAvailability(player) }"
+      >
         <span>{{ players[player].name }}</span>
         <span>{{ players[player].club }}</span>
       </div>
@@ -110,6 +113,9 @@ export default {
       return `Are you sure you want to update ${length} player${
         length === 1 ? "" : "s"
       }?`;
+    },
+    checkAvailability(pl) {
+      return Object.values(this.players[pl].available).includes(false);
     }
     //     makeLeagueToImg(v) {
     //       return v
@@ -235,6 +241,12 @@ export default {
           })
           .sort((a, b) => {
             return this.players[a].club.localeCompare(this.players[b].club);
+          })
+          .sort((a, b) => {
+            const check1 = this.checkAvailability(a);
+            const check2 = this.checkAvailability(b);
+            if (check1) return -1;
+            else if (check2) return 1;
           });
         return result;
       } else return "";
@@ -311,6 +323,10 @@ export default {
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+    }
+    .selected {
+      background-color: #ff9797;
+      padding: 5px;
     }
     input {
       padding: 5px;

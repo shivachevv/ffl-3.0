@@ -80,7 +80,7 @@
       <!-- EDIT FORM -->
       <div class="players-details-edit" v-if="playerSelected">
         <form @submit.prevent="editPlayerFormHandler">
-          <label>
+          <label class="select">
             Country:
             <select
               v-model="playerEdited.country"
@@ -104,7 +104,7 @@
               />
             </vs-select> -->
           </label>
-          <label>
+          <label class="select">
             Club:
             <select
               v-if="players[playerEdited.country]"
@@ -168,7 +168,7 @@
               color="dark"
             />
           </label>
-          <label>
+          <label class="select">
             Position:
             <select
               :label="playerSelected.position"

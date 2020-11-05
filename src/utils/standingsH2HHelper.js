@@ -8,6 +8,7 @@ const standingsH2HHelper = (rounds, players, users, currentRound) => {
             goaldiff: 0,
             games: 0,
             pts: 0,
+            form: '',
             wdl: {
                 win: 0,
                 draw: 0,
@@ -16,7 +17,10 @@ const standingsH2HHelper = (rounds, players, users, currentRound) => {
         }
     }
     let result = {}
+    // const totalRounds = Object.values(rounds).length
     Object.values(rounds).forEach(round => {
+        // console.log(i, totalRounds);
+        // const isInForm = i > totalRounds - 4
         const roundHeld = Object.values(round)[2]
         const roundObject = Object.values(round)[0]
         const roundArray = Object.values(roundObject)
@@ -39,42 +43,56 @@ const standingsH2HHelper = (rounds, players, users, currentRound) => {
 
 
                 // console.log(round, matches, user1, user2, result)
-                result[user1].games++
-                result[user2].games++
+                if (team1Total !== 0 && team2Total !== 0) {
+                    result[user1].games++
+                    result[user2].games++
 
-                result[user1].for += team1Total
-                result[user1].against += team2Total
+                    result[user1].for += team1Total
+                    result[user1].against += team2Total
 
-                result[user2].for += team2Total
-                result[user2].against += team1Total
+                    result[user2].for += team2Total
+                    result[user2].against += team1Total
 
-                result[user1].goaldiff += team1Total - team2Total
-                result[user2].goaldiff += team2Total - team1Total
+                    result[user1].goaldiff += team1Total - team2Total
+                    result[user2].goaldiff += team2Total - team1Total
 
-                if (team1Total > team2Total) {
-                    result[user1].pts += 3
-                    result[user1].wdl.win++
+                    if (team1Total > team2Total) {
+                        result[user1].pts += 3
+                        result[user1].wdl.win++
 
-                    result[user2].wdl.loss++
-                } else if (team2Total > team1Total) {
-                    result[user2].pts += 3
-                    result[user2].wdl.win++
+                        result[user2].wdl.loss++
+                        result[user1].form = result[user1].form + "W"
+                        result[user2].form = result[user2].form + "L"
 
-                    result[user1].wdl.loss++
-                } else {
-                    result[user1].pts++
-                    result[user2].pts++
+                    } else if (team2Total > team1Total) {
+                        result[user2].pts += 3
+                        result[user2].wdl.win++
 
-                    result[user2].wdl.draw++
-                    result[user1].wdl.draw++
+                        result[user1].wdl.loss++
+                        result[user2].form = result[user2].form + "W"
+                        result[user1].form = result[user1].form + "L"
+
+                    } else {
+                        result[user1].pts++
+                        result[user2].pts++
+
+                        result[user2].wdl.draw++
+                        result[user1].wdl.draw++
+
+                        result[user1].form = result[user1].form + "D"
+                        result[user2].form = result[user2].form + "D"
+                    }
                 }
+
+                result[user1].form = result[user1].form.substring(result[user1].form.length - 5)
+                result[user2].form = result[user2].form.substring(result[user2].form.length - 5)
 
             })
         }
 
     })
 
-    // console.log(result);
+    console.log(result);
 
     return result
 }

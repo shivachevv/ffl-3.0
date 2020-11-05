@@ -274,6 +274,9 @@ export default {
       if (this.currentRound === 0) {
         return 1
       }
+      if (user["rounds"][`r${this.currentRound}`].wildCard){
+        return 1
+      }
       const avail = user["rounds"][`r${this.currentRound}`].transfersAvail;
       const made = user["rounds"][`r${this.currentRound}`].transfersMade;
       return avail - made === 0 ? 1 : 2;

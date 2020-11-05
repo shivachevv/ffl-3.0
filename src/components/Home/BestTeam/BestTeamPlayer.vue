@@ -10,10 +10,12 @@
       alt="Player"
     />
     <h3 class="name">
-      {{ player.name }} :
+      {{ player.name }}<br />
       {{ player.points[`r${currentRound - 1}`].roundPts }} pts
     </h3>
-    <h3 class="team">{{ player.club }}</h3>
+    <h3 class="team" v-for="(team, i) in player.userTeams" :key="i">
+      {{ team }}
+    </h3>
   </div>
 </template>
 <script>
@@ -47,12 +49,12 @@ export default {
 @import "../../../common/breakpoints.scss";
 
 .player-container {
-  height: 250px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   transition: all 0.3s;
+  padding: 10px 0 20px 0;
   @media #{$mobile} {
     height: auto;
     margin: 0 1px;
@@ -68,6 +70,7 @@ export default {
   }
 
   .pos {
+    width: 80%;
     border-bottom: 2px solid #79c486;
     color: white;
     font-size: 1.1rem;
@@ -94,11 +97,14 @@ export default {
   }
 
   .name {
+    width: 80%;
     color: white;
     font-size: 1.1rem;
     margin: 10px 0 10px 0;
     text-align: center;
-
+    border-bottom: 2px solid #79c486;
+    padding: 0 0 10px 0;
+    line-height: 1.6rem;
     @media #{$mobile} {
       font-size: 1rem;
       margin: 5px 0 5px 0;

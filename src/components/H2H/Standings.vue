@@ -11,6 +11,7 @@
       <span class="up goal-diff">Goal Diff</span>
       <span class="up goal-diff-total">+ / -</span>
       <span class="up points">Pts</span>
+      <span class="up form">Form</span>
     </div>
 
     <!-- TEAMS -->
@@ -42,6 +43,7 @@
       >
       <span class="up goal-diff-total">{{ team[1].goaldiff }}</span>
       <span class="up points">{{ team[1].pts }}</span>
+      <span class="up form">{{ team[1].form }}</span>
     </router-link>
   </div>
 </template>
@@ -215,10 +217,19 @@ export default {
       width: 20%;
     }
   }
-
-  .points {
+  .goal-diff-total {
     width: 7%;
     text-align: center;
+  }
+
+  .points {
+    width: 5%;
+    text-align: center;
+  }
+  .form {
+    width: 11%;
+    text-align: center;
+    font-weight: bold;
   }
 }
 </style>

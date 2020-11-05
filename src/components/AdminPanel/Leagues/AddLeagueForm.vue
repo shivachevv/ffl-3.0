@@ -1,14 +1,25 @@
 <template>
   <div class="add-form-container" v-if="users">
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
     <vs-alert
       v-if="success"
       title="Upload finished!"
       active="true"
       color="success"
-    >League succesfully added!</vs-alert>
+      >League succesfully added!</vs-alert
+    >
     <form @submit.prevent="addLeagueHandler">
-      <vs-select
+      <label class="select"
+        >Users
+        <select v-model="selectedUser" placeholder="Select an user">
+          <option :key="u" :value="u" v-for="u in Object.keys(users)">{{
+            users[u].userTeam
+          }}</option>
+        </select>
+      </label>
+      <!-- <vs-select
         label="Users"
         v-model="selectedUser"
         icon
@@ -20,18 +31,26 @@
           :text="users[u].userTeam"
           v-for="u in Object.keys(users)"
         />
-      </vs-select>
-      <vs-input label="League Name" placeholder="Name the new League" v-model="newLeague.name" />
+      </vs-select> -->
+      <vs-input
+        label="League Name"
+        placeholder="Name the new League"
+        v-model="newLeague.name"
+      />
       <div v-if="newLeague.teams.length" class="league-teams">
         <span>Teams:</span>
         <div
           v-for="user in newLeague.teams"
           :key="user"
           @click.prevent="removePlayerFromLeague(user)"
-        >{{users[user].userTeam}}</div>
+        >
+          {{ users[user].userTeam }}
+        </div>
       </div>
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create League</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large"
+        >Create League</vs-button
+      >
     </form>
   </div>
 </template>
@@ -75,11 +94,11 @@ export default {
     async addLeagueHandler() {
       if (this.isNewLeagueOK()) {
         const { name, teams } = this.newLeague;
-        const id = uuidv4()
+        const id = uuidv4();
         const league = makeNewLeague(id, name, teams);
-        const users = this.createEditedUsers(id, teams)
+        const users = this.createEditedUsers(id, teams);
         await this.fetchNewLeague(league);
-        await this.fetchUpdatedUsers(users)
+        await this.fetchUpdatedUsers(users);
       } else {
         this.error = true;
         this.errorMsg = "Please enter league name and members!";
@@ -242,6 +261,22 @@ export default {
     div {
       margin: 10px 0 0 0;
     }
+    .select {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
+      select {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
+      }
+    }
     .league-teams {
       width: 100%;
       display: flex;
@@ -272,7 +307,7 @@ export default {
 
         &:hover {
           cursor: pointer;
-          background-color:#ffbcbc;
+          background-color: #ffbcbc;
         }
       }
     }

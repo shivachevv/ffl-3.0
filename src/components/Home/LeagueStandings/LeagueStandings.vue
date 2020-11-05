@@ -12,17 +12,16 @@
           <th class="table-num">#</th>
           <th class="up table-name">Team</th>
           <th class="up table-total">
-            Total
-            <br />points
+            Total points
           </th>
-          <th class="up table-rnd">
+          <!-- <th class="up table-rnd">
             Round
             <br />points
           </th>
           <th class="up table-move">
             Up
             <br />down
-          </th>
+          </th> -->
         </tr>
       </thead>
       <tbody>
@@ -47,7 +46,7 @@
             <span>{{ users[t[0]].name }}</span>
           </td>
           <td class="up table-total">{{ t[1].total }}</td>
-          <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>
+          <!-- <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>
           <td class="up table-move">
             <img
               :src="
@@ -57,7 +56,7 @@
               "
               :alt="`${t[1].movement} logo`"
             />
-          </td>
+          </td> -->
         </router-link>
       </tbody>
     </table>
@@ -245,7 +244,7 @@ export default {
   text-align: left;
   position: relative;
   padding: 10px 10px 10px 40px !important;
-
+width: 60%;
   a {
     color: #232f37;
   }
@@ -258,5 +257,8 @@ export default {
     right: 0;
     margin: auto 0;
   }
+}
+.table-total {
+  text-align: center;
 }
 </style>

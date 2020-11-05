@@ -78,7 +78,7 @@
       </div>
       <router-link :to="`/transfers/${user.userLogo}`">
         <vs-button color="#59A95D" type="relief" size="normal" button="button"
-          >TRANSFERS PAGE</vs-button
+          >TRANSFERS CENTER</vs-button
         >
       </router-link>
     </div>

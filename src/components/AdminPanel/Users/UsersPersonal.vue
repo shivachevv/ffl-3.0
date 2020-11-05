@@ -11,7 +11,17 @@
         @click.prevent="test"
         >TEST</vs-button
       > -->
-      <label>
+      <label class="select">
+        Users:
+        <select v-if="users" v-model="userSelected" icon>
+          <option
+            :key="u.uid"
+            :value="u"
+            v-for="u in Object.values(users)"
+          >{{u.userTeam}}</option>
+        </select>
+      </label>
+      <!-- <label>
         Users:
         <vs-select v-if="users" v-model="userSelected" icon>
           <vs-select-item
@@ -21,7 +31,7 @@
             v-for="u in Object.values(users)"
           />
         </vs-select>
-      </label>
+      </label> -->
     </div>
     <vs-alert
       v-if="success"
@@ -323,14 +333,29 @@ export default {
   .user-selection {
     width: 50%;
     padding: 20px 0 20px 20px;
-
-    label {
-      font-weight: bold;
-      display: inline-block;
-      div {
-        margin: 10px 0 0 0;
+    .select {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
+      select {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
       }
     }
+    // label {
+    //   font-weight: bold;
+    //   display: inline-block;
+    //   div {
+    //     margin: 10px 0 0 0;
+    //   }
+    // }
   }
 
   .user-details {

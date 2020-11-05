@@ -1,10 +1,14 @@
 <template>
   <div class="sync-points-container" v-if="players && currentRound">
-    <h1 class="section-header">Sync Player Points Section. Current round is: {{currentRound}}</h1>
+    <h1 class="section-header">
+      Sync Player Points Section. Current round is: {{ currentRound }}
+    </h1>
 
-    <vs-alert :active.sync="error" closable close-icon="close" color="danger">{{errorMsg}}</vs-alert>
+    <vs-alert :active.sync="error" closable close-icon="close" color="danger">{{
+      errorMsg
+    }}</vs-alert>
 
-    <h3 v-if="lastUpdate">Points last uploaded: {{lastUpdate}}</h3>
+    <h3 v-if="lastUpdate">Points last uploaded: {{ lastUpdate }}</h3>
     <div class="sync-section">
       <p>Select round:</p>
       <div class="rounds">
@@ -13,13 +17,22 @@
           v-for="rnd of Object.keys(roundDates)"
           :key="rnd"
           @click.prevent="selectRoundDates(rnd)"
-          :class="{selected: form.from === roundDates[rnd].from && form.to === roundDates[rnd].to,
-                     unavailable: rnd > currentRound}"
-        >{{rnd}}</a>
+          :class="{
+            selected:
+              form.from === roundDates[rnd].from &&
+              form.to === roundDates[rnd].to,
+            unavailable: rnd > currentRound
+          }"
+          >{{ rnd }}</a
+        >
       </div>
       <div class="form-container">
         <img
-          :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.upload ? 'check' : 'uncheck'}.png`)"
+          :src="
+            require(`@/assets/images/adminpanel/${
+              buttonEnablerFlags.upload ? 'check' : 'uncheck'
+            }.png`)
+          "
           alt="flag"
         />
         <form @submit.prevent="uploadDialog" class="download">
@@ -56,14 +69,20 @@
             <span>Target:</span>
             <input type="text" name="target" v-model="form.target" />
           </label>
-          <vs-button color="#59A95D" button="submit" type="relief" size="normal">1. UPLOAD POINTS</vs-button>
+          <vs-button color="#59A95D" button="submit" type="relief" size="normal"
+            >1. UPLOAD POINTS</vs-button
+          >
         </form>
       </div>
     </div>
 
     <div class="sync-section">
       <img
-        :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.download ? 'check' : 'uncheck'}.png`)"
+        :src="
+          require(`@/assets/images/adminpanel/${
+            buttonEnablerFlags.download ? 'check' : 'uncheck'
+          }.png`)
+        "
         alt="flag"
       />
       <vs-button
@@ -71,10 +90,11 @@
         type="relief"
         size="normal"
         @click="downloadDialog"
-      >2. DOWNLOAD POINTS</vs-button>
+        >2. DOWNLOAD POINTS</vs-button
+      >
     </div>
 
-    <h3 v-if="lastSync">Points last synced: {{lastSync}}</h3>
+    <h3 v-if="lastSync">Points last synced: {{ lastSync }}</h3>
     <div class="sync-section">
       <p>Select which round to sync points for:</p>
       <div class="rounds">
@@ -83,12 +103,20 @@
           v-for="rnd of Object.keys(roundDates)"
           :key="rnd"
           @click.prevent="selectSyncRoundHandler(rnd)"
-          :class="{selected: rnd === selectedSyncRound, unavailable: rnd > currentRound}"
-        >{{rnd}}</a>
+          :class="{
+            selected: rnd === selectedSyncRound,
+            unavailable: rnd > currentRound
+          }"
+          >{{ rnd }}</a
+        >
       </div>
       <div class="sync-container">
         <img
-          :src="require(`@/assets/images/adminpanel/${buttonEnablerFlags.sync ? 'check' : 'uncheck'}.png`)"
+          :src="
+            require(`@/assets/images/adminpanel/${
+              buttonEnablerFlags.sync ? 'check' : 'uncheck'
+            }.png`)
+          "
           alt="flag"
         />
         <vs-button
@@ -96,8 +124,15 @@
           type="relief"
           size="normal"
           @click="syncDialog"
-        >3. SYNC POINTS WITH PLAYERS</vs-button>
-        <vs-button color="#59A95D" type="relief" size="normal" @click="syncPointsHandler">TEST</vs-button>
+          >3. SYNC POINTS WITH PLAYERS</vs-button
+        >
+        <vs-button
+          color="#59A95D"
+          type="relief"
+          size="normal"
+          @click="syncPointsHandler"
+          >TEST</vs-button
+        >
       </div>
     </div>
   </div>
@@ -157,7 +192,7 @@ export default {
       users: undefined,
       standings: undefined,
       error: false,
-      errorMsg: "",
+      errorMsg: ""
     };
   },
   methods: {
@@ -264,6 +299,20 @@ export default {
         ? this.selectedSyncRound
         : this.currentRound;
 
+      // const updatedPlayers = await syncPointsHelper(
+      //   this.points,
+      //   this.players,
+      //   round
+      // );
+      // const standings = await standingsHelper(
+      //   this.standings,
+      //   this.leagues,
+      //   updatedPlayers,
+      //   this.users,
+      //   round
+      // );
+      // console.log(standings, this.points);
+
       if (this.points !== "empty") {
         const updatedPlayers = await syncPointsHelper(
           this.points,
@@ -277,13 +326,15 @@ export default {
           this.users,
           round
         );
-        console.log(standings);
+        // console.log(standings, this.points);
         this.fetchUpdatedPlayersObject(updatedPlayers);
         this.fetchUpdatedStandingsObject(standings);
       } else {
         this.lastSync = await this.uploadNewSyncDate();
         this.buttonEnablerFlags.sync = true;
-        this.fetchUpdatedStandingsObject(this.standings[`r${this.selectedSyncRound - 1}`]);
+        this.fetchUpdatedStandingsObject(
+          this.standings[`r${this.selectedSyncRound - 1}`]
+        );
         this.$vs.loading.close();
       }
     },
@@ -320,9 +371,9 @@ export default {
         body: JSON.stringify(payload)
       })
         .then(response => response.json())
-        .then(async (data) => {
+        .then(async data => {
           console.log("Success!");
-          this.standings = data
+          this.standings = data;
         })
         .catch(err => {
           console.error("Error:", err);

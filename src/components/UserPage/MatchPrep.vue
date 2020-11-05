@@ -63,8 +63,16 @@
         <vs-alert :active.sync="cptError" closable close-icon="close"
           >Captain and Vice Captain cannot be the same player!</vs-alert
         >
+        <label class="select">
+          Choose your Captain!
+          <select class="cpt-field" v-model="nextRnd.cpt" icon>
+            <option :value="p" v-for="(p, i) of userRoundStats.team" :key="i">{{
+              players[p].name
+            }}</option>
+          </select>
+        </label>
 
-        <vs-select
+        <!-- <vs-select
           class="cpt-field"
           label="Choose your Captain!"
           v-model="nextRnd.cpt"
@@ -76,8 +84,16 @@
             v-for="(p, i) of userRoundStats.team"
             :key="i"
           />
-        </vs-select>
-        <vs-select
+        </vs-select> -->
+        <label class="select">
+          Choose your Vice Captain!
+          <select class="cpt-field" v-model="nextRnd.viceCpt" icon>
+            <option :value="p" v-for="(p, i) of userRoundStats.team" :key="i">{{
+              players[p].name
+            }}</option>
+          </select>
+        </label>
+        <!-- <vs-select
           class="cpt-field"
           label="Choose your Vice Captain!"
           v-model="nextRnd.viceCpt"
@@ -89,7 +105,7 @@
             v-for="(p, i) of userRoundStats.team"
             :key="i"
           />
-        </vs-select>
+        </vs-select> -->
       </div>
       <div class="form-down">
         <div>
@@ -180,9 +196,9 @@ export default {
       if (this.user && this.currentRound) {
         let result = this.user.rounds[`r${this.currentRound}`].nextRndInfo;
         if (!result.team) {
-          result.team = this.user.rounds[`r${this.currentRound}`].team
+          result.team = this.user.rounds[`r${this.currentRound}`].team;
         }
-        return result
+        return result;
       } else {
         return undefined;
       }
@@ -301,25 +317,24 @@ export default {
   align-items: center;
   margin: 20px 0 0 0;
 
-
   .please-login {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  h2 {
-    width: 100%;
-    font-size: 1.4rem;
-    border-top: 1px solid #3c474d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
-    text-align: center;
+    h2 {
+      width: 100%;
+      font-size: 1.4rem;
+      border-top: 1px solid #3c474d;
+      padding: 20px;
+      text-align: center;
+    }
+    img {
+      width: 30%;
+      margin: 0 0 20px 0;
+    }
   }
-  img {
-    width: 30%;
-    margin: 0 0 20px 0;
-  }
-}
 }
 
 .prep-header {
@@ -373,7 +388,7 @@ export default {
   width: 100%;
   background-color: #184d18;
   color: lightgrey;
-  
+
   h2 {
     // margin: 20px 10px;
     padding: 10px 0 10px 0;
@@ -413,10 +428,27 @@ export default {
   }
 
   .form-up {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    .select {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
+      select {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
+      }
+    }
     img {
       position: absolute;
       left: 10px;

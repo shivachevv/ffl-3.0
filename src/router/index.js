@@ -93,7 +93,7 @@ const routes = [{
     import(/* webpackChunkName: "user-transfers" */ "../components/UserPage/UserTransfers/UserTransfers"),
   name: 'mytransfers',
   props: true,
-  meta: { title: 'FFL: Transfers ' },
+  meta: { title: 'FFL: Transfers Center ' },
   beforeEnter(to, from, next) {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {

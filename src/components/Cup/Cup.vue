@@ -97,11 +97,11 @@
                 srcset=""
               />
               <span class="team2">{{ users[match.team2.id].userTeam }}</span>
-              <a href="#" class="match-details"
+              <!-- <a href="#" class="match-details"
                 ><img
                   :src="require(`@/assets/images/cup/soccer-field.png`)"
                   alt=""
-              /></a>
+              /></a> -->
             </div>
 
             <span class="bye-team up" v-if="isThereBye"

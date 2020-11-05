@@ -3,7 +3,7 @@
     <h2>FFL BEST TEAM FOR ROUND {{ currentRound - 1 }}</h2>
     <carousel
       :navigationEnabled="true"
-      :perPage="4"
+      :perPage="isMobile ? 3 : 8"
       :paginationSize="10"
       :paginationPadding="10"
     >
@@ -75,6 +75,10 @@ export default {
       type: Object,
       required: true
     },
+    users: {
+      type: Object,
+      required: true
+    },
     currentRound: {
       type: Number,
       required: true
@@ -84,20 +88,29 @@ export default {
     return {};
   },
   computed: {
+    isMobile() {
+      const screen = window.innerWidth;
+      return screen < 501;
+    },
     bestTeamReady() {
       let result = {};
       Object.keys(this.players).forEach(id => {
         const player = this.players[id];
         const lastRnd = player.points[`r${this.currentRound - 1}`].roundPts;
-        if (result[player.position]) {
-          if (
-            result[player.position].points[`r${this.currentRound - 1}`]
-              .roundPts < lastRnd
-          ) {
+        const owned = Object.values(player.available).includes(false);
+        if (owned) {
+          if (result[player.position]) {
+            if (
+              result[player.position].points[`r${this.currentRound - 1}`]
+                .roundPts < lastRnd
+            ) {
+              result[player.position] = player;
+              result[player.position].userTeams = this.userOwnedCheck(id);
+            }
+          } else {
             result[player.position] = player;
+            result[player.position].userTeams = this.userOwnedCheck(id);
           }
-        } else {
-          result[player.position] = player;
         }
       });
 
@@ -105,6 +118,17 @@ export default {
     }
   },
   methods: {
+    userOwnedCheck(id) {
+      const userTeams = Object.values(this.users).filter(x => {
+        const team = Object.values(x.rounds[`r${this.currentRound}`].team)
+        if (team.includes(id)) {
+          return x
+        }
+      }).map(x=>{
+        return x.userTeam
+      });
+      return userTeams;
+    },
     playerPopupHandler(p) {
       return this.$emit("playerPopupHandler", p);
     }
@@ -159,12 +183,12 @@ export default {
       }
 
       @media #{$mobile} {
-      display:none;
-    }
+        display: none;
+      }
     }
     .VueCarousel-pagination {
       .VueCarousel-dot-container {
-        margin: 0px!important;
+        margin: 0px !important;
       }
     }
   }

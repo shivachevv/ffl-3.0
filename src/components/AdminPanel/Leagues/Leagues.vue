@@ -3,7 +3,11 @@
     <h1 class="section-header">Leagues Section</h1>
 
     <!-- CREATE NEW PLAYER BUTTON and POPUP -->
-    <vs-popup class="holamundo" title="Create new league!" :active.sync="showPopup">
+    <vs-popup
+      class="holamundo"
+      title="Create new league!"
+      :active.sync="showPopup"
+    >
       <AddLeagueForm :leagues="leagues" @updatedLeagues="leagues = $event" />
     </vs-popup>
     <vs-button
@@ -13,7 +17,8 @@
       type="relief"
       size="large"
       @click.prevent="openAddLeaguePopup"
-    >Create New League</vs-button>
+      >Create New League</vs-button
+    >
 
     <div class="league-selection">
       <vs-alert
@@ -21,49 +26,76 @@
         title="Update finished!"
         active="true"
         color="success"
-      >League successfully updated!</vs-alert>
-      <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
-      <label>
+        >League successfully updated!</vs-alert
+      >
+      <vs-alert :active.sync="error" closable close-icon="close">{{
+        errorMsg
+      }}</vs-alert>
+
+      <label class="select">
         Leagues:
-        <vs-select v-if="leagues" v-model="leagueSelected" icon>
-          <vs-select-item
+        <select v-if="leagues" v-model="leagueSelected" icon>
+          <option
             :key="league.id"
             :value="league"
-            :text="league.name"
             v-for="league in Object.values(leagues)"
-          />
-        </vs-select>
+            >{{ league.name }}</option
+          >
+        </select>
       </label>
     </div>
 
     <!-- EDIT FORM -->
-    <form @submit.prevent="editLeagueFormHandler" class="league-details-edit" v-if="leagueSelected">
-      <vs-input label="League Name" :placeholder="leagueSelected.name" v-model="leagueEdited.name" />
-      <vs-select label="Users" v-model="selectedUser" icon placeholder="Select an user">
+    <form
+      @submit.prevent="editLeagueFormHandler"
+      class="league-details-edit"
+      v-if="leagueSelected"
+    >
+      <vs-input
+        label="League Name"
+        :placeholder="leagueSelected.name"
+        v-model="leagueEdited.name"
+      />
+
+      <label class="select">
+        Users
+        <select v-model="selectedUser" placeholder="Select an user">
+          <option :key="u" :value="u" v-for="u in Object.keys(users)">{{
+            users[u].userTeam
+          }}</option>
+        </select>
+      </label>
+      <!-- <vs-select label="Users" v-model="selectedUser" icon placeholder="Select an user">
         <vs-select-item
           :key="u"
           :value="u"
           :text="users[u].userTeam"
           v-for="u in Object.keys(users)"
         />
-      </vs-select>
+      </vs-select> -->
+
       <div v-if="leagueSelected.teams.length" class="league-teams">
         <span>Teams:</span>
         <div
           v-for="user in leagueSelected.teams"
           :key="user"
           @click.prevent="removePlayerFromLeague(user)"
-        >{{users[user].userTeam}}</div>
+        >
+          {{ users[user].userTeam }}
+        </div>
       </div>
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit League</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large"
+        >Edit League</vs-button
+      >
       <vs-button
         color="danger"
         button="button"
         type="relief"
         size="large"
         @click.prevent="deleteLeagueHandler"
-      >Delete League</vs-button>
+        >Delete League</vs-button
+      >
     </form>
   </div>
 </template>
@@ -622,13 +654,46 @@ export default {
   padding: 0 0 0 20px;
 
   .league-selection {
+    width: 50%;
     margin: 20px 0 0 0;
+    .select {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
+      select {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
+      }
+    }
   }
   .league-details-edit {
     width: 50%;
     margin: 20px 0 0 0;
     div {
       margin: 20px 0 0 0;
+    }
+    .select {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin: 20px 0 0 0;
+      select {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 1rem;
+        option {
+          padding: 2px;
+        }
+      }
     }
     .league-teams {
       width: 100%;
