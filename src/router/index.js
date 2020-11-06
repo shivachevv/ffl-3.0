@@ -12,6 +12,7 @@ const Transfers = () => import("../components/Transfers/Transfers");
 const RulesAndPrizes = () => import("../components/Rules/Rules");
 const GetAllPlayers = () => import("../components/GetAllPlayers");
 const tactics = () => import("../components/tactics");
+const AllPlayersTable = () => import("../components/AllPlayersTable");
 const AdminPanel = () => import("../components/AdminPanel/AdminPanel");
 const NotFound = () => import("../components/common/NotFound");
 // import Login from "../components/Login/Login";
@@ -123,6 +124,11 @@ const routes = [{
   path: '/tactics',
   name: 'tactics',
   component: tactics
+},
+{
+  path: '/allplayers',
+  name: 'allplayers',
+  component: AllPlayersTable
 },
 {
   path: '/admin',

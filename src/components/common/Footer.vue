@@ -111,7 +111,7 @@ footer {
 .footer-pele,
 .footer-maradona,
 .footer-cat {
-  height: 250px;
+  // height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -159,7 +159,6 @@ footer {
     padding: 10px 0 10px 0;
     // height: 350px;
     font-size: 0.9rem;
-
 
     
   }

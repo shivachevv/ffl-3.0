@@ -11,13 +11,13 @@
           />
         </router-link>
       </div>
-
+      <!-- <img src="@/assets/images/home/logo.png" alt="FFL" /> -->
       <!-- <Half :leagueSelected="leagueSelected1stHalf"></Half> -->
-      <LeaguesDropdown
+      <!-- <LeaguesDropdown
         :leagues="this.leagues"
         :selected="selectedLeague"
         @selectedLeague="selectedLeague = $event"
-      ></LeaguesDropdown>
+      ></LeaguesDropdown> -->
       <div class="logo" v-for="team in leagueSelected2ndHalf" :key="team">
         <router-link :to="`/team-details/${users[team].userLogo}`">
           <img
@@ -36,13 +36,13 @@
 
 <script>
 import { mapGetters } from "vuex";
-import LeaguesDropdown from "./LeaguesDropdown";
+// import LeaguesDropdown from "./LeaguesDropdown";
 // import Half from "./Half";
 
 export default {
   name: "Logos",
   components: {
-    LeaguesDropdown
+    // LeaguesDropdown
   },
   data() {
     return {
@@ -52,14 +52,16 @@ export default {
   computed: {
     ...mapGetters(["leagues", "loggedUser", "users"]),
     leagueSelected1stHalf() {
-      return this.leagues[this.selectedLeague].teams.filter((x, i) => {
-        return i < this.leagues[this.selectedLeague].teams.length / 2;
-      });
+      return Object.values(this.leagues)[0].teams;
+      // return this.leagues[this.selectedLeague].teams.filter((x, i) => {
+      //   return i < this.leagues[this.selectedLeague].teams.length / 2;
+      // });
     },
     leagueSelected2ndHalf() {
-      return this.leagues[this.selectedLeague].teams.filter((x, i) => {
-        return i >= this.leagues[this.selectedLeague].teams.length / 2;
-      });
+      return Object.values(this.leagues)[1].teams;
+      // return this.leagues[this.selectedLeague].teams.filter((x, i) => {
+      //   return i >= this.leagues[this.selectedLeague].teams.length / 2;
+      // });
     },
     selectedLeague: {
       get: function() {
@@ -109,12 +111,13 @@ export default {
   }
 
   > div {
-    width: 80%;
-    height: 60px;
+    width: 95%;
+    // height: 60px;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     @media #{$mobile} {
       width: 100%;
@@ -123,6 +126,11 @@ export default {
     }
 
     .logo {
+      width: 4%;
+      @media #{$mobile} {
+      width: auto;
+      
+    }
       a {
         display: flex;
         flex-direction: column;

@@ -1,45 +1,53 @@
 <template>
-  <form
-    class="matching-container"
-    @submit.prevent="updateMatchingHandler"
-    v-if="players && matchingData"
-  >
-    <vs-button
-      color="#59A95D"
-      button="submit"
-      type="relief"
-      size="normal"
-      @click.prevent="test"
-      >TEST</vs-button
-    >
-    <vs-alert
-      v-if="success"
-      title="Update finished!"
-      active="true"
-      color="success"
-      >Matching successfully updated!</vs-alert
-    >
-    <h3>Unmatched players: {{ Object.keys(emptyMatching).length }}</h3>
-    <div class="player" v-for="player in emptyMatching" :key="player">
-      <div
-        class="player-name-club"
-        :class="{ selected: checkAvailability(player) }"
-      >
-        <span>{{ players[player].name }}</span>
-        <span>{{ players[player].club }}</span>
-      </div>
-      <input type="text" v-model="updatedMatching[player]" />
+  <div>
+    <div class="pagination">
+      <vs-pagination
+        :total="Math.ceil(Object.keys(emptyMatching).length / 30)"
+        v-model="page"
+      ></vs-pagination>
     </div>
-
-    <vs-button
-      class="btn"
-      color="#59A95D"
-      button="submit"
-      type="relief"
-      size="large"
-      >Submit Matching</vs-button
+    <form
+      class="matching-container"
+      @submit.prevent="updateMatchingHandler"
+      v-if="players && matchingData"
     >
-  </form>
+      <vs-button
+        color="#59A95D"
+        button="submit"
+        type="relief"
+        size="normal"
+        @click.prevent="test"
+        >TEST</vs-button
+      >
+      <vs-alert
+        v-if="success"
+        title="Update finished!"
+        active="true"
+        color="success"
+        >Matching successfully updated!</vs-alert
+      >
+      <h3>Unmatched players: {{ Object.keys(emptyMatching).length }}</h3>
+      <div class="player" v-for="player in pageChunk" :key="player">
+        <div
+          class="player-name-club"
+          :class="{ selected: checkAvailability(player) }"
+        >
+          <span>{{ players[player].name }}</span>
+          <span>{{ players[player].club }}</span>
+        </div>
+        <input type="text" v-model="updatedMatching[player]" />
+      </div>
+
+      <vs-button
+        class="btn"
+        color="#59A95D"
+        button="submit"
+        type="relief"
+        size="large"
+        >Submit Matching</vs-button
+      >
+    </form>
+  </div>
 </template>
 
 <script>
@@ -47,12 +55,14 @@ import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 import getMatching from "../../../utils/getMatching";
 import { DATA_URL } from "../../../common";
 // import AddPlayerForm from "./AddPlayerForm";
+import "material-icons/iconfont/material-icons.css";
 
 export default {
   name: "Matching",
   components: {},
   data() {
     return {
+      page: 1,
       matchingData: undefined,
       updatedMatching: {},
       // showPopup: false,
@@ -250,6 +260,15 @@ export default {
           });
         return result;
       } else return "";
+    },
+    pageChunk() {
+      const multiplier = 30;
+      const result = this.emptyMatching.filter((x, i) => {
+        if (i >= multiplier * (this.page - 1) && i <= multiplier * this.page) {
+          return x;
+        }
+      });
+      return result;
     }
   },
   watch: {
@@ -280,6 +299,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.pagination {
+  width: 50%;
+  margin: 20px 0 0 0;
+}
 .matching-container {
   width: 40%;
   display: flex;

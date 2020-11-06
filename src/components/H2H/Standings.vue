@@ -225,11 +225,17 @@ export default {
   .points {
     width: 5%;
     text-align: center;
+    @media #{$mobile} {
+      margin: 0 5px 0 0;
+    }
   }
   .form {
     width: 11%;
     text-align: center;
     font-weight: bold;
+    @media #{$mobile} {
+      display: none;
+    }
   }
 }
 </style>

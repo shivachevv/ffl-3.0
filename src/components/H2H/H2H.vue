@@ -148,12 +148,17 @@ con-vs-popup .vs-popup {
 .h2h-container {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+  align-items: flex-start;
   background-color: #c6c6c6;
   position: relative;
   margin: 20px 0 0 0;
+  @media #{$mobile} {
+    width: 98%;
+    flex-direction: column;
+    align-items: center;
+  }
 
   .h2h-standings {
     width: 50%;

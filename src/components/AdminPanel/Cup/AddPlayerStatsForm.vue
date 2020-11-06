@@ -65,24 +65,24 @@ export default {
       stats: {},
       statsArray: [
         "assists",
-        "cleanSheet",
-        "clearanceOffLine",
-        "errorLeadToGoal",
+        // "cleanSheet",
+        // "clearanceOffLine",
+        // "errorLeadToGoal",
         "goals",
-        "lastManTackle",
+        // "lastManTackle",
         "manOfTheMatch",
-        "ownGoals",
-        "penaltyGoals",
-        "penaltyMissed",
-        "penaltySaved",
-        "ratingOver85",
+        // "ownGoals",
+        // "penaltyGoals",
+        // "penaltyMissed",
+        // "penaltySaved",
+        // "ratingOver85",
         "redCards",
         "saves",
         "shotsOnPost",
-        "starter",
-        "sub",
-        "teamVictory",
-        "threeAllowed",
+        // "starter",
+        // "sub",
+        // "teamVictory",
+        // "threeAllowed",
         "yellowCards"
       ],
       error: false,
@@ -106,6 +106,7 @@ export default {
       }
     },
     fetchNewStats(payload) {
+      console.log(payload);
       this.$vs.loading();
       return fetch(
         `${DATA_URL}cup/${this.group}/rounds/${this.round}/match${this.match}/${this.team}/squad/${this.player[0]}.json`,

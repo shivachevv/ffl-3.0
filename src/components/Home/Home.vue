@@ -133,11 +133,7 @@ export default {
       set: function(v) {
         this.selectedLgTmp = v;
       }
-    },
-    // loggedUserObj(){
-      
-    //   return this.users[this.loggedUser]
-    // }
+    }    
   },
   watch: {
     leagues(nv) {

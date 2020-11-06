@@ -7,7 +7,7 @@
     <!---------------- NAVIGATION -------------------------------------->
 
     <ul class="navigation">
-      <li class="nav-links up" v-for="link in menuLinks" :key="link.title">
+      <li class="nav-links up" v-for="link in filteredLinks" :key="link.title" >
         <router-link v-if="link.path && link.toShow" :to="link.path">
           {{ link.title }}
           <!-- <img
@@ -18,6 +18,32 @@
       </li>
       <li class="nav-links up" v-if="loggedUser">
         <a href @click.prevent="logoutHandler">Logout</a>
+      </li>
+      <li>
+        <form
+          action="https://www.paypal.com/donate"
+          method="post"
+          target="_blank"
+        >
+          <input type="hidden" name="cmd" value="_donations" />
+          <input type="hidden" name="business" value="ENJ3T48MPRGXJ" />
+          <input type="hidden" name="currency_code" value="EUR" />
+          <input
+            type="image"
+            src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
+            border="0"
+            name="submit"
+            title="PayPal - The safer, easier way to pay online!"
+            alt="Donate with PayPal button"
+          />
+          <!-- <img
+            alt=""
+            border="0"
+            src="https://www.paypal.com/en_BG/i/scr/pixel.gif"
+            width="1"
+            height="1"
+          /> -->
+        </form>
       </li>
     </ul>
   </nav>
@@ -48,7 +74,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["leagues", "menuLinks", "loggedUser"])
+    ...mapGetters(["leagues", "menuLinks", "loggedUser"]),
+    filteredLinks(){
+      return this.menuLinks.filter(x=>{
+        if (x.path && x.toShow) {
+          return x
+        }
+      })
+    }
   },
   beforeCreate() {},
   created() {
@@ -97,7 +130,7 @@ nav {
     > img {
       width: 148px;
       position: absolute;
-      left: 9%;
+      left: 6%;
       top: -55px;
     }
   }
@@ -160,7 +193,6 @@ nav {
           @media #{$mobile} {
             border-bottom: 2px solid #983434;
           }
-          
         }
       }
     }

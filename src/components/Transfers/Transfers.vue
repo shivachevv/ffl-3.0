@@ -200,7 +200,7 @@
     </section>
 
     <!---------------- PELE TRANSFERS -------------------------------------->
-    <section class="league-transfers sha">
+    <section class="league-transfers">
       <div class="header up">
         <h2>
           League {{ leagues[selectedLeague].name }}
@@ -214,72 +214,70 @@
       </div>
 
       <div class="transfers-container">
-        <vs-collapse type="margin">
-          <vs-collapse-item
+        <!-- <vs-collapse type="margin"> -->
+        <!-- <vs-collapse-item
             v-for="(round, i) in sortedRounds"
             :key="i"
-          >
-          <!-- <vs-collapse-item
-            v-for="(round, i) in Object.keys(dividedTransfers[selectedLeague])"
-            :key="i"
           > -->
-            <div slot="header">Round {{ round }}</div>
+        <div class="transfer-round sha" v-for="(round, i) in sortedRounds" :key="i">
+          <div class="round-header">Round {{ round.substring(1) }}</div>
 
-            <div class="round-container">
-              <div class="transfers-header">
-                <h3 class="header-pos up">Pos</h3>
-                <h3 class="header-pos up">Status</h3>
-                <h3 class="header-team up">Team</h3>
-                <h3 class="header-in up">In</h3>
-                <h3 class="header-in-club up">Club In</h3>
-                <h3 class="header-out up">Out</h3>
-                <h3 class="header-out-club up">Club Out</h3>
-              </div>
-              <div
-                class="trans-row"
-                v-for="(transfer, i) in groupRoundTransfers(
-                  dividedTransfers[selectedLeague][round]
-                )"
-                :key="i"
-              >
-                <span class="position">{{ transfer.position }}</span>
-                <span
-                  title="Confirmed"
-                  class="material-icons status status-confirmed"
-                  v-if="transfer.status === 'confirmed'"
-                  >check_box</span
-                >
-                <span
-                  title="Cancelled"
-                  class="material-icons status status-cancelled"
-                  v-if="transfer.status === 'cancelled'"
-                >
-                  highlight_off
-                </span>
-                <span
-                  title="Pending"
-                  class="material-icons status status-pending"
-                  v-if="transfer.status === 'pending'"
-                >
-                  watch_later
-                </span>
-                <span class="team">{{ users[transfer.team].userTeam }}</span>
-                <span class="player-in">{{
-                  players[transfer.transferIn].name
-                }}</span>
-                <span class="player-in-club">{{
-                  players[transfer.transferIn].club
-                }}</span>
-                <span class="player-out">{{
-                  players[transfer.transferOut].name
-                }}</span>
-                <span class="player-out-club">{{
-                  players[transfer.transferOut].club
-                }}</span>
-              </div>
+          <div class="round-container ">
+            <div class="transfers-header">
+              <h3 class="header-pos up">Pos</h3>
+              <h3 class="header-pos up">Status</h3>
+              <h3 class="header-team up">Team</h3>
+              <h3 class="header-in up">In</h3>
+              <h3 class="header-in-club up">Club In</h3>
+              <h3 class="header-out up">Out</h3>
+              <h3 class="header-out-club up">Club Out</h3>
             </div>
-          </vs-collapse-item>
-        </vs-collapse>
+            <div
+              class="trans-row"
+              v-for="(transfer, i) in groupRoundTransfers(
+                dividedTransfers[selectedLeague][round]
+              )"
+              :key="i"
+            >
+              <span class="position">{{ transfer.position }}</span>
+              <span
+                title="Confirmed"
+                class="material-icons status status-confirmed"
+                v-if="transfer.status === 'confirmed'"
+                >check_box</span
+              >
+              <span
+                title="Cancelled"
+                class="material-icons status status-cancelled"
+                v-if="transfer.status === 'cancelled'"
+              >
+                highlight_off
+              </span>
+              <span
+                title="Pending"
+                class="material-icons status status-pending"
+                v-if="transfer.status === 'pending'"
+              >
+                watch_later
+              </span>
+              <span class="team">{{ users[transfer.team].userTeam }}</span>
+              <span class="player-in">{{
+                players[transfer.transferIn].name
+              }}</span>
+              <span class="player-in-club">{{
+                players[transfer.transferIn].club
+              }}</span>
+              <span class="player-out">{{
+                players[transfer.transferOut].name
+              }}</span>
+              <span class="player-out-club">{{
+                players[transfer.transferOut].club
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- </vs-collapse-item> -->
+        <!-- </vs-collapse> -->
       </div>
     </section>
   </div>
@@ -328,12 +326,14 @@ export default {
       }
       return "";
     },
-    sortedRounds(){
-      return Object.keys(this.dividedTransfers[this.selectedLeague]).sort((a,b)=>{
-        const round1 = Number(a.substring(1))
-        const round2 = Number(b.substring(1))
-        return round1 - round2
-      })
+    sortedRounds() {
+      return Object.keys(this.dividedTransfers[this.selectedLeague]).sort(
+        (a, b) => {
+          const round1 = Number(a.substring(1));
+          const round2 = Number(b.substring(1));
+          return round2 - round1;
+        }
+      );
     }
   },
   methods: {
@@ -424,7 +424,7 @@ export default {
       if (nv && this.players && this.transfers && this.users) {
         this.$vs.loading.close();
         this.selectedLeague = Object.keys(nv)[0];
-        console.log(this.selectedLeague);
+        // console.log(this.selectedLeague);
       }
       if (nv) {
         this.selectedLeague = Object.keys(nv)[0];
@@ -514,7 +514,7 @@ header {
 }
 
 .header {
-  margin: 20px 0 0 0;
+  // margin: 20px 0 0 0;
   width: 100%;
   height: 40px;
   background-color: #3b464d;
@@ -817,6 +817,7 @@ select::-ms-expand {
   ******************* TRANSFERS PELE SECTION ***************/
 
 .league-transfers {
+  margin: 20px 0 0 0;
   width: 70%;
   display: flex;
   flex-direction: column;
@@ -856,192 +857,208 @@ select::-ms-expand {
   font-size: 0.75rem;
   font-weight: bold;
 
-  header {
-    i {
-      background-color: red !important;
+  .transfer-round {
+    width: 100%;
+    margin: 15px 0 0 0;
+    border-radius: 5px;
+    overflow: hidden;
+
+    &:first-child {
+      margin: 0px;
+      border-radius: 0px 0px 5px 5px;
     }
-  }
-
-  .round-container {
-    .transfers-header {
+    .round-header {
       width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      border-bottom: 2px solid #893e40;
-      @media #{$mobile} {
-        font-size: 0.8rem;
-        display: none;
-      }
-
-      
-
-      .header-pos {
-        width: 6%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        /* margin: 9px 0 0 0; */
-        background-color: #a0a5a9;
-        @media #{$mobile} {
-        height: 20px;
-      }
-      }
-
-      .header-team {
-        width: 18%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        /* margin: 9px 0 0 0; */
-        background-color: #a0a5a9;
-        border-left: 1px solid #3b464d;
-        border-right: 1px solid #3b464d;
-        @media #{$mobile} {
-        height: 20px;
-      }
-      }
-
-      .header-in {
-        width: 20%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        /* margin: 9px 0 0 0; */
-        background-color: #a0a5a9;
-        //   border-left: 1px solid #3b464d;
-        //   border-right: 1px solid #3b464d;
-        @media #{$mobile} {
-        height: 20px;
-      }
-      }
-      .header-in-club {
-        width: 18%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        /* margin: 9px 0 0 0; */
-        background-color: #a0a5a9;
-        border-left: 1px solid #3b464d;
-        border-right: 1px solid #3b464d;
-        @media #{$mobile} {
-        height: 20px;
-      }
-      }
-
-      .header-out {
-        width: 20%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        /* margin: 9px 0 0 0; */
-        background-color: #a0a5a9;
-        @media #{$mobile} {
-        height: 20px;
-      }
-      }
-      .header-out-club {
-        width: 18%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        /* margin: 9px 0 0 0; */
-        background-color: #a0a5a9;
-        border-left: 1px solid #3b464d;
-        //   border-right: 1px solid #3b464d;
-        @media #{$mobile} {
-        height: 20px;
-      }
-      }
-      
+      padding: 10px;
+      background-color: #3b464d;
+      color: lightgrey;
+      font-weight: bold;
     }
-    .trans-row {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: stretch;
-      border-bottom: 1px solid #3b464d;
 
-      &:first-child {
-        border-top: 1px solid #3b464d;
+    header {
+      i {
+        background-color: red !important;
       }
-      &:last-child {
-        border-bottom: none;
-      }
+    }
 
-      span {
-        text-align: center;
+    .round-container {
+      .transfers-header {
+        width: 100%;
         display: flex;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
+        border-bottom: 2px solid #893e40;
         @media #{$mobile} {
-        font-size: 0.65rem;
-      }
-      }
+          font-size: 0.8rem;
+          display: none;
+        }
 
-      .position {
-        width: 6%;
-      }
-      .status {
-        width: 6%;
-        border-left: 1px solid #3b464d;
-        @media #{$mobile} {
-        font-size: 1.2rem;
-      }
-      }
-      .status-pending {
-        color: #6d6eff;
-      }
-      .status-confirmed {
-        color: green;
-      }
-      .status-cancelled {
-        color: #d40003;
-      }
+        .header-pos {
+          width: 6%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          /* margin: 9px 0 0 0; */
+          background-color: #a0a5a9;
+          @media #{$mobile} {
+            height: 20px;
+          }
+        }
 
-      .team {
-        width: 18%;
-        border-left: 1px solid #3b464d;
-        border-right: 1px solid #3b464d;
-      }
-      .player-in {
-        width: 20%;
-        //   border-left: 1px solid #3b464d;
-        //   border-right: 1px solid #3b464d;
-        background-color: #5b745b63;
-      }
-      .player-in-club {
-        width: 18%;
-        border-left: 1px solid #3b464d;
-        border-right: 1px solid #3b464d;
-        background-color: #5b745b63;
-      }
+        .header-team {
+          width: 18%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          /* margin: 9px 0 0 0; */
+          background-color: #a0a5a9;
+          border-left: 1px solid #3b464d;
+          border-right: 1px solid #3b464d;
+          @media #{$mobile} {
+            height: 20px;
+          }
+        }
 
-      .player-out {
-        width: 20%;
-        text-align: center;
-        background-color: #8a4e5080;
+        .header-in {
+          width: 20%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          /* margin: 9px 0 0 0; */
+          background-color: #a0a5a9;
+          //   border-left: 1px solid #3b464d;
+          //   border-right: 1px solid #3b464d;
+          @media #{$mobile} {
+            height: 20px;
+          }
+        }
+        .header-in-club {
+          width: 18%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          /* margin: 9px 0 0 0; */
+          background-color: #a0a5a9;
+          border-left: 1px solid #3b464d;
+          border-right: 1px solid #3b464d;
+          @media #{$mobile} {
+            height: 20px;
+          }
+        }
+
+        .header-out {
+          width: 20%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          /* margin: 9px 0 0 0; */
+          background-color: #a0a5a9;
+          @media #{$mobile} {
+            height: 20px;
+          }
+        }
+        .header-out-club {
+          width: 18%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          /* margin: 9px 0 0 0; */
+          background-color: #a0a5a9;
+          border-left: 1px solid #3b464d;
+          //   border-right: 1px solid #3b464d;
+          @media #{$mobile} {
+            height: 20px;
+          }
+        }
       }
-      .player-out-club {
-        width: 18%;
-        text-align: center;
-        background-color: #8a4e5080;
-        border-left: 1px solid #3b464d;
-        //   border-right: 1px solid #3b464d;
+      .trans-row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+        border-bottom: 1px solid #3b464d;
+
+        &:first-child {
+          border-top: 1px solid #3b464d;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+
+        span {
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          @media #{$mobile} {
+            font-size: 0.65rem;
+          }
+        }
+
+        .position {
+          width: 6%;
+        }
+        .status {
+          width: 6%;
+          border-left: 1px solid #3b464d;
+          @media #{$mobile} {
+            font-size: 1.2rem;
+          }
+        }
+        .status-pending {
+          color: #6d6eff;
+        }
+        .status-confirmed {
+          color: green;
+        }
+        .status-cancelled {
+          color: #d40003;
+        }
+
+        .team {
+          width: 18%;
+          border-left: 1px solid #3b464d;
+          border-right: 1px solid #3b464d;
+        }
+        .player-in {
+          width: 20%;
+          //   border-left: 1px solid #3b464d;
+          //   border-right: 1px solid #3b464d;
+          background-color: #5b745b63;
+        }
+        .player-in-club {
+          width: 18%;
+          border-left: 1px solid #3b464d;
+          border-right: 1px solid #3b464d;
+          background-color: #5b745b63;
+        }
+
+        .player-out {
+          width: 20%;
+          text-align: center;
+          background-color: #8a4e5080;
+        }
+        .player-out-club {
+          width: 18%;
+          text-align: center;
+          background-color: #8a4e5080;
+          border-left: 1px solid #3b464d;
+          //   border-right: 1px solid #3b464d;
+        }
       }
     }
   }

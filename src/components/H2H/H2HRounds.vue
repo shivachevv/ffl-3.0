@@ -68,9 +68,6 @@
           srcset=""
         />
         <span class="team2">{{ users[match.team2].userTeam }}</span>
-        <a href="#" class="match-details"
-          ><img :src="require(`@/assets/images/cup/soccer-field.png`)" alt=""
-        /></a>
       </div>
     </div>
     <!-- </vs-tab> -->
@@ -176,14 +173,15 @@ export default {
 ****************  ROUNDS **************************/
 
 .rounds {
-  width: 70%;
+  width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  margin: 20px 0 0 0;
   @media #{$mobile} {
-      width: 100%;
-    }
+    width: 100%;
+  }
 
   .buttons-and-labels {
     width: 50%;
@@ -197,7 +195,7 @@ export default {
   }
 
   .round-matches {
-    width: 80%;
+    width: 90%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -232,32 +230,17 @@ export default {
       .score {
         width: 10%;
         @media #{$mobile} {
-      width: 20%;
-    }
+          width: 20%;
+        }
       }
 
       img {
         width: 4%;
         @media #{$mobile} {
-      width: 7%;
-    }
-      }
-      .match-details {
-        position: absolute;
-        right: 30px;
-        @media #{$mobile} {
-      display: none;
-    }
-
-        img {
-          width: 20px;
-          transition: all 0.2s;
-
-          &:hover {
-            transform: scale(1.5);
-          }
+          width: 7%;
         }
       }
+      
     }
   }
 }

@@ -97,7 +97,7 @@ export default {
       Object.keys(this.players).forEach(id => {
         const player = this.players[id];
         const lastRnd = player.points[`r${this.currentRound - 1}`].roundPts;
-        const owned = Object.values(player.available).includes(false);
+        const owned = !!this.userOwnedCheck(id).length
         if (owned) {
           if (result[player.position]) {
             if (
@@ -120,7 +120,7 @@ export default {
   methods: {
     userOwnedCheck(id) {
       const userTeams = Object.values(this.users).filter(x => {
-        const team = Object.values(x.rounds[`r${this.currentRound}`].team)
+        const team = Object.values(x.rounds[`r${this.currentRound - 1}`].team)
         if (team.includes(id)) {
           return x
         }
