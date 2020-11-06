@@ -105,6 +105,7 @@ export default {
   -moz-box-shadow: 0px 6px 19px -8px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 6px 19px -8px rgba(0, 0, 0, 0.75);
   z-index: 999;
+  overflow: hidden;
 
   @media #{$mobile} {
     height: auto;
@@ -139,7 +140,7 @@ export default {
         width: 100%;
         height: 100%;
         text-align: center;
-        padding: 10px;
+        padding: 8px;
       }
       &:hover {
         img {
@@ -153,7 +154,7 @@ export default {
         }
       }
       img {
-        width: 40px;
+        width: 90%;
         transition: all 0.1s ease-in-out;
 
         @media #{$mobile} {

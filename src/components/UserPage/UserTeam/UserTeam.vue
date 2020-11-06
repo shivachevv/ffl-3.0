@@ -146,10 +146,19 @@ export default {
       } else {
         return false;
       }
+    },
+    resetRndShow(){
+      this.rndShow = Object.keys(this.user.rounds).length
     }
   },
   created() {},
-  mounted() {}
+  watch: {
+    user(nv){
+      if (nv){
+          this.resetRndShow()
+      }
+    }
+  }
 };
 </script>
 

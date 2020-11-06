@@ -100,7 +100,6 @@ export default {
             return x;
           }
         })[0];
-
         return user;
       } else {
         return undefined;

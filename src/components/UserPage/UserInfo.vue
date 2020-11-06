@@ -305,6 +305,10 @@ export default {
   margin: 0 0 2px 0;
   font-weight: bold;
   padding: 0 20px 0 20px;
+
+  span:last-child {
+    text-align: right;
+  }
 }
 
 .info-stat:nth-child(7) {
