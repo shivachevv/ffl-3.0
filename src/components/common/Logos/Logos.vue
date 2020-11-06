@@ -11,7 +11,9 @@
           />
         </router-link>
       </div>
-      <!-- <img src="@/assets/images/home/logo.png" alt="FFL" /> -->
+      <div class="separator">
+        <!-- <img src="@/assets/images/home/logo.png" alt="FFL" /> -->
+      </div>
       <!-- <Half :leagueSelected="leagueSelected1stHalf"></Half> -->
       <!-- <LeaguesDropdown
         :leagues="this.leagues"
@@ -129,9 +131,8 @@ export default {
     .logo {
       width: 4%;
       @media #{$mobile} {
-      width: auto;
-      
-    }
+        width: auto;
+      }
       a {
         display: flex;
         flex-direction: column;
@@ -161,6 +162,13 @@ export default {
           width: 30px;
           margin: 5px;
         }
+      }
+    }
+    .separator {
+      border: 2px solid #3c474d;
+      @media #{$mobile} {
+        display: block;
+        width: 100%;
       }
     }
   }
