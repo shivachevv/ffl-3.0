@@ -2,8 +2,9 @@
   <div class="teammate">
     <div class="player-shirt">
       <img
-        :src="`http://ff-legends.com/team-kits/${player.shirt}.png`"
+        :src="`http://ff-legends.com/team-kits/${player.shirt}.png?version=1`"
         :alt="`${player.name} logo`"
+        title="Kit"
       />
     </div>
     <div class="player-stats-cont">
@@ -55,13 +56,20 @@ export default {
       const { isTripple, isCap, isVCap, isVCActive, player, tmpRndShow } = this;
       const pts = Number(player.points[`r${tmpRndShow}`].roundPts);
       const multiplier = isTripple ? 3 : 2;
+
+      // console.log(isVCActive);
+
       if (isCap && !isVCap && !isTripple && !isVCActive) {
+        // console.log(1);
         return pts * multiplier;
       } else if (isCap && !isVCap && isTripple && !isVCActive) {
+        // console.log(2);
         return pts * multiplier;
       } else if (!isCap && isVCap && !isTripple && isVCActive) {
+        // console.log(3);
         return pts * multiplier;
       } else if (!isCap && isVCap && isTripple && isVCActive) {
+        // console.log(4);
         return pts * multiplier;
       } else {
         return pts

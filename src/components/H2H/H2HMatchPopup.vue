@@ -1,46 +1,5 @@
 <template>
-  <div class="popup animated faster fadeIn">
-    <!-- FIELD -->
-    <div class="popup-field up">
-      <div
-        class="teammate"
-        :class="`${player[0]}1`"
-        v-for="(player, i) in Object.entries(match.team1.squad)"
-        :key="`${i}1`"
-      >
-        <img
-          :src="
-            `http://ff-legends.com/team-kits/${players[player[1].id].shirt}.png?version=1`
-          "
-          alt=""
-          srcset=""
-        />
-        <span class="field-player-name"
-          >{{ players[player[1].id].name }}<br />{{ player[1].pts }}</span
-        >
-      </div>
-
-      <!-- TEAM 2 -->
-
-      <div
-        class="teammate"
-        :class="`${player[0]}2`"
-        v-for="(player, i) in Object.entries(match.team2.squad)"
-        :key="`${i}2`"
-      >
-        <img
-          :src="
-            `http://ff-legends.com/team-kits/${players[player[1].id].shirt}.png?version=1`
-          "
-          alt=""
-          srcset=""
-        />
-        <span class="field-player-name"
-          >{{ players[player[1].id].name }}<br />{{ player[1].pts }}</span
-        >
-      </div>
-    </div>
-
+  <div class="popup">
     <!-- POPUP STATS TEAM1 -->
     <div class="popup-stats up">
       <div class="popup-stats-team1 sha">
@@ -48,32 +7,16 @@
           <img
             :src="
               require(`@/assets/images/team-logos/${
-                users[match.team1.id].userLogo
+                users[match.match.team1].userLogo
               }.png`)
             "
             alt="T1 Logo"
             class="popup-team1-logo"
           />
-          <h2 class="popup-team1-team">{{ users[match.team1.id].userTeam }}</h2>
+          <h2 class="popup-team1-team">
+            {{ users[match.match.team1].userTeam }}
+          </h2>
         </div>
-        <!-- <div class="popup-stats-name">
-          <img
-            :src="require(`@/assets/images/cup/spartan-head.png`)"
-            alt="spartan-head"
-            srcset=""
-          />
-          <router-link
-            :to="`/team-details/${users[match.team1.id].userLogo}`"
-            class="popup-name1-link animated heartBeat infinite slow"
-          >
-            {{users[match.team1.id].name}}
-            <img
-              :src="require(`@/assets/images/cup/user-info.png`)"
-              alt="user-info"
-              srcset=""
-            />
-          </router-link>
-        </div> -->
 
         <div class="popup-players-team1 up">
           <div class="popup-players-header">
@@ -86,12 +29,19 @@
           <!-- TEAM 1 GK -->
           <div
             :class="`popup-team1-${player[0]}`"
-            v-for="(player, i) in Object.entries(match.team1.squad)"
+            v-for="(player, i) in Object.entries(
+              users[match.match.team1].rounds[`r${match.roundHeld}`].team
+            )"
             :key="`${i}1`"
           >
-            <span class="popup-player-position up">{{ player[0] }}</span>
-            <span class="team1-gk-name">{{ players[player[1].id].name }}</span>
-            <span class="team1-gk-pts">{{ player[1].pts }} pts</span>
+            <span class="popup-player-position up">{{ player[0].length === 2 ? player[0] : player[0].substring(0,2) }}</span>
+            <span class="team1-gk-name">{{ players[player[1]].name }}</span>
+            <span class="team1-gk-pts"
+              >{{
+                players[player[1]].points[`r${match.roundHeld}`].roundPts
+              }}
+              pts</span
+            >
           </div>
         </div>
 
@@ -131,32 +81,16 @@
           <img
             :src="
               require(`@/assets/images/team-logos/${
-                users[match.team2.id].userLogo
+                users[match.match.team2].userLogo
               }.png`)
             "
             alt="T1 Logo"
             class="popup-team1-logo"
           />
-          <h2 class="popup-team2-team">{{ users[match.team2.id].userTeam }}</h2>
+          <h2 class="popup-team2-team">
+            {{ users[match.match.team2].userTeam }}
+          </h2>
         </div>
-        <!-- <div class="popup-stats-name">
-          <img
-            :src="require(`@/assets/images/cup/spartan-head.png`)"
-            alt="spartan-head"
-            srcset=""
-          />
-          <router-link
-            :to="`/team-details/${users[match.team2.id].userLogo}`"
-            class="popup-name1-link animated heartBeat infinite slow"
-          >
-            {{users[match.team2.id].name}}
-            <img
-              :src="require(`@/assets/images/cup/user-info.png`)"
-              alt="user-info"
-              srcset=""
-            />
-          </router-link>
-        </div> -->
 
         <div class="popup-players-team2 up">
           <div class="popup-players-header">
@@ -169,12 +103,19 @@
           <!-- TEAM 2 PLAYERS -->
           <div
             :class="`popup-team2-${player[0]}`"
-            v-for="(player, i) in Object.entries(match.team2.squad)"
+            v-for="(player, i) in Object.entries(
+              users[match.match.team2].rounds[`r${match.roundHeld}`].team
+            )"
             :key="`${i}2`"
           >
-            <span class="popup-player-position up">{{ player[0] }}</span>
-            <span class="team2-gk-name">{{ players[player[1].id].name }}</span>
-            <span class="team2-gk-pts">{{ player[1].pts }} pts</span>
+            <span class="popup-player-position up">{{ player[0].length === 2 ? player[0] : player[0].substring(0,2) }}</span>
+            <span class="team2-gk-name">{{ players[player[1]].name }}</span>
+            <span class="team2-gk-pts"
+              >{{
+                players[player[1]].points[`r${match.roundHeld}`].roundPts
+              }}
+              pts</span
+            >
           </div>
         </div>
 
@@ -212,13 +153,10 @@
 </template>
 
 <script>
-// import { mapActions, mapGetters } from "vuex";
-// import popupPtsHelper from "../../utils/popupPtsHelper";
-// import Chart from "./Chart";
-// import { clickOutside } from "../../directives";
+import roundPointsCalculator from "../../utils/roundPointsCalculator";
 
 export default {
-  name: "CupMatchPopup",
+  name: "H2HMatchPopup",
   components: {},
   props: {
     match: {
@@ -245,36 +183,17 @@ export default {
         { short: "MOM", long: "manOfTheMatch" },
         { short: "S", long: "saves" }
       ]
-      // statsMap: {
-      //   assists: { short: "A", long: "Assists" },
-      //   cleanSheet: { short: "CS", long: "Clean sheet" },
-      //   clearanceOffLine: { short: "CL", long: "Clearance off line" },
-      //   errorLeadToGoal: { short: "ERR", long: "Error lead to goal" },
-      //   goals: { short: "G", long: "Goals" },
-      //   lastManTackle: { short: "LMT", long: "Last man tackle" },
-      //   manOfTheMatch: { short: "MOM", long: "Man of the match" },
-      //   ownGoals: { short: "OG", long: "Own goals" },
-      //   penaltyGoals: { short: "PG", long: "Penalty goals" },
-      //   penaltyMissed: { short: "PM", long: "Penalty Missed" },
-      //   penaltySaved: { short: "PS", long: "Penalty Saved" },
-      //   ratingOver85: { short: "RAT", long: "Rating over 8.5" },
-      //   redCards: { short: "RC", long: "Red cards" },
-      //   saves: { short: "S", long: "Saves" },
-      //   shotsOnPost: { short: "SP", long: "Shots on post" },
-      //   starter: { short: "ST", long: "Starter" },
-      //   sub: { short: "SUB", long: "Substitution" },
-      //   teamVictory: { short: "TV", long: "Team victory" },
-      //   threeAllowed: { short: "3G", long: "Three allowed" },
-      //   yellowCards: { short: "YC", long: "Yellow cards" }
-      // },
     };
   },
   computed: {
     calculatedStatsHome() {
       let result = {};
-      Object.values(this.match.team1.squad).forEach(player => {
-        Object.keys(player.stats).forEach(stat => {
-          const value = Number(player.stats[stat]);
+      const teamId = this.match.match.team1;
+      const rnd = this.match.roundHeld;
+      Object.values(this.users[teamId].rounds[`r${rnd}`].team).forEach(id => {
+        const player = this.players[id].points[`r${rnd}`];
+        Object.keys(player.roundStats).forEach(stat => {
+          const value = Number(player.roundStats[stat]);
           if (result[stat]) {
             result[stat] += value;
           } else {
@@ -286,9 +205,12 @@ export default {
     },
     calculatedStatsAway() {
       let result = {};
-      Object.values(this.match.team2.squad).forEach(player => {
-        Object.keys(player.stats).forEach(stat => {
-          const value = Number(player.stats[stat]);
+      const teamId = this.match.match.team2;
+      const rnd = this.match.roundHeld;
+      Object.values(this.users[teamId].rounds[`r${rnd}`].team).forEach(id => {
+        const player = this.players[id].points[`r${rnd}`];
+        Object.keys(player.roundStats).forEach(stat => {
+          const value = Number(player.roundStats[stat]);
           if (result[stat]) {
             result[stat] += value;
           } else {
@@ -302,26 +224,22 @@ export default {
   methods: {
     calculatedTotalPts(type) {
       const team = type === "home" ? "team1" : "team2";
-      return Object.values(this.match[team].squad).reduce((acc, player) => {
-        return acc + Number(player.pts);
-      }, 0);
-    }
-    // ...mapActions(["fetchPopupData"]),
-    // close() {
-    //   return this.$emit("popupClose", false);
-    // }
-  },
-  created() {
-    // this.fetchPopupData(this.player);
-  },
-  watch: {
-    match(){
-      // console.log(nv);
+      const teamId = this.match.match[`${team}`];
+      const rndNumber = this.match.roundHeld;
+      const round = this.users[teamId].rounds[`r${rndNumber}`];
+
+      const result = roundPointsCalculator(
+        round,
+        rndNumber,
+        this.players,
+        true
+      );
+
+      return result;
     }
   },
-  directives: {
-    // clickOutside
-  }
+  created() {},
+  watch: {}
 };
 </script>
 
@@ -344,128 +262,9 @@ export default {
     flex-direction: column;
   }
 
-  .popup-field {
-    // padding: 10px 0 0 0;
-    width: 50%;
-    //   height: 700px;
-    background-image: url("../../assets/images/cup/pitch-cup.jpg");
-    background-color: transparent;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    display: grid;
-    grid-column-gap: 5px;
-    grid-row-gap: 5px;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    position: relative;
-    @media #{$mobile} {
-      width: 100%;
-    }
-
-    .teammate {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      span {
-        text-align: center;
-        font-size: 0.75rem;
-        color: #d3d3d3;
-        background-color: #103e10;
-        padding: 2px;
-      }
-      img {
-        width: 50px;
-      }
-    }
-    /* POPUP FIELD POSITIONS */
-
-    .gk1 {
-      grid-row: 1 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .dl1 {
-      grid-row: 2 / span 1;
-      grid-column: 3 / span 1;
-    }
-
-    .dc1 {
-      grid-row: 2 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .dr1 {
-      grid-row: 2 / span 1;
-      grid-column: 1 / span 1;
-    }
-
-    .ml1 {
-      grid-row: 3 / span 1;
-      grid-column: 3 / span 1;
-    }
-
-    .mc1 {
-      grid-row: 3 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .mr1 {
-      grid-row: 3 / span 1;
-      grid-column: 1 / span 1;
-    }
-
-    .st1 {
-      grid-row: 4 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .gk2 {
-      grid-row: 8 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .dl2 {
-      grid-row: 7 / span 1;
-      grid-column: 1 / span 1;
-    }
-
-    .dc2 {
-      grid-row: 7 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .dr2 {
-      grid-row: 7 / span 1;
-      grid-column: 3 / span 1;
-    }
-
-    .ml2 {
-      grid-row: 6 / span 1;
-      grid-column: 1 / span 1;
-    }
-
-    .mc2 {
-      grid-row: 6 / span 1;
-      grid-column: 2 / span 1;
-    }
-
-    .mr2 {
-      grid-row: 6 / span 1;
-      grid-column: 3 / span 1;
-    }
-
-    .st2 {
-      grid-row: 5 / span 1;
-      grid-column: 2 / span 1;
-    }
-  }
-
   .popup-stats {
     margin: 0 0 0 10px;
-    width: 50%;
+    width: 100%;
     //   height: 700px;
     display: flex;
     flex-direction: row;
@@ -500,10 +299,11 @@ export default {
         font-size: 1rem;
         border-bottom: 2px solid #893e40;
         position: relative;
-
+        padding: 25px;
         img {
           position: absolute;
           left: 10px;
+          top: 8px;
           width: 7%;
           @media #{$mobile} {
             display: none;
@@ -604,21 +404,37 @@ export default {
       }
 
       .popup-team1-gk,
-      .popup-team1-dl,
-      .popup-team1-dc,
-      .popup-team1-dr,
-      .popup-team1-ml,
-      .popup-team1-mc,
-      .popup-team1-mr,
-      .popup-team1-st,
+      .popup-team1-dl1,
+      .popup-team1-dl2,
+      .popup-team1-dc1,
+      .popup-team1-dc2,
+      .popup-team1-dr1,
+      .popup-team1-dr2,
+      .popup-team1-ml1,
+      .popup-team1-ml2,
+      .popup-team1-mc1,
+      .popup-team1-mc2,
+      .popup-team1-mr1,
+      .popup-team1-mr2,
+      .popup-team1-st1,
+      .popup-team1-st2,
+      .popup-team1-st3,
       .popup-team2-gk,
-      .popup-team2-dl,
-      .popup-team2-dc,
-      .popup-team2-dr,
-      .popup-team2-ml,
-      .popup-team2-mc,
-      .popup-team2-mr,
-      .popup-team2-st {
+      .popup-team2-dl1,
+      .popup-team2-dl2,
+      .popup-team2-dc1,
+      .popup-team2-dc2,
+      .popup-team2-dr1,
+      .popup-team2-dr2,
+      .popup-team2-ml1,
+      .popup-team2-ml2,
+      .popup-team2-mc1,
+      .popup-team2-mc2,
+      .popup-team2-mr1,
+      .popup-team2-mr2,
+      .popup-team2-st1,
+      .popup-team2-st2,
+      .popup-team2-st3 {
         width: 100%;
         display: flex;
         flex-direction: row;

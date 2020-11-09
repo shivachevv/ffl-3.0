@@ -3,7 +3,7 @@
     <div class="popup-container sha">
       <div class="popup-name up">
         <img
-          :src="`http://ff-legends.com/team-kits/${player.shirt}.png`"
+          :src="`http://ff-legends.com/team-kits/${player.shirt}.png?version=1`"
           alt="shirt"
         />
         <div class="popup-name-cont">

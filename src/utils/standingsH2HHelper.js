@@ -92,7 +92,6 @@ const standingsH2HHelper = (rounds, players, users, currentRound) => {
 
     })
 
-    console.log(result);
 
     return result
 }

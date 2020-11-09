@@ -1,5 +1,18 @@
 <template>
   <div class="rounds" v-if="rounds && users && players && currentRound">
+    <vs-popup
+      @close="deselectMatch"
+      v-if="selectedMatch"
+      class="holamundo"
+      :active.sync="matchPopup"
+      :title="
+        `${users[selectedMatch.match.team1].userTeam} vs ${
+          users[selectedMatch.match.team2].userTeam
+        }`
+      "
+    >
+      <H2HMatchPopup :players="players" :match="selectedMatch" :users="users" />
+    </vs-popup>
     <!-- <vs-tabs alignment="center" color="#873c40">
       <vs-tab label="matches"> -->
     <div class="buttons-and-labels">
@@ -38,6 +51,7 @@
         class="gameweeks-match-wrapper"
         v-for="(match, i) in rounds[`r${selectedRound}`].matches"
         :key="i"
+        @click="openMatchPopupHandler(match)"
       >
         <span class="team1">{{ users[match.team1].userTeam }}</span>
         <img
@@ -80,10 +94,13 @@
 
 <script>
 import roundPointsCalculator from "../../utils/roundPointsCalculator";
+import H2HMatchPopup from './H2HMatchPopup'
 
 export default {
   name: "H2HRounds",
-  components: {},
+  components: {
+    H2HMatchPopup
+  },
   props: {
     rounds: {
       type: Object,
@@ -104,7 +121,9 @@ export default {
   },
   data() {
     return {
-      tempSelected: undefined
+      tempSelected: undefined,
+      matchPopup: false,
+      selectedMatch: undefined
     };
   },
   computed: {
@@ -126,6 +145,16 @@ export default {
     }
   },
   methods: {
+    openMatchPopupHandler(match) {
+      this.selectedMatch = {
+        match,
+        roundHeld:this.rounds[`r${this.selectedRound}`].roundHeld
+      }
+      return (this.matchPopup = true);
+    },
+    deselectMatch() {
+      return (this.selectedMatch = undefined);
+    },
     rndPrev() {
       if (this.selectedRound > 1) {
         this.selectedRound--;
@@ -240,7 +269,6 @@ export default {
           width: 7%;
         }
       }
-      
     }
   }
 }

@@ -131,9 +131,10 @@ export default {
       return this.$emit("playerPopupHandler", p);
     },
     isVCActive() {
-      const isLast = this.tmpRndShow === this.currentRound;
-      if (!isLast) {
+      // const isLast = this.tmpRndShow === this.currentRound;
+      // if (!isLast) {
         if (!this.players[this.rndShow.cpt]) {
+          // console.log("1a");
           return true;
         }
         const hasCptPlayed =
@@ -141,21 +142,22 @@ export default {
             .roundStats.starter ||
           this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
             .roundStats.sub;
-
+        // console.log("2a");
         return !hasCptPlayed;
-      } else {
-        return false;
-      }
+      // } else {
+      //   console.log("3a");
+      //   return false;
+      // }
     },
-    resetRndShow(){
-      this.rndShow = Object.keys(this.user.rounds).length
+    resetRndShow() {
+      this.rndShow = Object.keys(this.user.rounds).length;
     }
   },
   created() {},
   watch: {
-    user(nv){
-      if (nv){
-          this.resetRndShow()
+    user(nv) {
+      if (nv) {
+        this.resetRndShow();
       }
     }
   }

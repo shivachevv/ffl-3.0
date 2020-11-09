@@ -21,6 +21,8 @@ export const teamCodes = {
     "Fulham FC": 18,
     "Sheffield United": 19,
     "Aston Villa": 20,
+
+
     "Paris Saint-Germain": 21,
     "LOSC Lille": 22,
     "Olympique Lyon": 23,
@@ -41,6 +43,8 @@ export const teamCodes = {
     "FC Metz": 38,
     "Stade Brest 29": 39,
     "Dijon FCO": 40,
+
+
     "Juventus FC": 41,
     "SSC Napoli": 42,
     "Atalanta BC": 43,
@@ -61,6 +65,8 @@ export const teamCodes = {
     "Benevento Calcio": 58,
     "Spezia Calcio": 59,
     "Hellas Verona": 60,
+
+
     "FC Barcelona": 61,
     "Atlético Madrid": 62,
     "Real Madrid": 63,
@@ -81,6 +87,8 @@ export const teamCodes = {
     "CA Osasuna": 78,
     "Granada CF": 79,
     "Elche CF": 80,
+
+
     "Bayern Munich": 81,
     "Borussia Dortmund": 82,
     "RB Leipzig": 83,
@@ -99,6 +107,8 @@ export const teamCodes = {
     "1. FC Köln": 96,
     "VfB Stuttgart": 97,
     "1.FC Union Berlin": 98,
+
+
     "Ajax Amsterdam": 99,
     "PSV Eindhoven": 100,
     "Feyenoord Rotterdam": 101,
@@ -117,6 +127,8 @@ export const teamCodes = {
     "Twente Enschede FC": 114,
     "Sparta Rotterdam": 115,
     "RKC Waalwijk": 116,
+
+
     "Galatasaray SK": 117,
     "Istanbul Basaksehir FK": 118,
     "Besiktas JK": 119,
@@ -138,6 +150,8 @@ export const teamCodes = {
     "Yeni Malatyaspor": 135,
     "Kayserispor": 136,
     "MKE Ankaragücü": 137,
+
+    
     "SL Benfica": 138,
     "FC Porto": 139,
     "Sporting CP": 140,
