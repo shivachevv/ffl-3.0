@@ -55,7 +55,7 @@ export default {
     chartdata() {
       if (this.rounds) {
         return {
-          labels: this.rounds.map((x, i) => i),
+          labels: this.rounds.map((x, i) => i + 1),
           datasets: [
             {
               label: "Points per round",

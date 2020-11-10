@@ -46,6 +46,7 @@
         :title="`${popupPlayer.name} Information`"
         :active.sync="popupShow"
         v-if="popupPlayer"
+        @close="deselectPlayer"
       >
         <PlayerPopup :player="popupPlayer" />
       </vs-popup>
@@ -91,7 +92,7 @@ export default {
       "fetchCurrentRound",
       "fetchUsers",
       "fetchStandings",
-      "fetchLoggedUser",
+      "fetchLoggedUser"
     ]),
     playerPopupHandler(p) {
       this.popupShow = true;
@@ -99,6 +100,9 @@ export default {
     },
     closePopup() {
       return (this.popupShow = false);
+    },
+    deselectPlayer() {
+      return (this.popupPlayer = "");
     }
   },
   computed: {
@@ -185,7 +189,7 @@ export default {
       ) {
         this.$vs.loading.close();
       }
-    },
+    }
   },
   async created() {
     // if (!this.leagues) {

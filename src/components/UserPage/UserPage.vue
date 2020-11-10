@@ -42,6 +42,7 @@
         :title="`${popupPlayer.name} Information`"
         :active.sync="popupShow"
         v-if="popupPlayer"
+        @close="deselectPlayer"
       >
         <PlayerPopup :player="popupPlayer" />
       </vs-popup>
@@ -86,8 +87,8 @@ export default {
       this.popupShow = true;
       this.popupPlayer = this.players[p];
     },
-    closePopup(){
-      return this.popupShow = false
+    deselectPlayer() {
+      return (this.popupPlayer = "");
     }
   },
   computed: {
@@ -155,8 +156,7 @@ export default {
     this.fetchUsers();
     this.fetchCurrentRound();
     // this.fetchPlayers();
-  },
-  
+  }
 };
 </script>
 

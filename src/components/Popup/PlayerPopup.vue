@@ -142,26 +142,46 @@ export default {
     },
     playerPoints() {
       if (this.player) {
-        const roundCount = Object.values(this.player.points).length;
-        const total = Object.values(this.player.points).reduce((acc, rnd) => {
-          return acc + rnd.roundPts;
+        const playedRounds = Object.entries(this.player.points).filter(x => {
+          // console.log(typeof x[1].roundStats.starter);
+          if (
+            typeof x[1].roundStats.starter === "number" ||
+            typeof x[1].roundStats.starter === "string" &&
+            x[1].roundStats.starter !== ""
+          ) {
+            return x;
+          }
+        });
+        
+        const roundCount = playedRounds.length;
+        const total = playedRounds.reduce((acc, rnd) => {
+          return acc + rnd[1].roundPts;
         }, 0);
         const perRound = (total / roundCount).toFixed(2);
-        const last5 = Object.values(this.player.points).reduce(
-          (acc, rnd, i) => {
-            const roundsNumToGoBack = 5;
-
-            if (i >= roundCount - roundsNumToGoBack) {
-              return acc + rnd.roundPts;
-            } else {
-              return 0;
-            }
-          },
-          0
+        const sortedPlayerPoints = playedRounds.sort(
+          (a, b) => {
+            const round1 = Number(a[0].substring(1));
+            const round2 = Number(b[0].substring(1));
+            return round1 - round2;
+          }
         );
+
+        // FILTER ONLY ROUNDS THAT HAVE STATS AS NUMBERS AND NOT UDNEFINED
+
+        const last5 = sortedPlayerPoints.reduce((acc, rnd, i) => {
+          const roundsNumToGoBack = 5;
+          const roundsIncluded = roundCount - roundsNumToGoBack;
+          if (i >= roundsIncluded) {
+            return acc + rnd[1].roundPts;
+          } else {
+            return 0;
+          }
+        }, 0);
+
         const last5PerRnd = (last5 / 5).toFixed(2);
-        const chartPts = Object.values(this.player.points).map(x => {
-          return x.roundPts;
+
+        const chartPts = sortedPlayerPoints.map(x => {
+          return x[1].roundPts;
         });
         return { total, perRound, last5, last5PerRnd, chartPts };
       } else {
@@ -169,8 +189,7 @@ export default {
       }
     }
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     // ...mapActions(["fetchPopupData"]),
     // close() {
