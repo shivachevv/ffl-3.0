@@ -130,7 +130,7 @@
           color="#59A95D"
           type="relief"
           size="normal"
-          @click="syncPointsHandler"
+          @click="test"
           >TEST</vs-button
         >
       </div>
@@ -148,6 +148,7 @@ import getAllLeagues from "../../../utils/getAllLeagues";
 import getAllUsers from "../../../utils/getAllUsers";
 import getStandings from "../../../utils/getStandings";
 import standingsHelper from "../../../utils/standingsHelper";
+import newStandingsHelper from "../../../utils/newStandingsHelper";
 
 export default {
   name: "SyncPoints",
@@ -196,6 +197,14 @@ export default {
     };
   },
   methods: {
+    test(){
+      // const result = newStandingsHelper(this.players, this.users, this.leagues, this.currentRound) 
+      // const result1 = newStandingsHelper(this.players, this.users, this.leagues, this.currentRound - 1) 
+
+      // result
+      // result1
+      // console.log(result);
+    },
     uploadDialog() {
       const { league, from, to } = this.form;
       this.$vs.dialog({

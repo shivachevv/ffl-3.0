@@ -14,14 +14,14 @@
           <th class="up table-total">
             Total points
           </th>
-          <!-- <th class="up table-rnd">
-            Round
-            <br />points
+          <th class="up table-rnd">
+            Last
+            <br />Round
           </th>
           <th class="up table-move">
             Up
             <br />down
-          </th> -->
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -46,7 +46,7 @@
             <span>{{ users[t[0]].name }}</span>
           </td>
           <td class="up table-total">{{ t[1].total }}</td>
-          <!-- <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>
+          <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>
           <td class="up table-move">
             <img
               :src="
@@ -56,7 +56,7 @@
               "
               :alt="`${t[1].movement} logo`"
             />
-          </td> -->
+          </td>
         </router-link>
       </tbody>
     </table>

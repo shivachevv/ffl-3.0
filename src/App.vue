@@ -62,7 +62,14 @@ export default {
       }
     },
     currentRound(nv) {
-      if (nv && this.players && this.leagues && this.users && this.standings && this.loggedUser) {
+      if (
+        nv &&
+        this.players &&
+        this.leagues &&
+        this.users &&
+        this.standings &&
+        this.loggedUser
+      ) {
         this.$vs.loading.close();
       }
     },
@@ -103,7 +110,7 @@ export default {
       }
     }
   },
-  async created() {
+  created() {
     console.log("App");
     this.$vs.loading();
     this.fetchLoggedUser();

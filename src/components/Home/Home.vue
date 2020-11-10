@@ -1,5 +1,6 @@
 <template>
   <main>
+    {{ newStandings }}
     <div class="main-container" v-if="players && leagues">
       <div class="league-container">
         <!---------------- LEAGUE CHOICE -------------------------------------->
@@ -91,14 +92,15 @@ export default {
       "fetchCurrentRound",
       "fetchUsers",
       "fetchStandings",
-      "fetchLoggedUser"
+      "fetchLoggedUser",
+      "fetchNewStandings"
     ]),
     playerPopupHandler(p) {
       this.popupShow = true;
       this.popupPlayer = p;
     },
-    closePopup(){
-      return this.popupShow = false
+    closePopup() {
+      return (this.popupShow = false);
     }
   },
   computed: {
@@ -109,6 +111,7 @@ export default {
       "currentRound",
       "users",
       "standings",
+      "newStandings",
       "loggedUser"
     ]),
     selectedLeagueObj() {
@@ -119,9 +122,9 @@ export default {
         if (this.loggedUser && !this.selectedLgTmp) {
           const result = Object.keys(this.leagues).filter(id => {
             if (this.leagues[id].teams.includes(this.loggedUser.uid)) {
-              return id
+              return id;
             }
-          })[0]
+          })[0];
 
           // console.log(result);
           return result;
@@ -134,7 +137,7 @@ export default {
       set: function(v) {
         this.selectedLgTmp = v;
       }
-    }    
+    }
   },
   watch: {
     leagues(nv) {
@@ -157,6 +160,7 @@ export default {
         this.standings
       ) {
         this.$vs.loading.close();
+        this.fetchNewStandings();
       }
     },
     currentRound(nv) {
@@ -185,10 +189,15 @@ export default {
       ) {
         this.$vs.loading.close();
       }
+    },
+    newStandings(nv) {
+      if (nv) {
+        console.log(nv);
+      }
     }
   },
   async created() {
-    console.log('home');
+    // console.log('home',this.newStandings);
     // if (!this.leagues) {
     //   this.$vs.loading();
     //   this.fetchLeagues();
@@ -216,7 +225,7 @@ export default {
     // this.fetchCurrentRound();
     // this.fetchUsers();
   },
-  beforeDestroy(){
+  beforeDestroy() {
     // this.closePopup()
     // console.log('destroyed');
   }
@@ -225,7 +234,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import '../../common/breakpoints.scss';
+@import "../../common/breakpoints.scss";
 
 .league-container {
   width: 90%;
