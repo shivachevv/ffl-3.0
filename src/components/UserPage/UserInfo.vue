@@ -154,7 +154,8 @@ export default {
     ...mapGetters(["standings", "leagues"]),
     standingsStats() {
       if (this.standings && this.currentRound && this.leagues && this.user) {
-        const lastRndStandings = this.standings[`r${this.currentRound}`];
+        // const lastRndStandings = this.standings[`r${this.currentRound}`];
+        const lastRndStandings = this.standings;
 
         const userLeagueId = Object.keys(lastRndStandings).filter(leagueId => {
           if (Object.keys(lastRndStandings[leagueId]).includes(this.user.uid)) {

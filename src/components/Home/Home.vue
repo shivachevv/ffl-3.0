@@ -1,6 +1,5 @@
 <template>
   <main>
-    {{ newStandings }}
     <div class="main-container" v-if="players && leagues">
       <div class="league-container">
         <!---------------- LEAGUE CHOICE -------------------------------------->
@@ -93,7 +92,6 @@ export default {
       "fetchUsers",
       "fetchStandings",
       "fetchLoggedUser",
-      "fetchNewStandings"
     ]),
     playerPopupHandler(p) {
       this.popupShow = true;
@@ -111,7 +109,6 @@ export default {
       "currentRound",
       "users",
       "standings",
-      "newStandings",
       "loggedUser"
     ]),
     selectedLeagueObj() {
@@ -160,7 +157,6 @@ export default {
         this.standings
       ) {
         this.$vs.loading.close();
-        this.fetchNewStandings();
       }
     },
     currentRound(nv) {
@@ -190,14 +186,8 @@ export default {
         this.$vs.loading.close();
       }
     },
-    newStandings(nv) {
-      if (nv) {
-        console.log(nv);
-      }
-    }
   },
   async created() {
-    // console.log('home',this.newStandings);
     // if (!this.leagues) {
     //   this.$vs.loading();
     //   this.fetchLeagues();

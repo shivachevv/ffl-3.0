@@ -119,9 +119,10 @@ import { getCurrentRound } from "../../../utils/getCurrentRound";
 import pointsCalculator from "../../../utils/pointsCalculator";
 import { DATA_URL } from "../../../common";
 // import getStandings from '../../../utils/getStandings';
-import getAllLeagues from '../../../utils/getAllLeagues';
-import standingsHelper from '../../../utils/standingsHelper';
-import getAllUsers from '../../../utils/getAllUsers';
+import getAllLeagues from "../../../utils/getAllLeagues";
+// import standingsHelper from "../../../utils/standingsHelper";
+import newStandingsHelper from "../../../utils/newStandingsHelper";
+import getAllUsers from "../../../utils/getAllUsers";
 
 export default {
   name: "PlayersPoints",
@@ -140,7 +141,7 @@ export default {
       playerSelectedStats: {},
       success: false,
       error: false,
-      errorMsg: "",
+      errorMsg: ""
     };
   },
   methods: {
@@ -204,13 +205,33 @@ export default {
           this.$vs.loading();
           const tmpPlayers = await getAllPlayersDataNormal();
           this.players = cathegorizePlayers(tmpPlayers);
-          // TO IMPLEMENT STANDINGS CALCULATIONS
-          // FOR PREVIOUS AND CURRENT RND
-          const previousStandings = standingsHelper(undefined, this.leagues, tmpPlayers, this.users, this.currentRound - 1)
-          // console.log('previous', previousStandings);
-          const currentStandings = standingsHelper(previousStandings, this.leagues, tmpPlayers, this.users, this.currentRound)
-          // console.log(previousStandings, currentStandings);
-          this.fetchUpdatedStandingsObject(currentStandings, this.currentRound)
+
+          // const previousStandings = standingsHelper(
+          //   undefined,
+          //   this.leagues,
+          //   tmpPlayers,
+          //   this.users,
+          //   this.currentRound - 1
+          // );
+
+          // const currentStandings = standingsHelper(
+          //   previousStandings,
+          //   this.leagues,
+          //   tmpPlayers,
+          //   this.users,
+          //   this.currentRound
+          // );
+
+          const standings = await newStandingsHelper(
+            tmpPlayers,
+            this.users,
+            this.leagues,
+            this.currentRound,
+            false
+          );
+          await this.deleteStandings()
+          // this.fetchUpdatedStandingsObject(currentStandings, this.currentRound);
+          this.fetchUpdatedStandingsObject1(standings);
           this.success = true;
           // this.$emit('close', false)
         })
@@ -241,6 +262,44 @@ export default {
           this.errorMsg = err;
         });
     },
+    fetchUpdatedStandingsObject1(payload) {
+      return fetch(`${DATA_URL}newstandings.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async () => {
+          console.log("Success!");
+          // this.standings = data
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          this.$vs.loading.close();
+          this.error = true;
+          this.errorMsg = err;
+        });
+    },
+    async deleteStandings(){
+     return await fetch(`${DATA_URL}newstandings.json`, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(() => {
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
+    },
     sortedRounds(arr) {
       const sorted = arr.sort((x, y) => {
         const rnd1 = Number(x[0].substring(1, 3));
@@ -249,9 +308,9 @@ export default {
       });
       return sorted;
     },
-    closePopup(){
-      console.log('close');
-      return this.showPopup = false
+    closePopup() {
+      console.log("close");
+      return (this.showPopup = false);
     }
   },
   computed: {
@@ -300,8 +359,8 @@ export default {
     this.players = cathegorizePlayers(tmpPlayers);
     this.currentRound = await getCurrentRound();
     // this.standings = await getStandings()
-    this.leagues = await getAllLeagues()
-    this.users = await getAllUsers()
+    this.leagues = await getAllLeagues();
+    this.users = await getAllUsers();
   }
 };
 </script>

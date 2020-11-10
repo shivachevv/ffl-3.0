@@ -93,10 +93,15 @@ export default {
   computed: {
     sortedStandings() {
       return Object.entries(
-        this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
+        this.standings[this.selectedLeagueObj.id]
       ).sort((a, b) => {
         return b[1].total - a[1].total;
       });
+      // return Object.entries(
+      //   this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
+      // ).sort((a, b) => {
+      //   return b[1].total - a[1].total;
+      // });
     }
   },
   methods: {

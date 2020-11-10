@@ -45,8 +45,13 @@ export default {
   methods: {},
   computed: {
     towRdy() {
+      // const tow = Object.entries(
+      //   this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
+      // ).sort((a, b) => {
+      //   return b[1].lastRndTotal - a[1].lastRndTotal;
+      // });
       const tow = Object.entries(
-        this.standings[`r${this.currentRound}`][this.selectedLeagueObj.id]
+        this.standings[this.selectedLeagueObj.id]
       ).sort((a, b) => {
         return b[1].lastRndTotal - a[1].lastRndTotal;
       });

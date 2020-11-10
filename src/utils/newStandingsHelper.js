@@ -1,10 +1,10 @@
 import roundPointsCalculator from './roundPointsCalculator'
 
-const newStandingsHelper = (players, users, leagues, currentRound) => {
-    
+const newStandingsHelper = (players, users, leagues, currentRound, arePtsEmpty) => {
+
     const makeStandingsWithPlaces = (standings) => {
         let result = JSON.parse(JSON.stringify(standings))
-    
+
         Object.entries(result).forEach(league => {
             const leagueId = league[0]
             const leagueArr = Object.entries(league[1])
@@ -44,7 +44,10 @@ const newStandingsHelper = (players, users, leagues, currentRound) => {
                 const lastRndTotal = isFirstRnd ?
                     0
                     :
-                    roundPointsCalculator(rounds[`r${roundToTake - 1}`], roundToTake - 1, players, false)
+                    arePtsEmpty ?
+                        roundPointsCalculator(rounds[`r${roundToTake}`], roundToTake, players, false)
+                        :
+                        roundPointsCalculator(rounds[`r${roundToTake - 1}`], roundToTake - 1, players, false)
 
                 if (result[leagueId]) {
                     result[leagueId][userId] = {
@@ -63,7 +66,7 @@ const newStandingsHelper = (players, users, leagues, currentRound) => {
         })
         return result
     }
-    
+
     const addMovement = (newStandings, oldStandings, roundToTake) => {
         let result = JSON.parse(JSON.stringify(newStandings))
         const isFirstRnd = Number(roundToTake) === 1
@@ -76,15 +79,15 @@ const newStandingsHelper = (players, users, leagues, currentRound) => {
                     if (!isFirstRnd) {
                         // const previousRound = oldStandings[`r${currentRound - 1}`]
                         // // console.log(2);
-    
+
                         // if (!previousRound) {
-                            result[leagueId][x[0]].movement = oldStandings[leagueId][x[0]].place - newStandings[leagueId][x[0]].place
+                        result[leagueId][x[0]].movement = oldStandings[leagueId][x[0]].place - newStandings[leagueId][x[0]].place
                         // } else {
-                            // result[leagueId][x[0]].movement = previousRound[leagueId][x[0]].place - result[leagueId][x[0]].place
+                        // result[leagueId][x[0]].movement = previousRound[leagueId][x[0]].place - result[leagueId][x[0]].place
                         // }
-    
+
                         // console.log(3);
-    
+
                     } else {
                         result[leagueId][x[0]].movement = 0
                     }
@@ -96,11 +99,11 @@ const newStandingsHelper = (players, users, leagues, currentRound) => {
 
     const newStandings = makeStandings(players, users, leagues, currentRound)
     const oldStandings = makeStandings(players, users, leagues, currentRound - 1)
-    
+
     const newStandingsWithPlaces = makeStandingsWithPlaces(newStandings)
     const oldStandingsWithPlaces = makeStandingsWithPlaces(oldStandings)
 
-    const readyStandings = addMovement(newStandingsWithPlaces, oldStandingsWithPlaces, currentRound) 
+    const readyStandings = addMovement(newStandingsWithPlaces, oldStandingsWithPlaces, currentRound)
 
 
     return readyStandings

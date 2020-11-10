@@ -126,11 +126,7 @@
           @click="syncDialog"
           >3. SYNC POINTS WITH PLAYERS</vs-button
         >
-        <vs-button
-          color="#59A95D"
-          type="relief"
-          size="normal"
-          @click="test"
+        <vs-button color="#59A95D" type="relief" size="normal" @click="deleteStandings"
           >TEST</vs-button
         >
       </div>
@@ -147,7 +143,7 @@ import { DATA_URL, roundDates } from "../../../common";
 import getAllLeagues from "../../../utils/getAllLeagues";
 import getAllUsers from "../../../utils/getAllUsers";
 import getStandings from "../../../utils/getStandings";
-import standingsHelper from "../../../utils/standingsHelper";
+// import standingsHelper from "../../../utils/standingsHelper";
 import newStandingsHelper from "../../../utils/newStandingsHelper";
 
 export default {
@@ -197,10 +193,9 @@ export default {
     };
   },
   methods: {
-    test(){
-      // const result = newStandingsHelper(this.players, this.users, this.leagues, this.currentRound) 
-      // const result1 = newStandingsHelper(this.players, this.users, this.leagues, this.currentRound - 1) 
-
+    test() {
+      // const result = newStandingsHelper(this.players, this.users, this.leagues, this.currentRound)
+      // const result1 = newStandingsHelper(this.players, this.users, this.leagues, this.currentRound - 1)
       // result
       // result1
       // console.log(result);
@@ -328,22 +323,42 @@ export default {
           this.players,
           round
         );
-        const standings = await standingsHelper(
-          this.standings,
-          this.leagues,
+        const standings = await newStandingsHelper(
           updatedPlayers,
           this.users,
-          round
+          this.leagues,
+          round,
+          false
         );
+        // const standings = await standingsHelper(
+        //   this.standings,
+        //   this.leagues,
+        //   updatedPlayers,
+        //   this.users,
+        //   round
+        // );
         // console.log(standings, this.points);
         this.fetchUpdatedPlayersObject(updatedPlayers);
-        this.fetchUpdatedStandingsObject(standings);
+
+        await this.deleteStandings()
+        this.fetchUpdatedStandingsObject1(standings);
+        // this.fetchUpdatedStandingsObject(standings);
       } else {
         this.lastSync = await this.uploadNewSyncDate();
         this.buttonEnablerFlags.sync = true;
-        this.fetchUpdatedStandingsObject(
-          this.standings[`r${this.selectedSyncRound - 1}`]
+
+        const standings = await newStandingsHelper(
+          this.players,
+          this.users,
+          this.leagues,
+          round - 1,
+          true
         );
+        await this.deleteStandings()
+        this.fetchUpdatedStandingsObject1(standings);
+        // this.fetchUpdatedStandingsObject(
+        //   this.standings[`r${this.selectedSyncRound - 1}`]
+        // );
         this.$vs.loading.close();
       }
     },
@@ -368,6 +383,44 @@ export default {
           this.$vs.loading.close();
           this.error = true;
           this.errorMsg = err;
+        });
+    },
+    fetchUpdatedStandingsObject1(payload) {
+      return fetch(`${DATA_URL}newstandings.json`, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(async () => {
+          console.log("Success!");
+          // this.standings = data;
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          this.$vs.loading.close();
+          this.error = true;
+          this.errorMsg = err;
+        });
+    },
+    async deleteStandings(){
+     return await fetch(`${DATA_URL}newstandings.json`, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(() => {
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
         });
     },
     fetchUpdatedStandingsObject(payload) {
