@@ -7,6 +7,7 @@
       title="Create new player!"
       :active.sync="showPopup"
       v-if="players"
+        @close="closePopup"
     >
       <AddPlayerForm
         :players="players"
@@ -273,6 +274,9 @@ export default {
     };
   },
   methods: {
+    closePopup(){
+      return this.showPopup = false
+    },
     selectPlayerAvailability(e, league) {
       const result = e.target.checked;
       return this.$set(this.playerEditedAvail, league, result);

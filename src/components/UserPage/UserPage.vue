@@ -85,6 +85,9 @@ export default {
     playerPopupHandler(p) {
       this.popupShow = true;
       this.popupPlayer = this.players[p];
+    },
+    closePopup(){
+      return this.popupShow = false
     }
   },
   computed: {
@@ -152,7 +155,8 @@ export default {
     this.fetchUsers();
     this.fetchCurrentRound();
     // this.fetchPlayers();
-  }
+  },
+  
 };
 </script>
 

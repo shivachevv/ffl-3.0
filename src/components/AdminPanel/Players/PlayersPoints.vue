@@ -80,6 +80,7 @@
               '!'
           "
           :active.sync="showPopup"
+          @close="closePopup"
         >
           <h2 class="popup-header">Points: {{ selectedPlayerPts }}</h2>
           <form @submit.prevent="submitPlayerRoundStatsHandler">
@@ -211,6 +212,7 @@ export default {
           // console.log(previousStandings, currentStandings);
           this.fetchUpdatedStandingsObject(currentStandings, this.currentRound)
           this.success = true;
+          // this.$emit('close', false)
         })
         .catch(error => {
           console.error("Error:", error);
@@ -246,6 +248,10 @@ export default {
         return rnd1 - rnd2;
       });
       return sorted;
+    },
+    closePopup(){
+      console.log('close');
+      return this.showPopup = false
     }
   },
   computed: {

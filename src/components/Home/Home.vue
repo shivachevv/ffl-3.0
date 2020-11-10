@@ -94,9 +94,11 @@ export default {
       "fetchLoggedUser"
     ]),
     playerPopupHandler(p) {
-      console.log("popup");
       this.popupShow = true;
       this.popupPlayer = p;
+    },
+    closePopup(){
+      return this.popupShow = false
     }
   },
   computed: {
@@ -109,7 +111,6 @@ export default {
       "standings",
       "loggedUser"
     ]),
-
     selectedLeagueObj() {
       return this.leagues[this.selectedLeague];
     },
@@ -214,6 +215,10 @@ export default {
     // }
     // this.fetchCurrentRound();
     // this.fetchUsers();
+  },
+  beforeDestroy(){
+    // this.closePopup()
+    // console.log('destroyed');
   }
 };
 </script>

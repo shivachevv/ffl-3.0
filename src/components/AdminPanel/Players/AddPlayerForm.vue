@@ -169,6 +169,7 @@ export default {
           this.success = true;
           const updatedPlayers = await getAllPlayersDataCathegorized();
           this.$emit("updatedPlayers", updatedPlayers);
+          this.$parent.$emit("close", false);
         })
         .catch(err => {
           console.error("Error:", err);

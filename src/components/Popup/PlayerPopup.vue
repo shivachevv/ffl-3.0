@@ -169,6 +169,8 @@ export default {
       }
     }
   },
+  watch: {
+  },
   methods: {
     // ...mapActions(["fetchPopupData"]),
     // close() {
@@ -189,7 +191,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import '../../common/breakpoints.scss';
+@import "../../common/breakpoints.scss";
 
 /**********************************************************
 *************************  PLAYER POPUP SECTION **********/
@@ -213,11 +215,11 @@ export default {
     margin: 30px 0 0 0;
 
     @media #{$mobile} {
-    margin: 10px 0 0 0;
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
+      margin: 10px 0 0 0;
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
     thead {
       background-color: #8eca90;
       color: #103e10;
@@ -340,7 +342,7 @@ export default {
   text-align: center;
   display: flex;
   flex-direction: row;
-    flex-wrap: wrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   span {
@@ -365,7 +367,7 @@ export default {
   text-align: center;
   display: flex;
   flex-direction: row;
-    flex-wrap: wrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   span {
@@ -390,7 +392,7 @@ export default {
   text-align: center;
   display: flex;
   flex-direction: row;
-    flex-wrap: wrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   span {
@@ -415,7 +417,7 @@ export default {
   text-align: center;
   display: flex;
   flex-direction: row;
-    flex-wrap: wrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   span {

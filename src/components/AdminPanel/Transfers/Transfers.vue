@@ -21,16 +21,17 @@
     <vs-alert :active.sync="error" closable close-icon="close">{{
       errorMsg
     }}</vs-alert>
+    
     <div v-if="selectedRoundTransfers" class="transfers-container">
       <div
-        v-for="userId in Object.keys(selectedRoundTransfers)"
-        :key="userId"
+        v-for="userTransfers in sortedRoundTransfers"
+        :key="userTransfers[0]"
         class="user-transfers"
       >
-        <div class="user-trans-heading">{{ users[userId].userTeam }}</div>
+        <div class="user-trans-heading">{{ users[userTransfers[0]].userTeam }}</div>
         <div
-          v-for="(transfer, i) in Object.entries(
-            selectedRoundTransfers[userId]
+          v-for="(transfer, i) in sortUserTransfers(
+            userTransfers[1]
           )"
           :key="i"
           class="user-transfer"
@@ -155,6 +156,7 @@ export default {
       this.selectedRound = r;
       if (this.transfers) {
         this.selectedRoundTransfers = this.transfers[`r${r}`];
+        console.log(this.selectedRoundTransfers);
       }
     },
     async confirmTransfer(tr) {
@@ -357,6 +359,11 @@ export default {
           this.error = true;
           this.errorMsg = error;
         });
+    },
+    sortUserTransfers(transfers){
+      return Object.entries(transfers).sort((a,b)=>{
+        return new Date(b[1].timeMade) - new Date(a[1].timeMade);
+      })
     }
     // changeCaptainsHandler() {
     //   const oldCpt = this.selectedUser.rounds[`r${this.selectedRound}`].cpt;
@@ -493,7 +500,19 @@ export default {
     //   return (this.roundTotal = total);
     // }
   },
-  computed: {},
+  computed: {
+    sortedRoundTransfers() {
+      if (this.selectedRoundTransfers) {
+        const result = Object.entries(this.selectedRoundTransfers).sort((a, b) => {
+          const user1 = this.users[a[0]];
+          const user2 = this.users[b[0]]
+          return user1.league.localeCompare(user2.league)
+        });
+        console.log(result);
+        return result
+      } else return ''
+    }
+  },
   watch: {
     players(nv) {
       if (nv && this.users) {
@@ -507,6 +526,7 @@ export default {
     },
     transfers(nv) {
       if (nv && this.users && this.players) {
+        console.log(nv);
         this.$vs.loading.close();
       }
     },
