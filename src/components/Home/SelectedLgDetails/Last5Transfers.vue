@@ -72,21 +72,22 @@ export default {
         })
         .flat()
         .map(x => {
-          return [...Object.values(x)][0];
+          console.log(x);
+          return [...Object.values(x)];
         })
+        .flat()
         .filter(x => {
           if (this.selectedLeagueObj.teams.includes(x.team)) {
-            // console.log(x);  
             return x;
           }
-        })
-        .sort((a, b) => {
-          return new Date(b.timeMade) - new Date(a.timeMade);
         })
         .filter(x => {
           if (x.status !== "cancelled" && x.status !== "pending") {
             return x;
           }
+        })
+        .sort((a, b) => {
+          return new Date(b.timeMade) - new Date(a.timeMade);
         })
         .filter((x, i) => {
           if (i <= 4) {
