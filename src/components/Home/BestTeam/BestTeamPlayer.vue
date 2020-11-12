@@ -89,6 +89,7 @@ export default {
     font-size: 1.1rem;
     margin: 10px 0 10px 0;
     text-align: center;
+    height: 1rem;
 
     @media #{$mobile} {
       font-size: 1rem;

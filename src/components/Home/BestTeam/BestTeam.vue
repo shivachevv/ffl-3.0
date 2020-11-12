@@ -97,7 +97,7 @@ export default {
       Object.keys(this.players).forEach(id => {
         const player = this.players[id];
         const lastRnd = player.points[`r${this.currentRound - 1}`].roundPts;
-        const owned = !!this.userOwnedCheck(id).length
+        const owned = !!this.isOwned(id);
         if (owned) {
           if (result[player.position]) {
             if (
@@ -118,16 +118,64 @@ export default {
     }
   },
   methods: {
-    userOwnedCheck(id) {
-      const userTeams = Object.values(this.users).filter(x => {
-        const team = Object.values(x.rounds[`r${this.currentRound - 1}`].team)
+    isOwned(id) {
+      return Object.values(this.users).filter(x => {
+        const team = Object.values(x.rounds[`r${this.currentRound - 1}`].team);
         if (team.includes(id)) {
-          return x
+          return x;
         }
-      }).map(x=>{
-        return x.userTeam
-      });
-      return userTeams;
+      }).length;
+    },
+    userOwnedCheck(id) {
+      const simplifyTeams = teams => {
+        const half = teams.length / 2;
+        let result = {
+          one: "",
+          two: ""
+        };
+        teams.forEach((x, i) => {
+          if (x && i < half) {
+            result.one = x;
+          }
+          if (x && i >= half) {
+            result.two = x;
+          }
+        });
+        return Object.values(result)
+      };
+      const userTeams = Object.values(this.users)
+        .sort((a, b) => {
+          if (a.league && b.league) {
+            return a.league.localeCompare(b.league);
+          }
+        })
+        // .filter(x => {
+        //   const team = Object.values(
+        //     x.rounds[`r${this.currentRound - 1}`].team
+        //   );
+        //   if (team.includes(id)) {
+        //     return x;
+        //   }
+        // })
+        .filter(x => {
+          if (x.league) {
+            return x;
+          }
+        })
+        .map(x => {
+          const team = Object.values(
+            x.rounds[`r${this.currentRound - 1}`].team
+          );
+          if (team.includes(id)) {
+            return x.userTeam;
+          } else {
+            return "";
+          }
+        });
+
+      const simplifiedTeams = simplifyTeams(userTeams);
+
+      return simplifiedTeams;
     },
     playerPopupHandler(p) {
       return this.$emit("playerPopupHandler", p);
