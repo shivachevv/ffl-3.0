@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="main-container" v-if="players && leagues">
+    <div class="main-container" v-if="players && leagues && users">
       <div class="league-container">
         <!---------------- LEAGUE CHOICE -------------------------------------->
 

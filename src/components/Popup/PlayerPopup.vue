@@ -193,7 +193,7 @@ export default {
   methods: {
     // ...mapActions(["fetchPopupData"]),
     // close() {
-    //   return this.$emit("popupClose", false);
+    //   return this.parent.parent.$emit("popupClose", false);
     // }
   },
   created() {
@@ -202,8 +202,13 @@ export default {
   destroyed() {
     // this.fetchPopupData("");
   },
-  directives: {
-    // clickOutside
+  mounted() {
+    // window.onpopstate = function() {
+    //   // console.log(this.popupShow);
+    //   // this.popupShow = false
+    //   console.log('back');
+    //   this.close()
+    // };
   }
 };
 </script>

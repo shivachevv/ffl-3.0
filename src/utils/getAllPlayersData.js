@@ -1,6 +1,29 @@
 import { DATA_URL } from '../common'
+// import getCachedPlayers from './getCachedPlayers.js'
+// import setLastUpdate from './setLastUpdate.js'
 
 const getAllPlayersDataNormal = async () => {
+    // const date = new Date()
+    // await setLastUpdate(date)
+    // const cache = await caches.open("ffl-cache");
+    // cache.add("https://ffl-3-new.firebaseio.com/lastUpdate.json");
+
+
+    // const lastUpdateRes = await fetch(`${DATA_URL}lastUpdate.json`)
+    // const lastUpdate = await lastUpdateRes.json()
+
+    // const cachedUpdate = await getCachedPlayers("update")
+
+    // if (lastUpdate === cachedUpdate) {
+    //     console.log(1);
+    //     const players = await getCachedPlayers('players')
+    //     return players
+    // }
+
+
+
+    // console.log(2);
+
     const response = await fetch(`${DATA_URL}players.json`)
     const normal = await response.json()
     return normal

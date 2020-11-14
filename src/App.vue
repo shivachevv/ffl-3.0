@@ -13,7 +13,7 @@
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Logos from "./components/common/Logos/Logos";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "App",
@@ -35,82 +35,93 @@ export default {
       "fetchUsers"
     ])
   },
-  computed: {},
+  computed: { ...mapGetters(["players"]) },
   watch: {
-    leagues(nv) {
-      if (
-        nv &&
-        this.players &&
-        this.currentRound &&
-        this.users &&
-        this.loggedUser &&
-        this.standings
-      ) {
-        this.$vs.loading.close();
-      }
-    },
-    players(nv) {
-      if (
-        nv &&
-        this.leagues &&
-        this.currentRound &&
-        this.users &&
-        this.loggedUser &&
-        this.standings
-      ) {
-        this.$vs.loading.close();
-      }
-    },
-    currentRound(nv) {
-      if (
-        nv &&
-        this.players &&
-        this.leagues &&
-        this.users &&
-        this.standings &&
-        this.loggedUser
-      ) {
-        this.$vs.loading.close();
-      }
-    },
-    users(nv) {
-      if (
-        nv &&
-        this.players &&
-        this.leagues &&
-        this.currentRound &&
-        this.loggedUser &&
-        this.standings
-      ) {
-        this.$vs.loading.close();
-      }
-    },
-    standings(nv) {
-      if (
-        nv &&
-        this.players &&
-        this.leagues &&
-        this.currentRound &&
-        this.loggedUser &&
-        this.users
-      ) {
-        this.$vs.loading.close();
-      }
-    },
-    loggedUser(nv) {
-      if (
-        nv &&
-        this.players &&
-        this.leagues &&
-        this.currentRound &&
-        this.standings &&
-        this.users
-      ) {
-        this.$vs.loading.close();
+    // leagues(nv) {
+    //   if (
+    //     nv &&
+    //     this.players &&
+    //     this.currentRound &&
+    //     this.users &&
+    //     this.loggedUser &&
+    //     this.standings
+    //   ) {
+    //     this.$vs.loading.close();
+    //   }
+    // },
+    async players(nv) {
+      if (nv) {
+        console.log(new Date());
+        // console.log("players", new Date());
+        // const cache = await caches.open("ffl-cache");
+        // const playersRes = await cache.match("https://ffl-3-new.firebaseio.com/players.json")
+        // const cacheNames = await caches.keys();
+        // console.log(cacheNames);
+        // if (playersRes) {
+        //   const players = await playersRes.json()
+        //   players
+        //   console.log(1);
+        // }
+        // if (!playersRes) {
+        //   cache.add("https://ffl-3-new.firebaseio.com/players.json");
+        //   console.log(2);
+        // }
+        // console.log("players", new Date()); 
+        // // const request = new Request("https://ffl-3-new.firebaseio.com/players.json")
+        // // const response = await fetch(request)
       }
     }
+    // currentRound(nv) {
+    //   if (
+    //     nv &&
+    //     this.players &&
+    //     this.leagues &&
+    //     this.users &&
+    //     this.standings &&
+    //     this.loggedUser
+    //   ) {
+    //     this.$vs.loading.close();
+    //   }
+    // },
+    // users(nv) {
+    //   if (
+    //     nv &&
+    //     this.players &&
+    //     this.leagues &&
+    //     this.currentRound &&
+    //     this.loggedUser &&
+    //     this.standings
+    //   ) {
+    //     this.$vs.loading.close();
+    //   }
+    // },
+    // standings(nv) {
+    //   if (
+    //     nv &&
+    //     this.players &&
+    //     this.leagues &&
+    //     this.currentRound &&
+    //     this.loggedUser &&
+    //     this.users
+    //   ) {
+    //     this.$vs.loading.close();
+    //   }
+    // },
+    // loggedUser(nv) {
+    //   if (
+    //     nv &&
+    //     this.players &&
+    //     this.leagues &&
+    //     this.currentRound &&
+    //     this.standings &&
+    //     this.users
+    //   ) {
+    //     this.$vs.loading.close();
+    //   }
+    // }
   },
   created() {
+    console.log(new Date());
     console.log("App");
     this.$vs.loading();
     this.fetchLoggedUser();

@@ -54,13 +54,21 @@ export default {
   computed: {
     ...mapGetters(["leagues", "loggedUser", "users"]),
     leagueSelected1stHalf() {
-      return Object.values(this.leagues)[0].teams;
+      return Object.values(this.leagues)[0].teams.sort((a, b) => {
+        const code1 = Number(this.users[a].code);
+        const code2 = Number(this.users[b].code);
+        return code1 - code2;
+      });
       // return this.leagues[this.selectedLeague].teams.filter((x, i) => {
       //   return i < this.leagues[this.selectedLeague].teams.length / 2;
       // });
     },
     leagueSelected2ndHalf() {
-      return Object.values(this.leagues)[1].teams;
+      return Object.values(this.leagues)[1].teams.sort((a, b) => {
+        const code1 = Number(this.users[a].code);
+        const code2 = Number(this.users[b].code);
+        return code1 - code2;
+      });
       // return this.leagues[this.selectedLeague].teams.filter((x, i) => {
       //   return i >= this.leagues[this.selectedLeague].teams.length / 2;
       // });

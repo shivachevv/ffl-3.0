@@ -72,7 +72,6 @@ export default {
         })
         .flat()
         .map(x => {
-          console.log(x);
           return [...Object.values(x)];
         })
         .flat()

@@ -89,6 +89,9 @@ export default {
     },
     deselectPlayer() {
       return (this.popupPlayer = "");
+    },
+    closePopup() {
+      return (this.popupShow = false);
     }
   },
   computed: {
@@ -156,6 +159,18 @@ export default {
     this.fetchUsers();
     this.fetchCurrentRound();
     // this.fetchPlayers();
+  },
+  beforeDestroy(){
+    // console.log('beforeD');
+    // this.closePopup()
+    // this.popupShow = false
+  },
+  mounted() {
+    // window.onpopstate = function() {
+    //   console.log(this.popupShow);
+    //   this.popupShow = false
+    //   console.log(this.popupShow);
+    // };
   }
 };
 </script>

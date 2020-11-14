@@ -14,11 +14,9 @@
       <label class="select">
         Users:
         <select v-if="users" v-model="userSelected" icon>
-          <option
-            :key="u.uid"
-            :value="u"
-            v-for="u in Object.values(users)"
-          >{{u.userTeam}}</option>
+          <option :key="u.uid" :value="u" v-for="u in Object.values(users)">{{
+            u.userTeam
+          }}</option>
         </select>
       </label>
       <!-- <label>
@@ -106,6 +104,15 @@
           />
         </label>
         <label>
+          User Code:
+          <vs-input
+            type="number"
+            :label-placeholder="userSelected.code"
+            v-model="userEdited.code"
+            icon
+          />
+        </label>
+        <label>
           <input type="checkbox" v-model="userEdited.isAdmin" />
           User Admin Rights. Currently user is
           {{ userSelected.isAdmin ? "" : "NOT" }} an admin!
@@ -122,6 +129,14 @@
             size="large"
             @click.prevent="deleteUserHandler(userSelected.uid)"
             >Delete User</vs-button
+          >
+          <vs-button
+            color="#59A95D"
+            button="submit"
+            type="relief"
+            size="normal"
+            @click.prevent="test"
+            >TEST</vs-button
           >
         </div>
       </form>
@@ -189,29 +204,89 @@ export default {
     //     }
     //   }
     // },
+    // test() {
+    //   const users = {
+    //     qM55Gg1xhBbgB5QsWP5FvXEqQrB3: 1,
+    //     "7tjzW3pudtWpQd5cqQzBK2uOrLo2": 2,
+    //     Wh4kUmCfz6b7MpBAWSlP4v9K6sX2: 3,
+    //     bPMzc3E7h6OnYOZQCzGJG4otli72: 4,
+    //     vMZTRw7JtYdN22OR7IZ6B410oIm1: 5,
+    //     "1UEjAKUq3hU1ZaoXtTLSzkdlqWB3": 6,
+    //     k7WxaNO7bdgQipF8I2g3iOyIn0Z2: 7,
+    //     nsC36KbkTLeUJOzLidGqage2gL23: 8,
+    //     zg8NJkbTohelzFomiLZMmrHwQhJ3: 9,
+    //     USEqk1zX3bg8saW9biddsDm9P4R2: 10,
+    //     HXGFtVTMwyeYxkW8eVCfXw9EJEY2: 11,
+    //     UFD3ccSLkZcfOhS1gEeiGu9COng2: 12,
+    //     fwWpwxGuLMUJbHIpcP5ctXdYqXr1: 13,
+    //     BXf8jQ6xiDZJlwUj1zoi0m6TDPM2: 14,
+    //     VPcWnGqQ6GXFr0w9gfOMX6FHork1: 15,
+    //     iRA9PssA87f1njtVMSHYksLQNKM2: 16,
+    //     Xa0MdkBqkOM84E2bCBm1egKXZB43: 17,
+    //     "6VTr2lfia9auyWY568XGoglpIHQ2": 18,
+    //     "6fbtewcbmdYPRngaIpYGSJue3Th2": 19,
+    //     rtm22gY184WAKNNwDIxHwFYycwk2: 20,
+    //     "4242f8vV7HVbiEWpBffhg5PoB9E3": 21,
+    //     EQKc4OEkbESENPKutkY208Sx54j2: 22
+    //   };
+    //   const arr = Object.keys(this.users);
+
+    //   for (let i = 0; i < arr.length; i++) {
+    //     const id = arr[i];
+    //     if (Object.keys(users).includes(id)) {
+    //       const code = users[id];
+
+    //       const payload = {
+    //         code
+    //       };
+
+    //       fetch(`${DATA_URL}users/${id}.json`, {
+    //         method: "PATCH",
+    //         mode: "cors",
+    //         headers: {
+    //           "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify(payload)
+    //       })
+    //         .then(response => response.json())
+    //         .then(async data => {
+    //           console.log(data);
+    //         })
+    //         .catch(error => {
+    //           console.error("Error:", error);
+    //           this.error = true;
+    //           this.errorMsg = error;
+    //         });
+    //     }
+    //   }
+    // },
     editUserFormHandler() {
       const merged = this.mergeUsers(this.userEdited, this.userSelected);
       const {
         uid,
         email,
+        name,
         userTeam,
         age,
         location,
         ocupation,
         favTeam,
-        motto
+        motto,
+        code
       } = merged;
       const newUser = makeNewUser(
         uid,
         email,
+        name,
         userTeam,
         age,
         location,
         ocupation,
         favTeam,
-        motto
+        motto,
+        code
       );
-
+      console.log(this.userEdited, this.userSelected, newUser);
       return this.$vs.dialog({
         color: "success",
         title: "Confirm Edit",

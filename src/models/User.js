@@ -8,6 +8,7 @@ export const makeNewUser = (
     ocupation,
     favTeam,
     motto,
+    code,
     isAdmin = false
 ) => {
     return {
@@ -21,6 +22,7 @@ export const makeNewUser = (
         ocupation,
         favTeam,
         motto,
+        code,
         isAdmin,
         wildCards: {
             1: false,
