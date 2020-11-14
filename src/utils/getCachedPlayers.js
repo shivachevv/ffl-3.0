@@ -18,6 +18,7 @@ const getCachedPlayers = async (type) => {
         if (!playersResponse) {
             return undefined
         }
+        
         const players = await playersResponse.json()
         return players
     }
