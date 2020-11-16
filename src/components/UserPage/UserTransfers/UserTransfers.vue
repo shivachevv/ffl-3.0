@@ -43,14 +43,14 @@ export default {
   name: "UserTransfers",
   components: {
     UserTransfersTeam,
-    AllPlayersSection
+    AllPlayersSection,
   },
   data() {
     return {
       transferedOut: [],
       transferedIn: [],
       maxTransfersReached: false,
-      wildcard: ""
+      wildcard: "",
     };
   },
   computed: {
@@ -93,14 +93,14 @@ export default {
       } else {
         return "";
       }
-    }
+    },
   },
   methods: {
     ...mapActions(["fetchTransfers", "fetchUsers", "fetchLoggedUser"]),
     addTransferOut(x) {
       if (typeof x === "string" && x.includes("remove")) {
         const id = x.substring(7);
-        this.transferedOut = this.transferedOut.filter(x => x.id !== id);
+        this.transferedOut = this.transferedOut.filter((x) => x.id !== id);
       } else if (typeof x === "string" && x.includes("empty")) {
         this.transferedOut = [];
         this.transferedIn = [];
@@ -118,7 +118,7 @@ export default {
       ) {
         return this.transferedIn.push(x);
       } else if (this.transferedIn.includes(x)) {
-        this.transferedIn = this.transferedIn.filter(p => p.id !== x.id);
+        this.transferedIn = this.transferedIn.filter((p) => p.id !== x.id);
       }
     },
     max(x) {
@@ -141,7 +141,7 @@ export default {
     },
     countPositions(arr) {
       let positionsCount = {};
-      arr.forEach(player => {
+      arr.forEach((player) => {
         if (positionsCount[player.position]) {
           positionsCount[player.position]++;
         } else {
@@ -151,7 +151,7 @@ export default {
       return positionsCount;
     },
     simplifyTr(arr) {
-      return arr.map(x => {
+      return arr.map((x) => {
         return x.name;
       });
     },
@@ -173,13 +173,13 @@ export default {
 
       return {
         result,
-        unavailable
+        unavailable,
       };
     },
     comparePositions(_in, _out) {
-      const transform = arr => {
+      const transform = (arr) => {
         return arr
-          .map(x => {
+          .map((x) => {
             return x.position;
           })
           .sort((a, b) => {
@@ -200,18 +200,24 @@ export default {
         this.transferedIn,
         this.transferedOut
       );
+      const WCPermission = this.wildcard
+        ? _in.length === 3
+          ? true
+          : false
+        : true;
 
       if (
         _out.length === _in.length &&
         _out.length !== 0 &&
         availStatus.result &&
-        comparedPos
+        comparedPos &&
+        WCPermission
       ) {
         this.$vs.dialog({
           color: "success",
           title: "Transfers Confirmation",
           text: `${_out.join(", ")} - OUT ${_in.join(", ")} - IN`,
-          accept: this.acceptTransfers
+          accept: this.acceptTransfers,
         });
       } else {
         let errorMsg = "";
@@ -226,7 +232,7 @@ export default {
         this.$vs.dialog({
           color: "warning",
           title: "Incorrect transfers",
-          text: errorMsg
+          text: errorMsg,
         });
       }
     },
@@ -241,7 +247,7 @@ export default {
       //   oldTeam
       // );
       const updatedCount = {
-        transfersMade: this.transfersMadeSoFar + this.transferedIn.length
+        transfersMade: this.transfersMadeSoFar + this.transferedIn.length,
       };
       // console.log( updatedCount);
       try {
@@ -263,7 +269,7 @@ export default {
       }
     },
     async fetchNewTransfers(_in, _out) {
-      const sort = arr => {
+      const sort = (arr) => {
         return arr.sort((a, b) => {
           return a.position.localeCompare(b.position);
         });
@@ -299,12 +305,12 @@ export default {
             method: "PATCH",
             mode: "cors",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
           }
         )
-          .then(response => response.json())
+          .then((response) => response.json())
           .then(async () => {
             await this.fetchTransfers();
             // console.log("Success:", data);
@@ -312,7 +318,7 @@ export default {
             // this.$vs.loading();
             // this.transfers = await getAllTransfers();
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Error:", error);
             //   this.error = true;
             //   this.errorMsg = error;
@@ -334,31 +340,31 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(WCRound)
+        body: JSON.stringify(WCRound),
       })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(() => {})
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
         });
       fetch(`${DATA_URL}users/${this.loggedUser.uid}.json`, {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(WCGlobal)
+        body: JSON.stringify(WCGlobal),
       })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(() => {
           // console.log("Success:", data);
           //   this.success = true;
           // this.$vs.loading();
           // this.transfers = await getAllTransfers();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           //   this.error = true;
           //   this.errorMsg = error;
@@ -372,18 +378,18 @@ export default {
           method: "PATCH",
           mode: "cors",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
         })
-          .then(response => response.json())
+          .then((response) => response.json())
           .then(async () => {
             // console.log("Success:", data);
             //   this.success = true;
             // this.$vs.loading();
             // this.transfers = await getAllTransfers();
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Error:", error);
             //   this.error = true;
             //   this.errorMsg = error;
@@ -396,18 +402,18 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           //   this.success = true;
           // this.$vs.loading();
           // this.transfers = await getAllTransfers();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           //   this.error = true;
           //   this.errorMsg = error;
@@ -418,19 +424,19 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.$vs.loading();
           this.fetchUsers();
           //   this.success = true;
           // this.transfers = await getAllTransfers();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           //   this.error = true;
           //   this.errorMsg = error;
@@ -465,7 +471,7 @@ export default {
     acceptAlert() {
       this.$vs.notify({
         color: "success",
-        title: `${this.transferedIn.length} transfers made!`
+        title: `${this.transferedIn.length} transfers made!`,
         // text:'Lorem ipsum dolor sit amet, consectetur'
       });
     },
@@ -473,7 +479,7 @@ export default {
       return type === "in"
         ? (this.transferedIn = [])
         : (this.transferedOut = []);
-    }
+    },
   },
   watch: {
     // loggedUser(nv){
@@ -492,7 +498,7 @@ export default {
       if (nv) {
         this.$vs.loading.close();
       }
-    }
+    },
     // users(nv) {
     //   if (nv && this.players) {
     //     this.$vs.loading.close();
@@ -502,7 +508,7 @@ export default {
   created() {
     this.$vs.loading();
     this.fetchTransfers();
-  }
+  },
 };
 </script>
 
