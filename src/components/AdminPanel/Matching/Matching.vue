@@ -6,6 +6,13 @@
         v-model="page"
       ></vs-pagination>
     </div>
+    <div class="search-bar">
+      <label>
+        Search player name and team!
+        <input type="text" v-model="keyword" />
+      </label>
+    </div>
+
     <form
       class="matching-container"
       @submit.prevent="updateMatchingHandler"
@@ -67,6 +74,7 @@ export default {
       updatedMatching: {},
       // showPopup: false,
       players: undefined,
+      keyword: "",
       // leagueSelected: "",
       // teamSelected: "",
       // playerSelected: "",
@@ -79,7 +87,7 @@ export default {
       //   shirt: ""
       // },
       // positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
-      success: false
+      success: false,
     };
   },
   methods: {
@@ -96,7 +104,7 @@ export default {
         color: "success",
         title: "Confirm Matching",
         text: this.showSuccessMsg(payload),
-        accept: () => this.fetchUpdatedMatching(payload)
+        accept: () => this.fetchUpdatedMatching(payload),
       });
     },
     fetchUpdatedMatching(payload) {
@@ -104,17 +112,17 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.matchingData = await getMatching();
           this.success = true;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
         });
     },
@@ -126,7 +134,7 @@ export default {
     },
     checkAvailability(pl) {
       return Object.values(this.players[pl].available).includes(false);
-    }
+    },
     //     makeLeagueToImg(v) {
     //       return v
     //         .toLowerCase()
@@ -244,7 +252,7 @@ export default {
         const matched = Object.values(this.matchingData);
         const players = Object.keys(this.players);
         const result = players
-          .filter(player => {
+          .filter((player) => {
             if (!matched.includes(player)) {
               return player;
             }
@@ -257,6 +265,17 @@ export default {
             const check2 = this.checkAvailability(b);
             if (check1) return -1;
             else if (check2) return 1;
+          })
+          .filter((id) => {
+            if (this.keyword) {
+              const player = this.players[id];
+              const name = player.name.toLowerCase().trim();
+              const club = player.club.toLowerCase().trim();
+              const keyword = this.keyword.toLowerCase().trim();
+              if (name.includes(keyword) || club.includes(keyword)) {
+                return id;
+              }
+            } else return id;
           });
         return result;
       } else return "";
@@ -269,7 +288,7 @@ export default {
         }
       });
       return result;
-    }
+    },
   },
   watch: {
     matchingData(nv) {
@@ -288,13 +307,13 @@ export default {
           this.success = false;
         }, 2000);
       }
-    }
+    },
   },
   async created() {
     this.$vs.loading();
     this.players = await getAllPlayersDataNormal();
     this.matchingData = await getMatching();
-  }
+  },
 };
 </script>
 
@@ -302,6 +321,25 @@ export default {
 .pagination {
   width: 50%;
   margin: 20px 0 0 0;
+}
+
+.search-bar {
+  width: 100%;
+  label {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 20px 0 0 20px;
+    font-size: 1.2rem;
+    input {
+      width: 30%;
+      font-size: 1.3rem;
+      padding: 5px;
+      margin: 10px 0 0 0;
+      transition: all 0.3s;
+    }
+  }
 }
 .matching-container {
   width: 40%;
