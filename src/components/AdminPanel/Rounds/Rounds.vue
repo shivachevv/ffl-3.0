@@ -48,6 +48,7 @@ import { addPlayerPts } from "../../../models/Player";
 import { addUserRound } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
 import pointsCalculator from "../../../utils/pointsCalculator";
+import { setLastUpdateDB } from '../../../utils/setLastUpdate';
 // import getAllH2HRounds from "../../../utils/getAllH2HRounds";
 
 export default {
@@ -128,6 +129,7 @@ export default {
         .then(response => response.json())
         .then(async () => {
           this.players = await getAllPlayersDataNormal();
+          setLastUpdateDB()
           this.success = true;
           this.$vs.loading.close();
         })

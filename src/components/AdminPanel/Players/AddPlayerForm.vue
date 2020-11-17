@@ -94,6 +94,7 @@ import { addPlayerPts, makeNewPlayer } from "../../../models/Player";
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { v4 as uuidv4 } from "uuid";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
+import { setLastUpdateDB } from '../../../utils/setLastUpdate';
 
 export default {
   name: "AddPlayerForm",
@@ -168,6 +169,7 @@ export default {
           console.log("Success:", data);
           this.success = true;
           const updatedPlayers = await getAllPlayersDataCathegorized();
+          setLastUpdateDB()
           this.$emit("updatedPlayers", updatedPlayers);
           this.$parent.$emit("close", false);
         })

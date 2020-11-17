@@ -38,6 +38,7 @@ import AllPlayersSection from "./AllPlayersSection/AllPlayersSection";
 import { cathegorizePlayers } from "../../../utils/getAllPlayersData";
 import { DATA_URL } from "../../../common";
 import makeNewTransfer from "../../../models/Transfer";
+import { setLastUpdateDB } from '../../../utils/setLastUpdate';
 
 export default {
   name: "UserTransfers",
@@ -384,6 +385,7 @@ export default {
         })
           .then((response) => response.json())
           .then(async () => {
+            setLastUpdateDB()
             // console.log("Success:", data);
             //   this.success = true;
             // this.$vs.loading();

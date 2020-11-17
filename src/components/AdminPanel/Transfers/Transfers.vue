@@ -92,6 +92,7 @@ import { getCurrentRound } from "../../../utils/getCurrentRound";
 import getAllTransfers from "../../../utils/getAllTransfers";
 import makeNewTransfer from "../../../models/Transfer";
 import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
+import { setLastUpdateDB } from '../../../utils/setLastUpdate';
 // import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
@@ -353,6 +354,7 @@ export default {
         .then(response => response.json())
         .then(async data => {
           console.log("Success:", data);
+          setLastUpdateDB()
         })
         .catch(error => {
           console.error("Error:", error);

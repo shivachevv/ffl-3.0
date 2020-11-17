@@ -123,6 +123,7 @@ import getAllLeagues from "../../../utils/getAllLeagues";
 // import standingsHelper from "../../../utils/standingsHelper";
 import newStandingsHelper from "../../../utils/newStandingsHelper";
 import getAllUsers from "../../../utils/getAllUsers";
+import { setLastUpdateDB } from '../../../utils/setLastUpdate';
 
 export default {
   name: "PlayersPoints",
@@ -205,6 +206,7 @@ export default {
           this.$vs.loading();
           const tmpPlayers = await getAllPlayersDataNormal();
           this.players = cathegorizePlayers(tmpPlayers);
+          setLastUpdateDB()
 
           // const previousStandings = standingsHelper(
           //   undefined,

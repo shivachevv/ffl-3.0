@@ -14,16 +14,20 @@ import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Logos from "./components/common/Logos/Logos";
 import { mapActions, mapGetters } from "vuex";
+import { DATA_URL } from "./common";
 
 export default {
   name: "App",
   components: {
     Header,
     Footer,
-    Logos
+    Logos,
   },
   data() {
-    return {};
+    return {
+      loadBegin: 0,
+      loadEnd: 0,
+    };
   },
   methods: {
     ...mapActions([
@@ -32,10 +36,34 @@ export default {
       "fetchLeagues",
       "fetchPlayers",
       "fetchCurrentRound",
-      "fetchUsers"
-    ])
+      "fetchUsers",
+    ]),
+    uploadSiteEnter(user, loadTime) {
+      const siteEnterUrl = `${DATA_URL}/enters.json`;
+      const enterDate = new Date();
+      const payload = {
+        [enterDate]: {
+          user: user.uid,
+          loadTime,
+        }
+      };
+
+      return fetch(siteEnterUrl, {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((response) => response.json())
+        .then(() => {})
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    },
   },
-  computed: { ...mapGetters(["players"]) },
+  computed: { ...mapGetters(["players", "loggedUser"]) },
   watch: {
     // leagues(nv) {
     //   if (
@@ -52,6 +80,9 @@ export default {
     async players(nv) {
       if (nv) {
         console.log(new Date());
+        this.loadEnd = new Date().getTime();
+        const loadTime = (this.loadEnd - this.loadBegin) / 1000;
+        this.uploadSiteEnter(this.loggedUser, loadTime);
         // console.log("players", new Date());
         // const cache = await caches.open("ffl-cache");
         // const playersRes = await cache.match("https://ffl-3-new.firebaseio.com/players.json")
@@ -66,11 +97,11 @@ export default {
         //   cache.add("https://ffl-3-new.firebaseio.com/players.json");
         //   console.log(2);
         // }
-        // console.log("players", new Date()); 
+        // console.log("players", new Date());
         // // const request = new Request("https://ffl-3-new.firebaseio.com/players.json")
         // // const response = await fetch(request)
       }
-    }
+    },
     // currentRound(nv) {
     //   if (
     //     nv &&
@@ -108,21 +139,15 @@ export default {
     //   }
     // },
     // loggedUser(nv) {
-    //   if (
-    //     nv &&
-    //     this.players &&
-    //     this.leagues &&
-    //     this.currentRound &&
-    //     this.standings &&
-    //     this.users
-    //   ) {
-    //     this.$vs.loading.close();
+    //   if (nv) {
+    //     this.uploadSiteEnter(nv);
     //   }
-    // }
+    // },
   },
   created() {
     console.log(new Date());
-    console.log("App");
+    this.loadBegin = new Date().getTime();
+    // console.log("App");
     this.$vs.loading();
     this.fetchLoggedUser();
     this.fetchStandings();
@@ -130,7 +155,7 @@ export default {
     this.fetchPlayers();
     this.fetchCurrentRound();
     this.fetchUsers();
-  }
+  },
 };
 </script>
 

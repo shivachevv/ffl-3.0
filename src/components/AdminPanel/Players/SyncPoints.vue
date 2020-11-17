@@ -21,7 +21,7 @@
             selected:
               form.from === roundDates[rnd].from &&
               form.to === roundDates[rnd].to,
-            unavailable: rnd > currentRound
+            unavailable: rnd > currentRound,
           }"
           >{{ rnd }}</a
         >
@@ -105,7 +105,7 @@
           @click.prevent="selectSyncRoundHandler(rnd)"
           :class="{
             selected: rnd === selectedSyncRound,
-            unavailable: rnd > currentRound
+            unavailable: rnd > currentRound,
           }"
           >{{ rnd }}</a
         >
@@ -126,7 +126,11 @@
           @click="syncDialog"
           >3. SYNC POINTS WITH PLAYERS</vs-button
         >
-        <vs-button color="#59A95D" type="relief" size="normal" @click="deleteStandings"
+        <vs-button
+          color="#59A95D"
+          type="relief"
+          size="normal"
+          @click="deleteStandings"
           >TEST</vs-button
         >
       </div>
@@ -145,6 +149,7 @@ import getAllUsers from "../../../utils/getAllUsers";
 import getStandings from "../../../utils/getStandings";
 // import standingsHelper from "../../../utils/standingsHelper";
 import newStandingsHelper from "../../../utils/newStandingsHelper";
+import { setLastUpdateDB } from "../../../utils/setLastUpdate";
 
 export default {
   name: "SyncPoints",
@@ -160,7 +165,7 @@ export default {
         from: "",
         to: "",
         format: "json",
-        target: "https://ffl-3-new.firebaseio.com/pointsSync/points.json"
+        target: "https://ffl-3-new.firebaseio.com/pointsSync/points.json",
       },
       toolUrl: "https://whoscored.tailored.tools/results",
       proxyUrl: "https://cors-anywhere.herokuapp.com/",
@@ -170,17 +175,17 @@ export default {
       buttonEnablerFlags: {
         upload: false,
         download: false,
-        sync: false
+        sync: false,
       },
       leaguesNames: {
-        "2": "England-Premier-League",
-        "22": "France-Ligue-1",
-        "3": "Germany-Bundesliga",
-        "5": "Italy-Serie-A",
-        "13": "Netherlands-Eredivisie",
-        "21": "Portugal-Liga-NOS",
-        "4": "Spain-LaLiga",
-        "17": "Turkey-Super-Lig"
+        2: "England-Premier-League",
+        22: "France-Ligue-1",
+        3: "Germany-Bundesliga",
+        5: "Italy-Serie-A",
+        13: "Netherlands-Eredivisie",
+        21: "Portugal-Liga-NOS",
+        4: "Spain-LaLiga",
+        17: "Turkey-Super-Lig",
       },
       currentRound: undefined,
       selectedSyncRound: undefined,
@@ -189,7 +194,7 @@ export default {
       users: undefined,
       standings: undefined,
       error: false,
-      errorMsg: ""
+      errorMsg: "",
     };
   },
   methods: {
@@ -208,7 +213,7 @@ export default {
         text: `Are you sure you want to upload data for ${
           league ? this.leaguesNames[league] : "All leagues"
         } from ${from} to ${to}?`,
-        accept: () => this.uploadHandler()
+        accept: () => this.uploadHandler(),
       });
     },
     downloadDialog() {
@@ -220,13 +225,13 @@ export default {
           text: `Are you sure you want to download data for ${
             league ? this.leaguesNames[league] : "All leagues"
           } from ${from} to ${to}?`,
-          accept: () => this.downloadHandler()
+          accept: () => this.downloadHandler(),
         });
       } else {
         this.$vs.dialog({
           color: "warning",
           title: "Incorrect Download!",
-          text: "Please upload data first!"
+          text: "Please upload data first!",
         });
       }
     },
@@ -241,13 +246,13 @@ export default {
           } from ${from} to ${to} to be added to round ${
             this.selectedSyncRound ? this.selectedSyncRound : this.currentRound
           }?`,
-          accept: () => this.syncPointsHandler()
+          accept: () => this.syncPointsHandler(),
         });
       } else {
         this.$vs.dialog({
           color: "warning",
           title: "Incorrect Sync!",
-          text: "Please upload data first and then download it!"
+          text: "Please upload data first and then download it!",
         });
       }
     },
@@ -262,18 +267,18 @@ export default {
           method: "GET",
           mode: "cors",
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         }
       )
-        .then(res => res.json())
+        .then((res) => res.json())
         .then(async () => {
           this.$vs.loading.close();
           this.lastUpdate = await this.uploadNewUpdateDate();
           this.isLeagueSelected = league ? true : false;
           this.buttonEnablerFlags.upload = true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.error = true;
           this.errorMsg = err;
@@ -282,7 +287,7 @@ export default {
     },
     async deletePreviousUpload() {
       return await fetch(`${DATA_URL}pointsSync/points.json`, {
-        method: "DELETE"
+        method: "DELETE",
       });
     },
     async downloadHandler() {
@@ -302,20 +307,6 @@ export default {
       const round = this.selectedSyncRound
         ? this.selectedSyncRound
         : this.currentRound;
-
-      // const updatedPlayers = await syncPointsHelper(
-      //   this.points,
-      //   this.players,
-      //   round
-      // );
-      // const standings = await standingsHelper(
-      //   this.standings,
-      //   this.leagues,
-      //   updatedPlayers,
-      //   this.users,
-      //   round
-      // );
-      // console.log(standings, this.points);
 
       if (this.points !== "empty") {
         const updatedPlayers = await syncPointsHelper(
@@ -340,7 +331,10 @@ export default {
         // console.log(standings, this.points);
         this.fetchUpdatedPlayersObject(updatedPlayers);
 
-        await this.deleteStandings()
+        // UPDATE LAST_UPDATE_DATE FOR THE CACHE
+        setLastUpdateDB()
+
+        await this.deleteStandings();
         this.fetchUpdatedStandingsObject1(standings);
         // this.fetchUpdatedStandingsObject(standings);
       } else {
@@ -354,8 +348,13 @@ export default {
           round - 1,
           true
         );
-        await this.deleteStandings()
+        await this.deleteStandings();
         this.fetchUpdatedStandingsObject1(standings);
+
+        // UPDATE LAST_UPDATE_DATE FOR THE CACHE
+        setLastUpdateDB()
+
+        
         // this.fetchUpdatedStandingsObject(
         //   this.standings[`r${this.selectedSyncRound - 1}`]
         // );
@@ -367,18 +366,18 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(async () => {
           console.log("Success!");
           this.$vs.loading.close();
           this.lastSync = await this.uploadNewSyncDate();
           this.buttonEnablerFlags.sync = true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Error:", err);
           this.$vs.loading.close();
           this.error = true;
@@ -390,34 +389,33 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(async () => {
           console.log("Success!");
           // this.standings = data;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Error:", err);
           this.$vs.loading.close();
           this.error = true;
           this.errorMsg = err;
         });
     },
-    async deleteStandings(){
-     return await fetch(`${DATA_URL}newstandings.json`, {
+    async deleteStandings() {
+      return await fetch(`${DATA_URL}newstandings.json`, {
         method: "DELETE",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(response => response.json())
-        .then(() => {
-        })
-        .catch(error => {
+        .then((response) => response.json())
+        .then(() => {})
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
@@ -428,16 +426,16 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success!");
           this.standings = data;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Error:", err);
           this.$vs.loading.close();
           this.error = true;
@@ -450,11 +448,11 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "text/plain"
+          "Content-Type": "text/plain",
         },
         body: JSON.stringify({
-          lastUpdate: date
-        })
+          lastUpdate: date,
+        }),
       });
       const result = await response.json();
       return result.lastUpdate;
@@ -465,11 +463,11 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "text/plain"
+          "Content-Type": "text/plain",
         },
         body: JSON.stringify({
-          lastSync: date
-        })
+          lastSync: date,
+        }),
       });
       const result = await response.json();
       return result.lastSync;
@@ -477,20 +475,12 @@ export default {
     async getLastUpdate() {
       const response = await fetch(this.lastUpdateUrl);
       const date = await response.json();
-      return date
-        .split("T")
-        .join(" ")
-        .split(".")
-        .shift();
+      return date.split("T").join(" ").split(".").shift();
     },
     async getLastSync() {
       const response = await fetch(this.lastSyncUrl);
       const date = await response.json();
-      return date
-        .split("T")
-        .join(" ")
-        .split(".")
-        .shift();
+      return date.split("T").join(" ").split(".").shift();
     },
     selectRoundDates(rnd) {
       const round = this.roundDates[rnd];
@@ -499,7 +489,7 @@ export default {
     },
     selectSyncRoundHandler(rnd) {
       return (this.selectedSyncRound = rnd);
-    }
+    },
   },
   computed: {},
   watch: {
@@ -512,7 +502,7 @@ export default {
       if (nv) {
         this.$vs.loading.close();
       }
-    }
+    },
   },
   async created() {
     this.$vs.loading();
@@ -527,7 +517,7 @@ export default {
     this.lastSync = syncDate ? syncDate : "No Sync Date!";
 
     this.currentRound = await getCurrentRound();
-  }
+  },
 };
 </script>
 

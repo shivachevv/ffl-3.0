@@ -242,6 +242,7 @@
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { teamCodes, DATA_URL, countryMap } from "../../../common";
 import AddPlayerForm from "./AddPlayerForm";
+import { setLastUpdateDB } from '../../../utils/setLastUpdate';
 
 export default {
   name: "PlayersEdit",
@@ -345,6 +346,7 @@ export default {
           this.$vs.loading();
           this.deselectPlayer();
           this.players = await getAllPlayersDataCathegorized();
+          setLastUpdateDB()
           this.success = true;
         })
         .catch(error => {
@@ -395,6 +397,7 @@ export default {
             this.playerSelected = "";
             this.$vs.loading();
             this.players = await getAllPlayersDataCathegorized();
+            setLastUpdateDB()
             this.$vs.loading.close();
             this.success = true;
           })

@@ -1,32 +1,39 @@
 import { DATA_URL } from '../common'
-// import getCachedPlayers from './getCachedPlayers.js'
-// import setLastUpdate from './setLastUpdate.js'
+import getCachedPlayers from './getCachedPlayers.js'
+import { setLastUpdateCache } from './setLastUpdate.js'
+import setPlayersCache from './setPlayersCache.js'
+import getLastUpdate from './getLastUpdate.js'
 
 const getAllPlayersDataNormal = async () => {
     // const date = new Date()
-    // await setLastUpdate(date)
+    // await setLastUpdateDB(date)
     // const cache = await caches.open("ffl-cache");
     // cache.add("https://ffl-3-new.firebaseio.com/lastUpdate.json");
 
 
-    // const lastUpdateRes = await fetch(`${DATA_URL}lastUpdate.json`)
-    // const lastUpdate = await lastUpdateRes.json()
+    // const lastUpdate = undefined
+    const lastUpdate = await getLastUpdate()
+    const cachedUpdate = await getCachedPlayers("update")
 
-    // const cachedUpdate = await getCachedPlayers("update")
+    if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
+        console.log(1);
+        const players = await getCachedPlayers('players')
+        return players
+    } else {
 
-    // if (lastUpdate === cachedUpdate) {
-    //     console.log(1);
-    //     const players = await getCachedPlayers('players')
-    //     return players
-    // }
+        console.log(2);
+
+        const response = await fetch(`${DATA_URL}players.json`)
+        const players = await response.json()
+
+        await setLastUpdateCache()
+        await setPlayersCache()
+
+        return players
+    }
 
 
 
-    // console.log(2);
-
-    const response = await fetch(`${DATA_URL}players.json`)
-    const normal = await response.json()
-    return normal
 }
 
 const getAllPlayersDataCathegorized = async () => {
@@ -36,7 +43,7 @@ const getAllPlayersDataCathegorized = async () => {
 
     Object.keys(normal).forEach(id => {
         const player = normal[id]
-        
+
         if (!cathegorized[player.country]) {
             cathegorized[player.country] = {}
             if (!cathegorized[player.country][player.club]) {
@@ -63,7 +70,7 @@ const cathegorizePlayers = (players) => {
 
     Object.keys(players).forEach(id => {
         const player = players[id]
-        
+
         if (!cathegorized[player.country]) {
             cathegorized[player.country] = {}
             if (!cathegorized[player.country][player.club]) {
