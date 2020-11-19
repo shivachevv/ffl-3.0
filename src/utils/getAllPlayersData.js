@@ -2,6 +2,7 @@ import { DATA_URL } from '../common'
 import getCachedPlayers from './getCachedPlayers.js'
 import { setLastUpdateCache } from './setLastUpdate.js'
 import setPlayersCache from './setPlayersCache.js'
+
 import getLastUpdate from './getLastUpdate.js'
 
 const getAllPlayersDataNormal = async () => {

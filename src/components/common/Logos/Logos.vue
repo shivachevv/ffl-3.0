@@ -1,5 +1,5 @@
 <template>
-  <section class="logos-container" v-if="selectedLeague && users">
+  <section class="logos-container" v-if="users && leagues">
     <div>
       <div class="logo" v-for="team in leagueSelected1stHalf" :key="team">
         <router-link :to="`/team-details/${users[team].userLogo}`">
@@ -48,54 +48,75 @@ export default {
   },
   data() {
     return {
-      selectedLgTmp: ""
+      // selectedLgTmp: ""
     };
   },
   computed: {
-    ...mapGetters(["leagues", "loggedUser", "users"]),
+    ...mapGetters(["leagues", "users"]),
     leagueSelected1stHalf() {
-      return Object.values(this.leagues)[0].teams.sort((a, b) => {
-        const code1 = Number(this.users[a].code);
-        const code2 = Number(this.users[b].code);
-        return code1 - code2;
-      });
+      if (this.leagues && this.users) {
+        const teams = Object.values(this.leagues)[0].teams.map((x) => {
+          return this.users[x];
+        });
+        return teams
+          .sort((a, b) => {
+            return a.code - b.code;
+            // const code1 = Number(this.users[a].code);
+            // const code2 = Number(this.users[b].code);
+            // return code1 - code2 > 0 ? -1 : 1
+          })
+          .map((x) => {
+            return x.uid;
+          });
+      } else return "";
       // return this.leagues[this.selectedLeague].teams.filter((x, i) => {
       //   return i < this.leagues[this.selectedLeague].teams.length / 2;
       // });
     },
     leagueSelected2ndHalf() {
-      return Object.values(this.leagues)[1].teams.sort((a, b) => {
-        const code1 = Number(this.users[a].code);
-        const code2 = Number(this.users[b].code);
-        return code1 - code2;
-      });
+      if (this.leagues && this.users) {
+        const teams = Object.values(this.leagues)[1].teams.map((x) => {
+          return this.users[x];
+        });
+        return teams
+          .sort((a, b) => {
+            return a.code - b.code;
+            // const code1 = Number(this.users[a].code);
+            // const code2 = Number(this.users[b].code);
+            // return code1 - code2 > 0 ? -1 : 1
+          })
+          .map((x) => {
+            return x.uid;
+          });
+      } else return "";
+
       // return this.leagues[this.selectedLeague].teams.filter((x, i) => {
       //   return i >= this.leagues[this.selectedLeague].teams.length / 2;
       // });
     },
-    selectedLeague: {
-      get: function() {
-        if (this.loggedUser && !this.selectedLgTmp && this.leagues) {
-          return Object.values(this.leagues).filter(x => {
-            if (x.teams.includes(this.loggedUser.uid)) {
-              return x.id;
-            }
-          })[0].id;
-        } else {
-          if (this.leagues) {
-            return this.selectedLgTmp
-              ? this.selectedLgTmp
-              : Object.keys(this.leagues)[0];
-          } else {
-            return undefined;
-          }
-        }
-      },
-      set: function(v) {
-        this.selectedLgTmp = v;
-      }
-    }
-  }
+    // selectedLeague: {
+    //   get: function() {
+    //     if (this.loggedUser && !this.selectedLgTmp && this.leagues) {
+    //       return Object.values(this.leagues).filter(x => {
+    //         if (x.teams.includes(this.loggedUser.uid)) {
+    //           return x.id;
+    //         }
+    //       })[0].id;
+    //     } else {
+    //       if (this.leagues) {
+    //         return this.selectedLgTmp
+    //           ? this.selectedLgTmp
+    //           : Object.keys(this.leagues)[0];
+    //       } else {
+    //         return undefined;
+    //       }
+    //     }
+    //   },
+    //   set: function(v) {
+    //     this.selectedLgTmp = v;
+    //   }
+    // }
+  },
 };
 </script>
 

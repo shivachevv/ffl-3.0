@@ -67,6 +67,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
+          console.log('logout');
           this.fetchLoggedUser();
           // this.$router.push('/')
           location.reload();
