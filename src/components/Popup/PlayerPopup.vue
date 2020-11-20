@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <table style="overflow-x:auto;">
+      <table style="overflow-x: auto">
         <thead>
           <tr>
             <td>Rnd</td>
@@ -76,13 +76,13 @@ import Chart from "./Chart";
 export default {
   name: "PlayerPopup",
   components: {
-    Chart
+    Chart,
   },
   props: {
     player: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -106,7 +106,7 @@ export default {
         sub: { short: "SUB", long: "Substitution" },
         teamVictory: { short: "TV", long: "Team victory" },
         threeAllowed: { short: "3G", long: "Three allowed" },
-        yellowCards: { short: "YC", long: "Yellow cards" }
+        yellowCards: { short: "YC", long: "Yellow cards" },
       },
       chartStyle: "width: 100%; height: 100%; display: block;",
       posMap: {
@@ -125,8 +125,8 @@ export default {
         MR2: "right midfielder",
         ST1: "striker",
         ST2: "striker",
-        ST3: "striker"
-      }
+        ST3: "striker",
+      },
     };
   },
   computed: {
@@ -138,33 +138,31 @@ export default {
           const roundNum2 = Number(b[0].substring(1));
           return roundNum1 - roundNum2;
         })
-        .map(x => x[1]);
+        .map((x) => x[1]);
     },
     playerPoints() {
       if (this.player) {
-        const playedRounds = Object.entries(this.player.points).filter(x => {
+        const playedRounds = Object.entries(this.player.points).filter((x) => {
           // console.log(typeof x[1].roundStats.starter);
           if (
             typeof x[1].roundStats.starter === "number" ||
-            typeof x[1].roundStats.starter === "string" &&
-            x[1].roundStats.starter !== ""
+            (typeof x[1].roundStats.starter === "string" &&
+              x[1].roundStats.starter !== "")
           ) {
             return x;
           }
         });
-        
+
         const roundCount = playedRounds.length;
         const total = playedRounds.reduce((acc, rnd) => {
           return acc + rnd[1].roundPts;
         }, 0);
         const perRound = (total / roundCount).toFixed(2);
-        const sortedPlayerPoints = playedRounds.sort(
-          (a, b) => {
-            const round1 = Number(a[0].substring(1));
-            const round2 = Number(b[0].substring(1));
-            return round1 - round2;
-          }
-        );
+        const sortedPlayerPoints = playedRounds.sort((a, b) => {
+          const round1 = Number(a[0].substring(1));
+          const round2 = Number(b[0].substring(1));
+          return round1 - round2;
+        });
 
         // FILTER ONLY ROUNDS THAT HAVE STATS AS NUMBERS AND NOT UDNEFINED
 
@@ -180,14 +178,15 @@ export default {
 
         const last5PerRnd = (last5 / 5).toFixed(2);
 
-        const chartPts = sortedPlayerPoints.map(x => {
+        const chartPts = Object.entries(this.player.points).map((x) => {
           return x[1].roundPts;
-        });
+        })
+        
         return { total, perRound, last5, last5PerRnd, chartPts };
       } else {
         return "";
       }
-    }
+    },
   },
   watch: {},
   methods: {
@@ -209,7 +208,7 @@ export default {
     //   console.log('back');
     //   this.close()
     // };
-  }
+  },
 };
 </script>
 
