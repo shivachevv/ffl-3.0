@@ -7,11 +7,9 @@
       @close="deselectMatch"
       v-if="players && selectedMatch"
       class="holamundo"
-      :title="
-        `${users[selectedMatch.team1.id].userTeam} vs ${
-          users[selectedMatch.team2.id].userTeam
-        }`
-      "
+      :title="`${users[selectedMatch.team1.id].userTeam} vs ${
+        users[selectedMatch.team2.id].userTeam
+      }`"
       :active.sync="matchPopup"
       stylePopup="width:70%"
     >
@@ -32,6 +30,13 @@
           :key="group.name"
           >{{ group.name }}</a
         >
+        <a
+          href="#"
+          class="sha cup-stages-links up"
+          :class="{ selected: selectedGroup === 'elimination' }"
+          @click.prevent="groupSelectionHandler(`elimination`)"
+          >Elimination</a
+        >
       </div>
     </div>
 
@@ -50,7 +55,7 @@
         />
         <!-- GROUP MATCHES -->
 
-        <div class="group-matches sha">
+        <div class="group-matches sha" v-if="selectedGroup !== 'elimination'">
           <div class="matches-header">
             <h2 class="up">Group Matches</h2>
           </div>
@@ -116,6 +121,8 @@
             >
           </div>
         </div>
+        <Eliminations v-if="selectedGroup === 'elimination'" />
+         
       </div>
       <!-- <div class="group-right">
         <img src="images/cup.png" alt="Group A" srcset="" />
@@ -129,12 +136,14 @@ import { mapGetters, mapActions } from "vuex";
 import cupStandingsHelper from "../../utils/cupStandingsHelper";
 import CupMatchPopup from "./CupMatchPopup";
 import Standings from "../H2H/Standings";
+import Eliminations from "./Eliminations";
 
 export default {
   name: "Cup",
   components: {
     CupMatchPopup,
-    Standings
+    Standings,
+    Eliminations
   },
   props: {},
   data() {
@@ -142,14 +151,14 @@ export default {
       selectedGroup: undefined,
       cupStandings: undefined,
       matchPopup: false,
-      selectedMatch: undefined
+      selectedMatch: undefined,
     };
   },
   computed: {
     ...mapGetters(["cup", "users", "players"]),
     isThereBye() {
       return Object.keys(this.selectedGroup.teams).length % 2 === 1;
-    }
+    },
     // playingTeams(){
     //   if (this.isThereBye) {
     //     return this.
@@ -168,9 +177,9 @@ export default {
 
       // console.log(round, matches);
 
-      return this.selectedGroup.teams.filter(x => {
+      return this.selectedGroup.teams.filter((x) => {
         let teamsPlayed = [];
-        matches.forEach(match => {
+        matches.forEach((match) => {
           teamsPlayed.push(match.team1.id);
           teamsPlayed.push(match.team2.id);
         });
@@ -204,21 +213,21 @@ export default {
     },
     deselectMatch() {
       this.selectedMatch = undefined;
-    }
+    },
   },
   watch: {
     cup(nv) {
       if (nv) {
         this.cupStandings = cupStandingsHelper(nv);
       }
-    }
+    },
   },
   async created() {
     await this.fetchCup();
     this.$vs.loading.close();
     this.selectedGroup = Object.values(this.cup)[0];
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
@@ -317,7 +326,7 @@ con-vs-popup .vs-popup {
 .cup-stages-links:nth-child(4) {
   margin: 0 20px;
   @media #{$mobile} {
-    margin: 0px;
+    margin: 2px;
     width: 24%;
   }
 }
@@ -342,8 +351,7 @@ con-vs-popup .vs-popup {
 .group-a,
 .group-b,
 .group-c,
-.group-d,
-.elimination {
+.group-d{
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -352,6 +360,17 @@ con-vs-popup .vs-popup {
   margin: 20px 0 0 0;
   transition: all 0.3s;
 }
+
+
+// .elimination {
+//   width: 130%;
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-around;
+//   align-items: flex-start;
+//   margin: 20px 0 0 0;
+//   transition: all 0.3s;
+// }
 
 .group-left,
 .group-right {
@@ -365,7 +384,7 @@ con-vs-popup .vs-popup {
 }
 
 .group-center {
-  width: 50%;
+  width: 60%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -377,7 +396,7 @@ con-vs-popup .vs-popup {
 
 /******** GAMEWEEKS *********************/
 .group-matches {
-  width: 100%;
+  width: 80%;
   background-color: #cccccc;
   margin: 20px 0 0 0;
 }
@@ -496,188 +515,5 @@ con-vs-popup .vs-popup {
   margin: 0 10px 0 0;
 }
 
-/*************************************************************
-********* ELIMINATION ***************************************/
 
-.elimination-matches {
-  width: 135%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: #d3d3d3;
-}
-
-.elimination-stages {
-  width: 100%;
-  height: 30px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #c6c6c6;
-}
-
-.elimination-stages h2 {
-  width: 20%;
-  text-align: center;
-  font-size: 0.875rem;
-}
-
-.elimination-matches-wrapper {
-  width: 100%;
-  padding: 30px;
-  display: grid;
-  grid-column-gap: 30px;
-  grid-row-gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-}
-
-/********** ELIMINATION MATCHES POSITIONS ************/
-.quarter1 {
-  grid-row: 1 / span 1;
-  grid-column: 1 / span 1;
-}
-
-.quarter2 {
-  grid-row: 3 / span 1;
-  grid-column: 1 / span 1;
-}
-
-.quarter3 {
-  grid-row: 1 / span 1;
-  grid-column: 5 / span 1;
-}
-
-.quarter4 {
-  grid-row: 3 / span 1;
-  grid-column: 5 / span 1;
-}
-
-.semi1 {
-  grid-row: 2 / span 1;
-  grid-column: 2 / span 1;
-}
-
-.semi2 {
-  grid-row: 2 / span 1;
-  grid-column: 4 / span 1;
-}
-
-.final {
-  grid-row: 3 / span 1;
-  grid-column: 3 / span 1;
-}
-
-.winner {
-  grid-row: 1 / span 1;
-  grid-column: 3 / span 1;
-}
-
-.match {
-  width: 100%;
-  background-color: #c6c6c6;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  transition: all 0.3s;
-}
-
-.match:hover {
-  transform: scale(1.05);
-  cursor: pointer;
-}
-
-.quarter1:hover .row2,
-.quarter2:hover .row2,
-.quarter3:hover .row2,
-.quarter4:hover .row2 {
-  background-color: #a6aeb3;
-}
-
-.semi1:hover .row2,
-.semi2:hover .row2 {
-  background-color: #222a2e;
-}
-
-.final:hover .row2 {
-  background-color: #692a2c;
-}
-
-.row1,
-.row3 {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.row1 img,
-.row3 img {
-  width: 25px;
-  position: absolute;
-  left: 10px;
-}
-
-.row2 {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background-color: #bcc4c8;
-  border-bottom: 1px solid #b1b2b2;
-  border-top: 1px solid #b1b2b2;
-  font-size: 1.125rem;
-}
-
-.row2 a {
-  right: 10px;
-  top: 25%;
-}
-
-.semis {
-  background-color: #3c474d;
-  color: #d3d3d3;
-}
-
-.row2 a img {
-  transition: all 0.3s;
-}
-
-.row2 a img:hover {
-  transform: scale(1.2);
-}
-
-.final-match {
-  background-color: #893e40;
-  color: #d3d3d3;
-}
-
-.winner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.winner a {
-  color: #3c474d;
-  text-decoration: none;
-  font-size: 1.125rem;
-  margin: 20px 0 0 0;
-}
-
-.winner a:hover {
-  text-decoration: underline;
-}
 </style>
