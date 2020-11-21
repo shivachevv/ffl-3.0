@@ -25,7 +25,7 @@
         >
           <img
             :src="
-              `http://ff-legends.com/team-logos/${l
+              `https://ff-legends.com/team-logos/${l
                 .toLowerCase()
                 .split(' ')
                 .join('-')}.png`
@@ -39,7 +39,7 @@
         <img src="@/assets/images/user-transfers/triangle.png" alt="triangle" />
         <img
           :src="
-            `http://ff-legends.com/team-logos/${selectedLeague
+            `https://ff-legends.com/team-logos/${selectedLeague
               .toLowerCase()
               .split(' ')
               .join('-')}.png`
@@ -70,7 +70,7 @@
         >
           <img
             :src="
-              `http://ff-legends.com/team-logos/${selectedLeague
+              `https://ff-legends.com/team-logos/${selectedLeague
                 .toLowerCase()
                 .split(' ')
                 .join('-')}/${t
@@ -87,7 +87,7 @@
         <img src="@/assets/images/user-transfers/triangle.png" alt="triangle" />
         <img
           :src="
-            `http://ff-legends.com/team-logos/${selectedLeague
+            `https://ff-legends.com/team-logos/${selectedLeague
               .toLowerCase()
               .split(' ')
               .join('-')}/${selectedTeam

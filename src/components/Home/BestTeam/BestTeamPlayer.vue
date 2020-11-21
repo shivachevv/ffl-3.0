@@ -6,7 +6,7 @@
   >
     <h3 class="pos">{{ player.position }}</h3>
     <img
-      :src="`http://ff-legends.com/team-kits/${player.shirt}.png?version=1`"
+      :src="`https://ff-legends.com/team-kits/${player.shirt}.png?version=1`"
       alt="Player"
     />
     <h3 class="name">

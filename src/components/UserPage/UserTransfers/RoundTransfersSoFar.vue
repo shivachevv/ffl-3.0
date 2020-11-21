@@ -38,7 +38,7 @@
 
       <!-- <img
         class="green"
-        :src="`http://ff-legends.com/team-kits/tr-green.png`"
+        :src="`https://ff-legends.com/team-kits/tr-green.png`"
         alt
       /> -->
     </div>
@@ -48,7 +48,7 @@
       >
       <img
         class="red"
-        :src="`http://ff-legends.com/team-kits/tr-red.png`"
+        :src="`https://ff-legends.com/team-kits/tr-red.png`"
         alt
       />
     </div> -->

@@ -79,7 +79,8 @@ export default {
     // },
     async players(nv) {
       if (nv) {
-        console.log(new Date());
+        // this.$vs.loading.close();
+        console.log('end',new Date());
         this.loadEnd = new Date().getTime();
         const loadTime = (this.loadEnd - this.loadBegin) / 1000;
         this.uploadSiteEnter(this.loggedUser, loadTime);
@@ -145,10 +146,10 @@ export default {
     // },
   },
   created() {
-    console.log(new Date());
+    console.log('begin',new Date());
     this.loadBegin = new Date().getTime();
     // console.log("App");
-    this.$vs.loading();
+    // this.$vs.loading();
     this.fetchLoggedUser();
     this.fetchStandings();
     this.fetchLeagues();

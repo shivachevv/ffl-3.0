@@ -3,7 +3,7 @@
     <div class="popup-container sha">
       <div class="popup-name up">
         <img
-          :src="`http://ff-legends.com/team-kits/${player.shirt}.png?version=1`"
+          :src="`https://ff-legends.com/team-kits/${player.shirt}.png?version=1`"
           alt="shirt"
         />
         <div class="popup-name-cont">
@@ -68,10 +68,7 @@
 </template>
 
 <script>
-// import { mapActions, mapGetters } from "vuex";
-// import popupPtsHelper from "../../utils/popupPtsHelper";
 import Chart from "./Chart";
-// import { clickOutside } from "../../directives";
 
 export default {
   name: "PlayerPopup",
@@ -130,19 +127,15 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters(["popupData"]),
     sortedRounds() {
-      return Object.entries(this.player.points)
-        .sort((a, b) => {
-          const roundNum1 = Number(a[0].substring(1));
-          const roundNum2 = Number(b[0].substring(1));
-          return roundNum1 - roundNum2;
-        })
-        .map((x) => x[1]);
+      return this.sortRounds(Object.entries(this.player.points)).map(
+        (x) => x[1]
+      );
     },
     playerPoints() {
       if (this.player) {
-        const playedRounds = Object.entries(this.player.points).filter((x) => {
+        const playerPointsArr = Object.entries(this.player.points);
+        const playedRounds = playerPointsArr.filter((x) => {
           // console.log(typeof x[1].roundStats.starter);
           if (
             typeof x[1].roundStats.starter === "number" ||
@@ -158,11 +151,7 @@ export default {
           return acc + rnd[1].roundPts;
         }, 0);
         const perRound = (total / roundCount).toFixed(2);
-        const sortedPlayerPoints = playedRounds.sort((a, b) => {
-          const round1 = Number(a[0].substring(1));
-          const round2 = Number(b[0].substring(1));
-          return round1 - round2;
-        });
+        const sortedPlayerPoints = this.sortRounds(playedRounds);
 
         // FILTER ONLY ROUNDS THAT HAVE STATS AS NUMBERS AND NOT UDNEFINED
 
@@ -178,10 +167,10 @@ export default {
 
         const last5PerRnd = (last5 / 5).toFixed(2);
 
-        const chartPts = Object.entries(this.player.points).map((x) => {
+        const chartPts = this.sortRounds(playerPointsArr).map((x) => {
           return x[1].roundPts;
-        })
-        
+        });
+
         return { total, perRound, last5, last5PerRnd, chartPts };
       } else {
         return "";
@@ -190,24 +179,20 @@ export default {
   },
   watch: {},
   methods: {
-    // ...mapActions(["fetchPopupData"]),
-    // close() {
-    //   return this.parent.parent.$emit("popupClose", false);
-    // }
+    sortRounds(rounds) {
+      return rounds.sort((a, b) => {
+        const round1 = Number(a[0].substring(1));
+        const round2 = Number(b[0].substring(1));
+        return round1 - round2;
+      });
+    },
+    
   },
   created() {
-    // this.fetchPopupData(this.player);
   },
   destroyed() {
-    // this.fetchPopupData("");
   },
   mounted() {
-    // window.onpopstate = function() {
-    //   // console.log(this.popupShow);
-    //   // this.popupShow = false
-    //   console.log('back');
-    //   this.close()
-    // };
   },
 };
 </script>

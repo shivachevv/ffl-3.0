@@ -44,7 +44,7 @@
           :alt="l"
         /> -->
         <img
-          :src="`http://ff-legends.com/team-logos/${makeLeagueToImg(l)}.png`"
+          :src="`https://ff-legends.com/team-logos/${makeLeagueToImg(l)}.png`"
           alt="league"
         />
       </a>

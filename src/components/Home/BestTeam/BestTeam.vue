@@ -93,8 +93,9 @@ export default {
       return screen < 501;
     },
     bestTeamReady() {
+      const players = Object.keys(this.players)
       let result = {};
-      Object.keys(this.players).forEach(id => {
+      players.forEach(id => {
         const player = this.players[id];
         const lastRnd = player.points[`r${this.currentRound - 1}`].roundPts;
         const owned = !!this.isOwned(id);

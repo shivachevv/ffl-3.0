@@ -1,7 +1,7 @@
 <template>
   <div class="teammate" @click="transferOutHandler(player)">
     <div class="player-shirt">
-      <img :src="`http://ff-legends.com/team-kits/${shirt}.png?version=1`" alt />
+      <img :src="`https://ff-legends.com/team-kits/${shirt}.png?version=1`" alt />
     </div>
     <div class="player-stats-cont">
       <div class="name-cont">

@@ -10,7 +10,7 @@
       >
         <img
           :src="
-            `http://ff-legends.com/team-kits/${players[player[1].id].shirt}.png?version=1`
+            `https://ff-legends.com/team-kits/${players[player[1].id].shirt}.png?version=1`
           "
           alt=""
           srcset=""
@@ -30,7 +30,7 @@
       >
         <img
           :src="
-            `http://ff-legends.com/team-kits/${players[player[1].id].shirt}.png?version=1`
+            `https://ff-legends.com/team-kits/${players[player[1].id].shirt}.png?version=1`
           "
           alt=""
           srcset=""

@@ -102,7 +102,7 @@
 
         <!-- <div class="winner up">
             <img src="images/cup-winner.png" alt="" srcset="" />
-            <a href="http://ff-legends.com/foolosophy-wanderers.html"
+            <a href="https://ff-legends.com/foolosophy-wanderers.html"
               >Foolosophy Wanderers</a
             >
           </div> -->
