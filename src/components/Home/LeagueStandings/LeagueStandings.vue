@@ -15,8 +15,8 @@
             Total points
           </th>
           <th class="up table-rnd">
-            Last
-            <br />Round
+            Round
+            <br />Points
           </th>
           <th class="up table-move">
             Up
@@ -46,7 +46,7 @@
             <span>{{ users[t[0]].name }}</span>
           </td>
           <td class="up table-total">{{ t[1].total }}</td>
-          <td class="up table-rnd">{{ t[1].lastRndTotal }}</td>
+          <td class="up table-rnd">{{ t[1].thisRndTotal }}</td>
           <td class="up table-move">
             <img
               :src="

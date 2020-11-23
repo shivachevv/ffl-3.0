@@ -49,16 +49,23 @@ const newStandingsHelper = (players, users, leagues, currentRound, arePtsEmpty) 
                         :
                         roundPointsCalculator(rounds[`r${roundToTake - 1}`], roundToTake - 1, players, false)
 
+                const thisRndTotal = arePtsEmpty ?
+                    0
+                    : 
+                    roundPointsCalculator(rounds[`r${roundToTake}`], roundToTake, players, false)
+
                 if (result[leagueId]) {
                     result[leagueId][userId] = {
                         total,
                         lastRndTotal,
+                        thisRndTotal
                     }
                 } else {
                     result[leagueId] = {}
                     result[leagueId][userId] = {
                         total,
                         lastRndTotal,
+                        thisRndTotal
                     }
                 }
 
@@ -104,7 +111,6 @@ const newStandingsHelper = (players, users, leagues, currentRound, arePtsEmpty) 
     const oldStandingsWithPlaces = makeStandingsWithPlaces(oldStandings)
 
     const readyStandings = addMovement(newStandingsWithPlaces, oldStandingsWithPlaces, currentRound)
-
 
     return readyStandings
 }

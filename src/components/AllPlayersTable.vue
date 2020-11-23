@@ -1,5 +1,5 @@
 <template>
-  <vs-table
+  <!-- <vs-table
     max-items="50"
     pagination
     search
@@ -47,8 +47,8 @@
       </vs-tr>
     </template>
     {{ playersReady }}
-  </vs-table>
-  <!-- <table v-if="players" class="container">
+  </vs-table> -->
+  <table v-if="players" class="container">
     <tbody>
       <tr class="rounds">
         <td>Name</td>
@@ -73,7 +73,7 @@
         </td>
       </tr>
     </tbody>
-  </table> -->
+  </table>
 </template>
 
 <script>
@@ -115,14 +115,14 @@ export default {
     },
   },
   methods: {
-    // sortedRounds(arr) {
-    //   const sorted = arr.sort((x, y) => {
-    //     const rnd1 = Number(x[0].substring(1, 3));
-    //     const rnd2 = Number(y[0].substring(1, 3));
-    //     return rnd1 - rnd2;
-    //   });
-    //   return sorted;
-    // },
+    sortedRounds(arr) {
+      const sorted = arr.sort((x, y) => {
+        const rnd1 = Number(x[0].substring(1, 3));
+        const rnd2 = Number(y[0].substring(1, 3));
+        return rnd1 - rnd2;
+      });
+      return sorted;
+    },
   },
   watch: {
     players(nv) {
