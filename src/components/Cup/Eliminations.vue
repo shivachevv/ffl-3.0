@@ -17,7 +17,12 @@
       <!-- ELIMINATION MATCHES FIELD -->
       <div class="elimination-matches-wrapper">
         <!-- 1/8 FINALS -->
-        <div v-for="i in 8" :key="`e${i}`" :class="`sha up eight${i}`">
+        <div
+          v-for="i in 8"
+          :key="`e${i}`"
+          :class="`sha up eightfinal eight${i}`"
+        >
+          <div class="label ef-label">EF{{ i }}</div>
           <div class="row1">
             <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
             <span class="team1-name">{{ eightfinals[`ef${i}`].m1 }}</span>
@@ -35,10 +40,11 @@
         </div>
 
         <!-- 1/4 FINALS -->
-        <div v-for="i in 4" :key="`q${i}`" :class="`sha up quarter${i}`">
+        <div v-for="i in 4" :key="`q${i}`" :class="`sha up quarterfinal quarter${i}`">
+          <div class="label qf-label">QF{{ i }}</div>
           <div class="row1">
             <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">QF{{ i }}</span>
+            <span class="team1-name">{{quarterfinals[`qf${i}`].m1}}</span>
             <span class="elim-total"></span>
           </div>
           <div class="row2">
@@ -47,16 +53,17 @@
           </div>
           <div class="row3">
             <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">QF{{ i }}</span>
+            <span class="team1-name">{{quarterfinals[`qf${i}`].m2}}</span>
             <span class="elim-total"></span>
           </div>
         </div>
 
         <!-- 1/2 FINALS -->
-        <div v-for="i in 2" :key="`s${i}`" :class="`sha up semi${i}`">
+        <div v-for="i in 2" :key="`s${i}`" :class="`sha up semifinal semi${i}`">
+          <div class="label sf-label">SF{{ i }}</div>
           <div class="row1">
             <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">SF{{ i }}</span>
+            <span class="team1-name">{{semifinals[`sf${i}`].m1}}</span>
             <span class="elim-total"></span>
           </div>
           <div class="row2">
@@ -65,7 +72,7 @@
           </div>
           <div class="row3">
             <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">SF{{ i }}</span>
+            <span class="team1-name">{{semifinals[`sf${i}`].m2}}</span>
             <span class="elim-total"></span>
           </div>
         </div>
@@ -157,6 +164,34 @@ export default {
           m1: "B4",
           m2: "D1",
         },
+      },
+      quarterfinals: {
+        qf1: {
+          m1: "EF1",
+          m2: "EF5",
+        },
+        qf2: {
+          m1: "EF2",
+          m2: "EF6",
+        },
+        qf3: {
+          m1: "EF3",
+          m2: "EF7",
+        },
+        qf4: {
+          m1: "EF4",
+          m2: "EF8",
+        }
+      },
+      semifinals: {
+        sf1: {
+          m1: "QF1",
+          m2: "QF2",
+        },
+        sf2: {
+          m1: "QF3",
+          m2: "QF4",
+        }
       },
       //   selectedGroup: undefined,
       //   cupStandings: undefined,
@@ -391,6 +426,37 @@ export default {
   grid-column: 5 / span 4;
 }
 
+.eightfinal, .quarterfinal, .semifinal {
+  position: relative;
+  overflow: hidden;
+  .label {
+    position: absolute;
+    font-size: 0.7rem;
+    color: white;
+    top: 6px;
+    left: -18px;
+    background-color: #000000;
+    padding: 2px 20px;
+    transform: rotate(315deg);
+
+    &.ef-label {
+      background-color: #893e40;
+    }
+    &.qf-label {
+      background-color:#3c474d;
+    }
+    &.sf-label {
+      background-color: #000000;
+    }
+  }
+
+  .row2 {
+    font-weight: bold;
+  }
+}
+
+
+
 .match {
   width: 100%;
   //   background-color: #c6c6c6;
@@ -399,27 +465,14 @@ export default {
   justify-content: space-evenly;
   align-items: center;
   transition: all 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
 }
 
-.match:hover {
-  transform: scale(1.05);
-  cursor: pointer;
-}
-
-.eight1 .row2,
-.eight2 .row2,
-.eight3 .row2,
-.eight4 .row2,
-.eight5 .row2,
-.eight6 .row2,
-.eight7 .row2,
-.eight8 .row2 {
-  font-weight: bold;
-}
-.quarter1 .row2,
-.quarter2 .row2,
-.quarter3 .row2,
-.quarter4 .row2 {
+.quarterfinal .row2 {
   background-color: #9ec1d6;
   font-weight: bold;
 }
@@ -430,8 +483,7 @@ export default {
 //   background-color: #a6aeb3;
 // }
 
-.semi1 .row2,
-.semi2 .row2 {
+.semifinal .row2 {
   background-color: #5faed6;
   font-weight: bold;
 }
