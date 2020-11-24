@@ -1,6 +1,6 @@
   <template>
   <div class="login sha">
-    <p>Register</p>
+    <!-- <p>Register</p>
     <h2 v-if="error">{{error}}</h2>
 
     <form class="user-form" @submit.prevent="registerHandler">
@@ -80,7 +80,7 @@
         />
 
         <button>Register</button>
-      </div>
+      </div> -->
 
       <!-- <div class="form-group">
         <select @change="clubSelectionHandler">
@@ -108,8 +108,8 @@
           placeholder="Enter your logo URL"
           v-model="teamLogo"
           @blur="$v.teamLogo.$touch"
-        />
-      </div>-->
+        />-->
+      </div>
 
       <!-- NEW PLAYERS SELECTION RADIO BUTTONS -->
       <!-- <div class="form-group" v-if="playersData">
@@ -210,202 +210,202 @@
                 !$v.selectedPlayers.st.required "
           >Team is not complete!</span>
         </template>
-      </div>-->
+      </div>
     </form>
-  </div>
+  </div>-->
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
-import firebase from "firebase/app";
-import "firebase/auth";
-import { makeNewUser } from "../../models/User";
-import { DATA_URL } from "../../common";
+// import { validationMixin } from "vuelidate";
+// import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+// import firebase from "firebase/app";
+// import "firebase/auth";
+// import { makeNewUser } from "../../models/User";
+// import { DATA_URL } from "../../common";
 
-export default {
-  name: "Register",
-  components: {},
-  props: {},
-  mixins: [validationMixin],
-  validations: {
-    email: {
-      required,
-      email,
-      minLength: minLength(6)
-    },
-    name: {
-      required,
-    },
-    password: {
-      required,
-      minLength: minLength(6)
-    },
-    rePassword: {
-      sameAsPassword: sameAs("password")
-    },
-    teamName: {
-      required
-    }
-  },
-  data() {
-    return {
-      name:"",
-      email: "",
-      password: "",
-      rePassword: "",
-      teamName: "",
-      age: "",
-      location: "",
-      ocupation: "",
-      favTeam: "",
-      motto: "",
-      error: ""
-    };
-  },
-  methods: {
-    async registerHandler() {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      } else {
-        try {
-          const {
-            email,
-            password,
-            name,
-            teamName,
-            age,
-            location,
-            ocupation,
-            favTeam,
-            motto
-          } = this;
-          const fbUser = await firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password);
-          const uid = fbUser.user.uid;
-          const newUser = makeNewUser(
-            uid,
-            email,
-            name,
-            teamName,
-            age,
-            location,
-            ocupation,
-            favTeam,
-            motto
-          );
-          this.fetchUser(newUser);
-        } catch (error) {
-          this.error = error.message;
-        }
-      }
-    },
-    fetchUser(user) {
-      return fetch(`${DATA_URL}users/${user.uid}.json`, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(user)
-      })
-        .then(response => response.json())
-        .then(() => {
-          console.log("Success:");
-          //   this.success = true;
-        })
-        .catch(error => {
-          console.error("Error:", error);
-        });
-    }
-  }
-};
+// export default {
+//   name: "Register",
+//   components: {},
+//   props: {},
+//   mixins: [validationMixin],
+//   validations: {
+//     email: {
+//       required,
+//       email,
+//       minLength: minLength(6)
+//     },
+//     name: {
+//       required,
+//     },
+//     password: {
+//       required,
+//       minLength: minLength(6)
+//     },
+//     rePassword: {
+//       sameAsPassword: sameAs("password")
+//     },
+//     teamName: {
+//       required
+//     }
+//   },
+//   data() {
+//     return {
+//       name:"",
+//       email: "",
+//       password: "",
+//       rePassword: "",
+//       teamName: "",
+//       age: "",
+//       location: "",
+//       ocupation: "",
+//       favTeam: "",
+//       motto: "",
+//       error: ""
+//     };
+//   },
+//   methods: {
+//     async registerHandler() {
+//       this.$v.$touch();
+//       if (this.$v.$invalid) {
+//         return;
+//       } else {
+//         try {
+//           const {
+//             email,
+//             password,
+//             name,
+//             teamName,
+//             age,
+//             location,
+//             ocupation,
+//             favTeam,
+//             motto
+//           } = this;
+//           const fbUser = await firebase
+//             .auth()
+//             .createUserWithEmailAndPassword(email, password);
+//           const uid = fbUser.user.uid;
+//           const newUser = makeNewUser(
+//             uid,
+//             email,
+//             name,
+//             teamName,
+//             age,
+//             location,
+//             ocupation,
+//             favTeam,
+//             motto
+//           );
+//           this.fetchUser(newUser);
+//         } catch (error) {
+//           this.error = error.message;
+//         }
+//       }
+//     },
+//     fetchUser(user) {
+//       return fetch(`${DATA_URL}users/${user.uid}.json`, {
+//         method: "PATCH",
+//         mode: "cors",
+//         headers: {
+//           "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(user)
+//       })
+//         .then(response => response.json())
+//         .then(() => {
+//           console.log("Success:");
+//           //   this.success = true;
+//         })
+//         .catch(error => {
+//           console.error("Error:", error);
+//         });
+//     }
+//   }
+// };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-$error-clr: #ff7175;
-.login {
-  background-color: #4e585e;
-  color: white;
-  border-radius: 5px;
-  padding: 0 20px 20px 20px;
-  width: 50%;
-  margin: 20px auto 0 auto;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.5s;
+// $error-clr: #ff7175;
+// .login {
+//   background-color: #4e585e;
+//   color: white;
+//   border-radius: 5px;
+//   padding: 0 20px 20px 20px;
+//   width: 50%;
+//   margin: 20px auto 0 auto;
+//   position: relative;
+//   overflow: hidden;
+//   transition: all 0.5s;
 
-  .error-msg {
-    color: $error-clr;
-  }
-  p {
-    width: 100%;
-    font-weight: bold;
-    font-size: 1.5rem;
-    padding: 10px 0;
-    text-align: center;
-    border-bottom: 2px solid #c6c6c6;
-  }
-  .user-form {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    margin: 20px 0 0 0;
-    *:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-    .form-group {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      select {
-        padding: 0.5rem;
-        transition: all 0.2s;
-      }
-      label {
-        cursor: pointer;
-        &:hover {
-          text-decoration: underline;
-        }
-      }
+//   .error-msg {
+//     color: $error-clr;
+//   }
+//   p {
+//     width: 100%;
+//     font-weight: bold;
+//     font-size: 1.5rem;
+//     padding: 10px 0;
+//     text-align: center;
+//     border-bottom: 2px solid #c6c6c6;
+//   }
+//   .user-form {
+//     display: flex;
+//     flex-flow: row;
+//     justify-content: space-between;
+//     margin: 20px 0 0 0;
+//     *:not(:last-child) {
+//       margin-bottom: 1rem;
+//     }
+//     .form-group {
+//       width: 100%;
+//       display: flex;
+//       flex-direction: column;
+//       justify-content: flex-start;
+//       align-items: center;
+//       select {
+//         padding: 0.5rem;
+//         transition: all 0.2s;
+//       }
+//       label {
+//         cursor: pointer;
+//         &:hover {
+//           text-decoration: underline;
+//         }
+//       }
 
-      input {
-        padding: 0.5rem;
-        transition: all 0.2s;
-        width: 50%;
-        &:focus {
-          border: 3px solid #924243;
-        }
-        &[type="radio"] {
-          display: none;
-        }
-      }
+//       input {
+//         padding: 0.5rem;
+//         transition: all 0.2s;
+//         width: 50%;
+//         &:focus {
+//           border: 3px solid #924243;
+//         }
+//         &[type="radio"] {
+//           display: none;
+//         }
+//       }
 
-      .section-header {
-          margin: 20px 0 10px 0;
-      }
-    }
-    button {
-      font-size: 1.5rem;
-      color: #4e585e;
-      padding: 0.5rem;
-      background-color: lightgray;
-      border: 1px solid gray;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all 0.3s;
-      width: 40%;
-      &:hover {
-        background-color: #893f40;
-        color: lightgray;
-        border: none;
-      }
-    }
-  }
-}
+//       .section-header {
+//           margin: 20px 0 10px 0;
+//       }
+//     }
+//     button {
+//       font-size: 1.5rem;
+//       color: #4e585e;
+//       padding: 0.5rem;
+//       background-color: lightgray;
+//       border: 1px solid gray;
+//       border-radius: 3px;
+//       cursor: pointer;
+//       transition: all 0.3s;
+//       width: 40%;
+//       &:hover {
+//         background-color: #893f40;
+//         color: lightgray;
+//         border: none;
+//       }
+//     }
+//   }
+// }
 </style>
