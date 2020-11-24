@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img src="@/assets/images/home/banner_home.jpg" alt="banner_home" />
+    <img src="@/assets/images/home/banner_home.webp" alt="banner_home" />
     <h1 class="up h1-hidden">Fantasy Legends</h1>
     <Navigation></Navigation>
   </header>

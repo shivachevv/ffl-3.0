@@ -43,7 +43,7 @@
     <!-- GROUP A -->
     <section class="group-a">
       <!-- <div class="group-left">
-        <img src="images/group-a.png" alt="Group A" srcset="" />
+        <img src="images/group-a.webp" alt="Group A" srcset="" />
       </div> -->
       <div class="group-center">
         <Standings
@@ -81,7 +81,7 @@
                 :src="
                   require(`@/assets/images/team-logos/${
                     users[match.team1.id].userLogo
-                  }.png`)
+                  }.webp`)
                 "
                 alt=""
                 srcset=""
@@ -96,7 +96,7 @@
                 :src="
                   require(`@/assets/images/team-logos/${
                     users[match.team2.id].userLogo
-                  }.png`)
+                  }.webp`)
                 "
                 alt=""
                 srcset=""
@@ -114,7 +114,7 @@
                 :src="
                   require(`@/assets/images/team-logos/${
                     users[showByeTeam(i)].userLogo
-                  }.png`)
+                  }.webp`)
                 "
                 alt=""
               />{{ users[showByeTeam(i)].userTeam }} - bye</span

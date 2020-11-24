@@ -8,7 +8,7 @@
             :src="
               require(`@/assets/images/team-logos/${
                 users[match.match.team1].userLogo
-              }.png`)
+              }.webp`)
             "
             alt="T1 Logo"
             class="popup-team1-logo"
@@ -82,7 +82,7 @@
             :src="
               require(`@/assets/images/team-logos/${
                 users[match.match.team2].userLogo
-              }.png`)
+              }.webp`)
             "
             alt="T1 Logo"
             class="popup-team1-logo"

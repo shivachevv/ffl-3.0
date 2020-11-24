@@ -38,7 +38,7 @@
               :src="
                 require(`@/assets/images/team-logos/${
                   users[t[0]].userLogo
-                }.png`)
+                }.webp`)
               "
               :alt="`${users[t[0]].userTeam} logo`"
             />

@@ -52,7 +52,7 @@
       <div class="color-1" :style="`background-color:${colors.first};`"></div>
       <div class="color-2" :style="`background-color:${colors.second};`">
         <img
-          :src="require(`@/assets/images/team-logos/${user.userLogo}.png`)"
+          :src="require(`@/assets/images/team-logos/${user.userLogo}.webp`)"
           :alt="`${user.userLogo} logo`"
         />
       </div>

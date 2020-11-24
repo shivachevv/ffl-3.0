@@ -41,7 +41,8 @@ const actions = {
         commit
     }) {
         const players = await getAllPlayersDataNormal()
-        commit('setPlayers', players)
+        const result = Object.freeze(players)
+        commit('setPlayers', result)
     },
     // async fetchPlayersCathegorized({
     //     commit

@@ -51,7 +51,7 @@ const newStandingsHelper = (players, users, leagues, currentRound, arePtsEmpty) 
 
                 const thisRndTotal = arePtsEmpty ?
                     0
-                    : 
+                    :
                     roundPointsCalculator(rounds[`r${roundToTake}`], roundToTake, players, false)
 
                 if (result[leagueId]) {
@@ -84,11 +84,15 @@ const newStandingsHelper = (players, users, leagues, currentRound, arePtsEmpty) 
             leagueArr
                 .forEach(x => {
                     if (!isFirstRnd) {
+                        if (arePtsEmpty) {
+                            result[leagueId][x[0]].movement = 0
+                        } else {
+                            result[leagueId][x[0]].movement = oldStandings[leagueId][x[0]].place - newStandings[leagueId][x[0]].place
+                        }
                         // const previousRound = oldStandings[`r${currentRound - 1}`]
                         // // console.log(2);
 
                         // if (!previousRound) {
-                        result[leagueId][x[0]].movement = oldStandings[leagueId][x[0]].place - newStandings[leagueId][x[0]].place
                         // } else {
                         // result[leagueId][x[0]].movement = previousRound[leagueId][x[0]].place - result[leagueId][x[0]].place
                         // }

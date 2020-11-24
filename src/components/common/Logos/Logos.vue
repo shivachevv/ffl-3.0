@@ -5,7 +5,7 @@
         <router-link :to="`/team-details/${users[team].userLogo}`">
           <img
             :src="
-              require(`@/assets/images/team-logos/${users[team].userLogo}.png`)
+              require(`@/assets/images/team-logos/${users[team].userLogo}.webp`)
             "
             alt="Team logo"
           />
@@ -24,7 +24,7 @@
         <router-link :to="`/team-details/${users[team].userLogo}`">
           <img
             :src="
-              require(`@/assets/images/team-logos/${users[team].userLogo}.png`)
+              require(`@/assets/images/team-logos/${users[team].userLogo}.webp`)
             "
             alt="Team logo"
           />

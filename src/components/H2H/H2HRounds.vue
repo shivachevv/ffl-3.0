@@ -58,7 +58,7 @@
           :src="
             require(`@/assets/images/team-logos/${
               users[match.team1].userLogo
-            }.png`)
+            }.webp`)
           "
           alt=""
           srcset=""
@@ -76,7 +76,7 @@
           :src="
             require(`@/assets/images/team-logos/${
               users[match.team2].userLogo
-            }.png`)
+            }.webp`)
           "
           alt=""
           srcset=""

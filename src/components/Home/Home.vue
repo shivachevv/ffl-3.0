@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="main-container" v-if="players && leagues && users">
+    <div class="main-container" v-if="leagues && users">
       <div class="league-container">
         <!---------------- LEAGUE CHOICE -------------------------------------->
 
@@ -22,9 +22,10 @@
         <!---------------- LEAGUE DETAILS -------------------------------------->
 
         <SelectedLgDetails
+          v-if="frozenPlayers"
           :users="users"
           :selectedLeagueObj="selectedLeagueObj"
-          :players="players"
+          :players="frozenPlayers"
           :standings="standings"
           :currentRound="currentRound"
           @playerPopupSelected="playerPopupHandler($event)"
@@ -34,7 +35,8 @@
       <!---------------- BEST TEAM OF THE WEEK -------------------------------------->
 
       <BestTeam
-        :players="players"
+        v-if="frozenPlayers"
+        :players="frozenPlayers"
         :users="users"
         :currentRound="currentRound"
         @playerPopupHandler="playerPopupHandler($event)"
@@ -76,13 +78,13 @@ export default {
     LeagueStandings,
     SelectedLgDetails,
     PlayerPopup,
-    BestTeam
+    BestTeam,
   },
   data() {
     return {
       popupShow: false,
       popupPlayer: "",
-      selectedLgTmp: ""
+      selectedLgTmp: "",
     };
   },
   methods: {
@@ -92,7 +94,7 @@ export default {
       "fetchCurrentRound",
       "fetchUsers",
       "fetchStandings",
-      "fetchLoggedUser"
+      "fetchLoggedUser",
     ]),
     playerPopupHandler(p) {
       this.popupShow = true;
@@ -103,7 +105,7 @@ export default {
     },
     deselectPlayer() {
       return (this.popupPlayer = "");
-    }
+    },
   },
   computed: {
     ...mapGetters([
@@ -113,15 +115,15 @@ export default {
       "currentRound",
       "users",
       "standings",
-      "loggedUser"
+      "loggedUser",
     ]),
     selectedLeagueObj() {
       return this.leagues[this.selectedLeague];
     },
     selectedLeague: {
-      get: function() {
+      get: function () {
         if (this.loggedUser && !this.selectedLgTmp) {
-          const result = Object.keys(this.leagues).filter(id => {
+          const result = Object.keys(this.leagues).filter((id) => {
             if (this.leagues[id].teams.includes(this.loggedUser.uid)) {
               return id;
             }
@@ -135,10 +137,18 @@ export default {
             : "33c46ff1-1756-41a1-a80f-01b2f4fb4b3c";
         }
       },
-      set: function(v) {
+      set: function (v) {
         this.selectedLgTmp = v;
+      },
+    },
+    frozenPlayers() {
+      if (this.players) {
+        const result = Object.freeze(this.players);
+        return result;
+      } else {
+        return "";
       }
-    }
+    },
   },
   watch: {
     leagues(nv) {
@@ -189,7 +199,7 @@ export default {
       ) {
         this.$vs.loading.close();
       }
-    }
+    },
   },
   async created() {
     // if (!this.leagues) {
@@ -222,7 +232,7 @@ export default {
   beforeDestroy() {
     // this.closePopup()
     // console.log('destroyed');
-  }
+  },
 };
 </script>
 

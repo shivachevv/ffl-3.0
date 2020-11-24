@@ -49,7 +49,7 @@
             :src="
               require(`@/assets/images/team-logos/${
                 users[match.team1.id].userLogo
-              }.png`)
+              }.webp`)
             "
             alt="T1 Logo"
             class="popup-team1-logo"
@@ -132,7 +132,7 @@
             :src="
               require(`@/assets/images/team-logos/${
                 users[match.team2.id].userLogo
-              }.png`)
+              }.webp`)
             "
             alt="T1 Logo"
             class="popup-team1-logo"
