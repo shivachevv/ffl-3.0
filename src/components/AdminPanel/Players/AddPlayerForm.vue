@@ -95,6 +95,7 @@ import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData"
 import { v4 as uuidv4 } from "uuid";
 import { getCurrentRound } from "../../../utils/getCurrentRound";
 import { setLastUpdateDB } from '../../../utils/setLastUpdate';
+import updateLightPlayers from '../../../utils/updateLightPlayers';
 
 export default {
   name: "AddPlayerForm",
@@ -170,6 +171,7 @@ export default {
           this.success = true;
           const updatedPlayers = await getAllPlayersDataCathegorized();
           setLastUpdateDB()
+          updateLightPlayers()
           this.$emit("updatedPlayers", updatedPlayers);
           this.$parent.$emit("close", false);
         })

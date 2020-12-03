@@ -124,6 +124,7 @@ import getAllLeagues from "../../../utils/getAllLeagues";
 import newStandingsHelper from "../../../utils/newStandingsHelper";
 import getAllUsers from "../../../utils/getAllUsers";
 import { setLastUpdateDB } from '../../../utils/setLastUpdate';
+import updateLightPlayers from '../../../utils/updateLightPlayers';
 
 export default {
   name: "PlayersPoints",
@@ -207,6 +208,7 @@ export default {
           const tmpPlayers = await getAllPlayersDataNormal();
           this.players = cathegorizePlayers(tmpPlayers);
           setLastUpdateDB()
+          updateLightPlayers()
 
           // const previousStandings = standingsHelper(
           //   undefined,

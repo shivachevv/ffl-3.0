@@ -243,6 +243,7 @@ import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData"
 import { teamCodes, DATA_URL, countryMap } from "../../../common";
 import AddPlayerForm from "./AddPlayerForm";
 import { setLastUpdateDB } from '../../../utils/setLastUpdate';
+import updateLightPlayers from '../../../utils/updateLightPlayers';
 
 export default {
   name: "PlayersEdit",
@@ -347,6 +348,7 @@ export default {
           this.deselectPlayer();
           this.players = await getAllPlayersDataCathegorized();
           setLastUpdateDB()
+          updateLightPlayers()
           this.success = true;
         })
         .catch(error => {
@@ -398,6 +400,7 @@ export default {
             this.$vs.loading();
             this.players = await getAllPlayersDataCathegorized();
             setLastUpdateDB()
+            updateLightPlayers()
             this.$vs.loading.close();
             this.success = true;
           })

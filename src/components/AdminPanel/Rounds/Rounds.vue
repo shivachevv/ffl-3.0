@@ -49,6 +49,7 @@ import { addUserRound } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
 import pointsCalculator from "../../../utils/pointsCalculator";
 import { setLastUpdateDB } from "../../../utils/setLastUpdate";
+import updateLightPlayers from '../../../utils/updateLightPlayers';
 // import getAllH2HRounds from "../../../utils/getAllH2HRounds";
 
 export default {
@@ -131,6 +132,7 @@ export default {
         .then(async () => {
           this.players = await getAllPlayersDataNormal();
           setLastUpdateDB();
+          updateLightPlayers()
           this.success = true;
           this.$vs.loading.close();
         })

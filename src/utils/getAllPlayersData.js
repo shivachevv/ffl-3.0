@@ -25,7 +25,7 @@ const getAllPlayersDataNormal = async () => {
             const response = await fetch(`${DATA_URL}players.json`)
             const players = await response.json()
             await setLastUpdateCache()
-            await setPlayersCache()
+            await setPlayersCache('players')
             return players
         }
 
@@ -38,13 +38,10 @@ const getAllPlayersDataNormal = async () => {
         const players = await response.json()
 
         await setLastUpdateCache()
-        await setPlayersCache()
+        await setPlayersCache('players')
 
         return players
     }
-
-
-
 }
 
 const getAllPlayersDataCathegorized = async () => {
@@ -103,8 +100,42 @@ const cathegorizePlayers = (players) => {
     return cathegorized
 }
 
+const getAllLightPlayers = async () => {
+
+    const lastUpdate = await getLastUpdate()
+    const cachedUpdate = await getCachedPlayers("update")
+
+    if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
+        console.log(11);
+        const players = await getCachedPlayers('light-players')
+
+        if (!players) {
+            console.log(22);
+            const response = await fetch(`${DATA_URL}lightPlayers.json`)
+            const players = await response.json()
+            await setLastUpdateCache()
+            await setPlayersCache('lightPlayers')
+            return players
+        }
+
+        return players
+    } else {
+
+        console.log(2);
+
+        const response = await fetch(`${DATA_URL}lightPlayers.json`)
+        const players = await response.json()
+
+        await setLastUpdateCache()
+        await setPlayersCache('lightPlayers')
+
+        return players
+    }
+}
+
 export {
     getAllPlayersDataNormal,
     getAllPlayersDataCathegorized,
-    cathegorizePlayers
+    cathegorizePlayers,
+    getAllLightPlayers
 }

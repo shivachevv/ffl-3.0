@@ -150,6 +150,7 @@ import getStandings from "../../../utils/getStandings";
 // import standingsHelper from "../../../utils/standingsHelper";
 import newStandingsHelper from "../../../utils/newStandingsHelper";
 import { setLastUpdateDB } from "../../../utils/setLastUpdate";
+import updateLightPlayers from '../../../utils/updateLightPlayers';
 
 export default {
   name: "SyncPoints",
@@ -375,6 +376,9 @@ export default {
           console.log("Success!");
           this.$vs.loading.close();
           this.lastSync = await this.uploadNewSyncDate();
+
+          updateLightPlayers()
+
           this.buttonEnablerFlags.sync = true;
         })
         .catch((err) => {

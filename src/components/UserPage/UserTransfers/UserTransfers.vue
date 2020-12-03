@@ -42,6 +42,7 @@ import { cathegorizePlayers } from "../../../utils/getAllPlayersData";
 import { DATA_URL } from "../../../common";
 import makeNewTransfer from "../../../models/Transfer";
 import { setLastUpdateDB } from '../../../utils/setLastUpdate';
+import updateLightPlayers from '../../../utils/updateLightPlayers';
 
 export default {
   name: "UserTransfers",
@@ -388,7 +389,9 @@ export default {
         })
           .then((response) => response.json())
           .then(async () => {
-            setLastUpdateDB()
+            await setLastUpdateDB()
+            await updateLightPlayers()
+
             // console.log("Success:", data);
             //   this.success = true;
             // this.$vs.loading();

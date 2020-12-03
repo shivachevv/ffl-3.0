@@ -2,6 +2,7 @@ import { DATA_URL } from '../common'
 const cacheName = "ffl-cache"
 const lastUpdateUrl = `${DATA_URL}lastUpdate.json`
 const playersUrl = `${DATA_URL}players.json`
+const lightPlayersUrl = `${DATA_URL}lightPlayers.json`
 
 const getCachedPlayers = async (type) => {
     const cache = await caches.open(cacheName);
@@ -16,6 +17,15 @@ const getCachedPlayers = async (type) => {
         }
         if (type === "players") {
             const playersResponse = await cache.match(playersUrl)
+            if (!playersResponse) {
+                return undefined
+            }
+
+            const players = await playersResponse.json()
+            return players
+        }
+        if (type === "light-players") {
+            const playersResponse = await cache.match(lightPlayersUrl)
             if (!playersResponse) {
                 return undefined
             }
