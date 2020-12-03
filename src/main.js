@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import * as firebase from "firebase";
+import "firebase/auth";
 import './firebase'
 import Vuesax from 'vuesax'
 

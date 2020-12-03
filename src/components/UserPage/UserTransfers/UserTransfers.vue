@@ -32,9 +32,12 @@
 </template>
 
 <script>
+// import UserTransfersTeam from "./UserTransfersTeam";
+// import AllPlayersSection from "./AllPlayersSection/AllPlayersSection";
+const UserTransfersTeam = () => import("./UserTransfersTeam");
+const AllPlayersSection = () => import("./AllPlayersSection/AllPlayersSection");
+
 import { mapGetters, mapActions } from "vuex";
-import UserTransfersTeam from "./UserTransfersTeam";
-import AllPlayersSection from "./AllPlayersSection/AllPlayersSection";
 import { cathegorizePlayers } from "../../../utils/getAllPlayersData";
 import { DATA_URL } from "../../../common";
 import makeNewTransfer from "../../../models/Transfer";

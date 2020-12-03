@@ -6,7 +6,7 @@
 // import currentRndHelper from "../../utils/currentRndHelper";
 import { getAllPlayersDataNormal } from '../../utils/getAllPlayersData'
 // import { getAllPlayersDataCathegorized } from '../../utils/getAllPlayersData'
-
+import lightenPlayers from '../../utils/lightenPlayers'
 
 // const URL_PLAYERS = 'https://ffl-3-92418.firebaseio.com/playerPts.json';
 // const URL_PLAYERS_HISTORY = 'https://ffl-3-92418.firebaseio.com/playerHistory.json';
@@ -40,9 +40,17 @@ const actions = {
     async fetchPlayers({
         commit
     }) {
-        const players = await getAllPlayersDataNormal()
-        const result = Object.freeze(players)
-        commit('setPlayers', result)
+        let players = await getAllPlayersDataNormal()
+        // const result = Object.freeze(players)
+
+        let copy = JSON.parse(JSON.stringify(players))
+        const lighterPlayers = await lightenPlayers(copy)
+
+        copy = null
+        players = null
+
+
+        commit('setPlayers', lighterPlayers)
     },
     // async fetchPlayersCathegorized({
     //     commit

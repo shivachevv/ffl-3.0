@@ -20,8 +20,10 @@
 </template>
 
 <script>
-import Tow from "./Tow";
-import Last5Transfers from "./Last5Transfers";
+// import Tow from "./Tow";
+// import Last5Transfers from "./Last5Transfers";
+const Tow = () => import("./Tow");
+const Last5Transfers = () => import("./Last5Transfers");
 
 export default {
   name: "SelectedLgDetails",

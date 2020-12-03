@@ -129,7 +129,7 @@
 <script>
 import AddH2HRoundForm from "./AddH2HRoundForm";
 // import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
-import { DATA_URL } from "../../../common";
+import { DATA_URL, API_URL } from "../../../common";
 // import getAllLeagues from "../../../utils/getAllLeagues";
 // import { getCurrentRound } from "../../../utils/getCurrentRound";
 import getAllUsers from "../../../utils/getAllUsers";
@@ -143,7 +143,7 @@ import uploadAllPlayers from "../../../utils/uploadAllPlayers";
 export default {
   name: "H2HLeagues",
   components: {
-    AddH2HRoundForm
+    AddH2HRoundForm,
   },
   data() {
     return {
@@ -166,17 +166,23 @@ export default {
       errorMsg: "",
       showPopup: false,
       selectedUser: undefined,
-      
+
       //   newViceCpt: "",
       //   roundTotal: 0
     };
   },
   methods: {
-    test(){
-      for (const user in this.users) {
-          console.log(this.users[user].userTeam," - ", user);
-          
-        }
+    test() {
+      fetch(`${API_URL}players/light-upload`, {
+        method: "GET",
+        // mode: "no-cors",
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          console.log('done');
+        })
+        .catch((err) => console.log('errorr', err));
     },
     createH2HRound() {
       uploadAllPlayers();
@@ -228,7 +234,7 @@ export default {
           text: this.showSuccessMsg(this.selectedRound),
           accept: () => {
             this.fetchUpdatedLeague(this.selectedRound);
-          }
+          },
         });
       } else {
         // this.error = true;
@@ -280,18 +286,18 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.success = true;
           this.$vs.loading();
           this.h2hrounds = await getAllH2HRounds();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
@@ -371,7 +377,7 @@ export default {
     selectRoundHandler(r) {
       this.selectedRound = this.h2hrounds[r];
       this.selectedRoundNum = r;
-    }
+    },
     // async confirmTransfer(tr) {
     //   try {
     //     await this.updateTransferStatus(tr, "confirmed");
@@ -652,11 +658,11 @@ export default {
     // }
   },
   computed: {
-    sortedRounds(){
-      return Object.keys(this.h2hrounds).sort((a,b)=>{
-        return Number(a.substring(1)) - Number(b.substring(1))
-      })
-    }
+    sortedRounds() {
+      return Object.keys(this.h2hrounds).sort((a, b) => {
+        return Number(a.substring(1)) - Number(b.substring(1));
+      });
+    },
   },
   watch: {
     h2hrounds(nv) {
@@ -680,7 +686,7 @@ export default {
           this.success = false;
         }, 2000);
       }
-    }
+    },
   },
   async created() {
     // this.$vs.loading();
@@ -689,7 +695,7 @@ export default {
     // this.players = await getAllPlayersDataNormal()
     // this.currentRound = await getCurrentRound();
     // this.transfers = await getAllTransfers();
-  }
+  },
 };
 </script>
 

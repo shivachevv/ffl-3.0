@@ -61,7 +61,8 @@
 <script>
 // import slider components
 import { Carousel, Slide } from "vue-carousel";
-import BestTeamPlayer from "./BestTeamPlayer";
+// import BestTeamPlayer from "./BestTeamPlayer";
+const BestTeamPlayer = () => import("./BestTeamPlayer");
 
 export default {
   name: "BestTeam",

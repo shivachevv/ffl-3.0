@@ -21,20 +21,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 /* BUTTON */
-@keyframes "pulse" {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  33% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(3);
-    opacity: 0;
-  }
-}
+
 .button {
   text-align: center;
   display: inline-flex;

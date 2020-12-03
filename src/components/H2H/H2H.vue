@@ -22,8 +22,10 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import standingsH2HHelper from "../../utils/standingsH2HHelper";
-import Standings from "./Standings";
-import H2HRounds from "./H2HRounds";
+// import Standings from "./Standings";
+// import H2HRounds from "./H2HRounds";
+const Standings = () => import("./Standings");
+const H2HRounds = () => import("./H2HRounds");
 // import CupMatchPopup from "./CupMatchPopup";
 
 export default {

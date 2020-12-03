@@ -134,7 +134,8 @@
 
 <script>
 // import { mapGetters } from "vuex";
-import Timer from "./Timer";
+// import Timer from "./Timer";
+const Timer = ()=> import("./Timer")
 import deadline from "../../utils/deadlineHelper";
 import { mapActions } from "vuex";
 import { DATA_URL } from "../../common";

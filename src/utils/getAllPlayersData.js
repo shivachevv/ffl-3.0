@@ -19,6 +19,16 @@ const getAllPlayersDataNormal = async () => {
     if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
         console.log(1);
         const players = await getCachedPlayers('players')
+
+        if (!players) {
+            console.log(2);
+            const response = await fetch(`${DATA_URL}players.json`)
+            const players = await response.json()
+            await setLastUpdateCache()
+            await setPlayersCache()
+            return players
+        }
+
         return players
     } else {
 

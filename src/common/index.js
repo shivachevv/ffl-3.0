@@ -1,5 +1,7 @@
 export const DATA_URL = "https://ffl-3-new.firebaseio.com/"
 
+export const API_URL = "https://arcane-crag-66483.herokuapp.com/api/"
+
 export const teamCodes = {
     "Manchester City": 1,
     "Liverpool FC": 2,

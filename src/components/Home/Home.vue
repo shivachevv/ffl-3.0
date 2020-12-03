@@ -64,11 +64,11 @@
 </template>
 
 <script>
-import LeagueSelect from "./LeagueSelect/LeagueSelect";
-import LeagueStandings from "./LeagueStandings/LeagueStandings";
-import SelectedLgDetails from "./SelectedLgDetails/SelectedLgDetails";
-import BestTeam from "./BestTeam/BestTeam";
-import PlayerPopup from "../Popup/PlayerPopup";
+const LeagueSelect = () => import("./LeagueSelect/LeagueSelect");
+const LeagueStandings = () => import("./LeagueStandings/LeagueStandings");
+const SelectedLgDetails = () => import("./SelectedLgDetails/SelectedLgDetails");
+const BestTeam = () => import("./BestTeam/BestTeam");
+const PlayerPopup = () => import("../Popup/PlayerPopup");
 import { mapGetters, mapActions } from "vuex";
 
 export default {

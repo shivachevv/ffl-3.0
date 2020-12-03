@@ -51,11 +51,11 @@
 </template>
 
 <script>
-import UserTeam from "./UserTeam/UserTeam";
-import UserInfo from "./UserInfo";
-import MatchPrep from "./MatchPrep";
-import TeamTransfers from "./TeamTransfers";
-import PlayerPopup from "../Popup/PlayerPopup";
+const UserTeam = () => import("./UserTeam/UserTeam");
+const UserInfo = () => import("./UserInfo");
+const MatchPrep = () => import("./MatchPrep");
+const TeamTransfers = () => import("./TeamTransfers");
+const PlayerPopup = () => import("../Popup/PlayerPopup");
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -65,13 +65,13 @@ export default {
     UserInfo,
     MatchPrep,
     PlayerPopup,
-    TeamTransfers
+    TeamTransfers,
   },
   props: {},
   data() {
     return {
       popupShow: false,
-      popupPlayer: ""
+      popupPlayer: "",
     };
   },
   methods: {
@@ -79,7 +79,7 @@ export default {
       // "fetchLeagues",
       // "fetchPlayers",
       "fetchCurrentRound",
-      "fetchUsers"
+      "fetchUsers",
       // "fetchStandings",
       // "fetchLoggedUser"
     ]),
@@ -92,7 +92,7 @@ export default {
     },
     closePopup() {
       return (this.popupShow = false);
-    }
+    },
   },
   computed: {
     ...mapGetters(["users", "loggedUser", "currentRound", "players"]),
@@ -101,7 +101,7 @@ export default {
     },
     user() {
       if (this.users) {
-        const user = Object.values(this.users).filter(x => {
+        const user = Object.values(this.users).filter((x) => {
           const routeTeam = this.$route.params.id;
           if (routeTeam === x.userLogo) {
             return x;
@@ -111,7 +111,7 @@ export default {
       } else {
         return undefined;
       }
-    }
+    },
   },
   watch: {
     // loggedUser(nv){
@@ -152,7 +152,7 @@ export default {
         //   }
         // }
       }
-    }
+    },
   },
   created() {
     this.$vs.loading();
@@ -160,7 +160,7 @@ export default {
     this.fetchCurrentRound();
     // this.fetchPlayers();
   },
-  beforeDestroy(){
+  beforeDestroy() {
     // console.log('beforeD');
     // this.closePopup()
     // this.popupShow = false
@@ -171,7 +171,7 @@ export default {
     //   this.popupShow = false
     //   console.log(this.popupShow);
     // };
-  }
+  },
 };
 </script>
 

@@ -68,7 +68,8 @@
 </template>
 
 <script>
-import Chart from "./Chart";
+// import Chart from "./Chart";
+const Chart = () => import("./Chart");
 
 export default {
   name: "PlayerPopup",

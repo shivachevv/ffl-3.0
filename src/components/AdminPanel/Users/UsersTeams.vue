@@ -381,6 +381,9 @@ export default {
     this.players = await getAllPlayersDataNormal();
     this.users = await getAllUsers();
     this.currentRound = await getCurrentRound();
+  },
+  destroyed(){
+    console.log('destroyed');
   }
 };
 </script>

@@ -94,7 +94,8 @@
 
 <script>
 import roundPointsCalculator from "../../utils/roundPointsCalculator";
-import H2HMatchPopup from './H2HMatchPopup'
+// import H2HMatchPopup from './H2HMatchPopup'
+const H2HMatchPopup = () => import("./H2HMatchPopup");
 
 export default {
   name: "H2HRounds",

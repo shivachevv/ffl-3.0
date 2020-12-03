@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import Navigation from "./Navigation";
+// import Navigation from "./Navigation";
+const Navigation = () => import("./Navigation");
 
 export default {
   name: "Header",

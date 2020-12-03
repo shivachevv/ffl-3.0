@@ -18,7 +18,9 @@
 </template>
 
 <script>
-import LeagueBtn from "./LeagueBtn";
+// import LeagueBtn from "./LeagueBtn";
+const LeagueBtn = () => import("./LeagueBtn");
+
 
 export default {
   name: "LeagueSelect",

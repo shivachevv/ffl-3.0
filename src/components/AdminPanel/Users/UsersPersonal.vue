@@ -386,6 +386,9 @@ export default {
   async created() {
     this.$vs.loading();
     this.users = await getAllUsers();
+  },
+  destroyed(){
+    console.log('destroyed');
   }
 };
 </script>

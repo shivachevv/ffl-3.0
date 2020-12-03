@@ -57,10 +57,14 @@
 </template>
 
 <script>
-import TransfersTeammate from "./TransfersTeammate";
-import TeamHeader from "../UserTeam/TeamHeader";
-import SelectedTransfers from "./SelectedTransfers";
-import RoundTransfersSoFar from "./RoundTransfersSoFar";
+const TransfersTeammate = () => import("./TransfersTeammate");
+const TeamHeader = () => import("../UserTeam/TeamHeader");
+const SelectedTransfers = () => import("./SelectedTransfers");
+const RoundTransfersSoFar = () => import("./RoundTransfersSoFar");
+// import TransfersTeammate from "./TransfersTeammate";
+// import TeamHeader from "../UserTeam/TeamHeader";
+// import SelectedTransfers from "./SelectedTransfers";
+// import RoundTransfersSoFar from "./RoundTransfersSoFar";
 // import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -69,42 +73,42 @@ export default {
     TransfersTeammate,
     TeamHeader,
     SelectedTransfers,
-    RoundTransfersSoFar
+    RoundTransfersSoFar,
   },
   props: {
     user: {
       type: Object,
-      required: true
+      required: true,
     },
     players: {
       type: Object,
-      required: true
+      required: true,
     },
     currentRound: {
       type: Number,
-      required: true
+      required: true,
     },
     transfersAvail: {
       type: Number,
-      required: true
+      required: true,
     },
     transferedOut: {
       type: Array,
-      required: true
+      required: true,
     },
     transferedIn: {
       type: Array,
-      required: true
+      required: true,
     },
     maxTransfersReached: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       wildcard: "",
-      reset: false
+      reset: false,
     };
   },
   computed: {
@@ -124,7 +128,7 @@ export default {
       // .sort((a, b) => {
       //   return a.position.localeCompare(b.position);
       // });
-    }
+    },
   },
   methods: {
     makeTransferOut(x) {
@@ -132,7 +136,7 @@ export default {
     },
     max(x) {
       return this.$emit("max", x);
-    }
+    },
   },
   watch: {
     wildcard(nv) {
@@ -141,7 +145,7 @@ export default {
       }
       this.reset = !nv;
       return this.$emit("wcHandler", nv);
-    }
+    },
   },
   filters: {
     // playerClassFilter: function(v) {
@@ -150,7 +154,7 @@ export default {
   },
   created() {
     // this.fetchUserPts(this.user.teamCode);
-  }
+  },
 };
 </script>
 

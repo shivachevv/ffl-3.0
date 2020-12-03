@@ -19,7 +19,7 @@
         button="submit"
         type="relief"
         size="normal"
-        @click.prevent="createUpdatedH2HObject"
+        @click.prevent="createUpdatedPlayersObject"
         >TEST</vs-button
       >
     </div>
@@ -48,7 +48,7 @@ import { addPlayerPts } from "../../../models/Player";
 import { addUserRound } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
 import pointsCalculator from "../../../utils/pointsCalculator";
-import { setLastUpdateDB } from '../../../utils/setLastUpdate';
+import { setLastUpdateDB } from "../../../utils/setLastUpdate";
 // import getAllH2HRounds from "../../../utils/getAllH2HRounds";
 
 export default {
@@ -62,7 +62,7 @@ export default {
       h2hrounds: undefined,
       success: false,
       error: false,
-      errorMsg: ""
+      errorMsg: "",
     };
   },
   methods: {
@@ -75,13 +75,14 @@ export default {
       this.$vs.dialog({
         color: "success",
         title: "Confirm New Round!",
-        text: `Are you sure you want to add new round ${this.currentRound +
-          1}?`,
+        text: `Are you sure you want to add new round ${
+          this.currentRound + 1
+        }?`,
         accept: () => {
           this.fetchNewRound();
           this.fetchNewRndDataToPlayers(editedPlayers);
           this.fetchNewRndDataToUsers(editedUsers);
-        }
+        },
       });
     },
     async fetchNewRound() {
@@ -98,17 +99,17 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(async () => {
           this.users = await getAllUsers();
           this.success = true;
           this.$vs.loading.close();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.$vs.loading.close();
@@ -122,18 +123,18 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(async () => {
           this.players = await getAllPlayersDataNormal();
-          setLastUpdateDB()
+          setLastUpdateDB();
           this.success = true;
           this.$vs.loading.close();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.$vs.loading.close();
@@ -143,7 +144,7 @@ export default {
     createUpdatedUsersObject() {
       let copy = JSON.parse(JSON.stringify(this.users));
 
-      Object.keys(copy).forEach(id => {
+      Object.keys(copy).forEach((id) => {
         const team = this.createNextRndTeam(copy[id]);
         const transfers = this.createNextRndTransfers(copy[id]);
         const cpt = this.createNextRndCaptains(copy[id], "cpt");
@@ -205,20 +206,22 @@ export default {
       let copy = JSON.parse(JSON.stringify(this.players));
 
       const playerStatsEmptyValues = Array(20).fill("");
-      Object.keys(copy).forEach(id => {
+      Object.keys(copy).forEach((id) => {
         const player = copy[id];
         if (player["points"]) {
           player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
             // + 1
+
             0,
             ...playerStatsEmptyValues
           );
-          const stats = player["points"][`r${this.currentRound}`].roundStats;
+          // console.log(player);
+          const stats = player["points"][`r${this.currentRound}`].roundStats; // currentRound
           const currentTotalPts = this.currentPlayerTotalPts(
             player.position,
             stats
           );
-          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts;
+          player["points"][`r${this.currentRound}`].roundPts = currentTotalPts; // currentRound
         } else {
           player["points"] = {};
           player["points"][`r${this.currentRound + 1}`] = addPlayerPts(
@@ -239,12 +242,15 @@ export default {
           }
         }
       });
-
+      // this.fetchNewRndDataToPlayers(copy)
       return copy;
     },
-    // createUpdatedH2HObject(){                //  TO BE DECIDED WHETHER TO USE !
-    //   console.log(this.h2hrounds);
-    // },
+    createUpdatedH2HObject() {
+      //  TO BE DECIDED WHETHER TO USE !
+      // Object.values(this.players).forEach((player) => {
+      //   console.log(player.points.r15);
+      // });
+    },
     createNextRndTeam(user) {
       if (this.currentRound === 0) {
         return {
@@ -263,7 +269,7 @@ export default {
           mr2: "",
           st1: "",
           st2: "",
-          st3: ""
+          st3: "",
         };
       }
       const current = user["rounds"][`r${this.currentRound}`].team;
@@ -274,10 +280,10 @@ export default {
     },
     createNextRndTransfers(user) {
       if (this.currentRound === 0) {
-        return 1
+        return 1;
       }
-      if (user["rounds"][`r${this.currentRound}`].wildCard){
-        return 1
+      if (user["rounds"][`r${this.currentRound}`].wildCard) {
+        return 1;
       }
       const avail = user["rounds"][`r${this.currentRound}`].transfersAvail;
       const made = user["rounds"][`r${this.currentRound}`].transfersMade;
@@ -287,7 +293,7 @@ export default {
     },
     createNextRndCaptains(user, rank) {
       if (this.currentRound === 0) {
-        return ""
+        return "";
       }
       const current = user["rounds"][`r${this.currentRound}`][rank];
       const next = user["rounds"][`r${this.currentRound}`].nextRndInfo[rank];
@@ -297,7 +303,7 @@ export default {
     },
     createNextRndSuperCpt(user) {
       if (this.currentRound === 0) {
-        return false
+        return false;
       }
       return user["rounds"][`r${this.currentRound}`].nextRndInfo.superCpt;
       // console.log(user);
@@ -327,7 +333,7 @@ export default {
         stats.threeAllowed,
         stats.yellowCards
       );
-    }
+    },
   },
   computed: {},
   watch: {
@@ -357,7 +363,7 @@ export default {
           this.success = false;
         }, 3000);
       }
-    }
+    },
     // error(nv) {
     //   if (nv === true) {
     //     setTimeout(() => {
@@ -368,11 +374,11 @@ export default {
   },
   async created() {
     this.$vs.loading();
-    getCurrentRound().then(data => (this.currentRound = data));
-    getAllPlayersDataNormal().then(data => (this.players = data));
-    getAllUsers().then(data => (this.users = data));
+    getCurrentRound().then((data) => (this.currentRound = data));
+    getAllPlayersDataNormal().then((data) => (this.players = data));
+    getAllUsers().then((data) => (this.users = data));
     // getAllH2HRounds().then(data => (this.h2hrounds = data));
-  }
+  },
 };
 </script>
 

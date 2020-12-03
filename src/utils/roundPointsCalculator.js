@@ -8,8 +8,9 @@ const roundPointsCalculator = (round, rndNum, players, isCup = false) => {
     // } else {
     //     hasCptPlayed = false
     // }
-    
+
     // console.log(cpt, players[cpt]);
+    // console.log(cpt, rndNum, players[cpt].points[`r${rndNum}`])
     const hasCptPlayed = cpt ?
         !!players[cpt].points[`r${rndNum}`].roundStats.starter || !!players[cpt].points[`r${rndNum}`].roundStats.sub
         :
@@ -31,6 +32,7 @@ const roundPointsCalculator = (round, rndNum, players, isCup = false) => {
     })
 
     return total
+
 }
 
 export default roundPointsCalculator

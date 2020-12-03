@@ -122,6 +122,7 @@
 import "material-icons/iconfont/material-icons.css";
 import { mapGetters } from "vuex";
 import * as firebase from "firebase";
+import "firebase/auth";
 
 export default {
   name: "UserInfo",

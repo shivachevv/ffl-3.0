@@ -3,98 +3,164 @@
     <div class="admin-menu">
       <h1 class="admin-menu-header">ADMIN MENU</h1>
       <div class="admin-menu-items">
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('rounds')">Rounds</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('rounds')"
+          >Rounds</a
+        >
         <div class="admin-menu-item" v-if="showRounds">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'Rounds'}"
-          >Rounds</button>
+            :class="{ selected: chosenComponent === 'Rounds' }"
+          >
+            Rounds
+          </button>
         </div>
 
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('players')">Players</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('players')"
+          >Players</a
+        >
         <div class="admin-menu-item" v-if="showPlayers">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'PlayersEdit'}"
-          >PlayersEdit</button>
+            :class="{ selected: chosenComponent === 'PlayersEdit' }"
+          >
+            PlayersEdit
+          </button>
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'PlayersPoints'}"
-          >PlayersPoints</button>
+            :class="{ selected: chosenComponent === 'PlayersPoints' }"
+          >
+            PlayersPoints
+          </button>
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'SyncPoints'}"
-          >SyncPoints</button>
+            :class="{ selected: chosenComponent === 'SyncPoints' }"
+          >
+            SyncPoints
+          </button>
         </div>
 
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('users')">Users</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('users')"
+          >Users</a
+        >
         <div class="admin-menu-item" v-if="showUsers">
           <button
             @click.prevent="switchComponent"
             class="menu-item-link"
-            :class="{selected: chosenComponent === 'UsersPersonal'}"
-          >UsersPersonal</button>
+            :class="{ selected: chosenComponent === 'UsersPersonal' }"
+          >
+            UsersPersonal
+          </button>
           <button
             @click.prevent="switchComponent"
             class="menu-item-link"
-            :class="{selected: chosenComponent === 'UsersTeams'}"
-          >UsersTeams</button>
+            :class="{ selected: chosenComponent === 'UsersTeams' }"
+          >
+            UsersTeams
+          </button>
         </div>
 
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('transfers')">Transfers</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('transfers')"
+          >Transfers</a
+        >
         <div class="admin-menu-item" v-if="showTransfers">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'Transfers'}"
-          >Transfers</button>
+            :class="{ selected: chosenComponent === 'Transfers' }"
+          >
+            Transfers
+          </button>
         </div>
 
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('leagues')">Leagues</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('leagues')"
+          >Leagues</a
+        >
         <div class="admin-menu-item" v-if="showLeagues">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'Leagues'}"
-          >Leagues</button>
+            :class="{ selected: chosenComponent === 'Leagues' }"
+          >
+            Leagues
+          </button>
         </div>
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('h2h')">H2HLeague</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('h2h')"
+          >H2HLeague</a
+        >
         <div class="admin-menu-item" v-if="showH2H">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'H2HLeague'}"
-          >H2HLeague</button>
+            :class="{ selected: chosenComponent === 'H2HLeague' }"
+          >
+            H2HLeague
+          </button>
         </div>
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('cup')">Cup</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('cup')"
+          >Cup</a
+        >
         <div class="admin-menu-item" v-if="showCup">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'CupGroupsAndRounds'}"
-          >CupGroupsAndRounds</button>
+            :class="{ selected: chosenComponent === 'CupGroupsAndRounds' }"
+          >
+            CupGroupsAndRounds
+          </button>
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'CupSquadSelect'}"
-          >CupSquadSelect</button>
+            :class="{ selected: chosenComponent === 'CupSquadSelect' }"
+          >
+            CupSquadSelect
+          </button>
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'CupMatchPoints'}"
-          >CupMatchPoints</button>
+            :class="{ selected: chosenComponent === 'CupMatchPoints' }"
+          >
+            CupMatchPoints
+          </button>
         </div>
-        <a href class="menu-item-section" @click.prevent="showSectionHandler('matching')">Matching</a>
+        <a
+          href
+          class="menu-item-section"
+          @click.prevent="showSectionHandler('matching')"
+          >Matching</a
+        >
         <div class="admin-menu-item" v-if="showMatching">
           <button
             class="menu-item-link"
             @click.prevent="switchComponent"
-            :class="{selected: chosenComponent === 'Matching'}"
-          >Matching</button>
+            :class="{ selected: chosenComponent === 'Matching' }"
+          >
+            Matching
+          </button>
         </div>
       </div>
     </div>
@@ -107,19 +173,19 @@
 </template>
 
 <script>
-import PlayersEdit from "./Players/PlayersEdit";
-import PlayersPoints from "./Players/PlayersPoints";
-import SyncPoints from "./Players/SyncPoints";
-import Rounds from "./Rounds/Rounds";
-import UsersPersonal from "./Users/UsersPersonal";
-import UsersTeams from "./Users/UsersTeams";
-import Transfers from "./Transfers/Transfers";
-import Leagues from "./Leagues/Leagues";
-import H2HLeague from "./H2HLeague/H2HLeague";
-import CupGroupsAndRounds from "./Cup/CupGroupsAndRounds";
-import CupSquadSelect from "./Cup/CupSquadSelect";
-import CupMatchPoints from "./Cup/CupMatchPoints";
-import Matching from "./Matching/Matching";
+const PlayersEdit = () => import("./Players/PlayersEdit");
+const PlayersPoints = () => import("./Players/PlayersPoints");
+const SyncPoints = () => import("./Players/SyncPoints");
+const Rounds = () => import("./Rounds/Rounds");
+const UsersPersonal = () => import("./Users/UsersPersonal");
+const UsersTeams = () => import("./Users/UsersTeams");
+const Transfers = () => import("./Transfers/Transfers");
+const Leagues = () => import("./Leagues/Leagues");
+const H2HLeague = () => import("./H2HLeague/H2HLeague");
+const CupGroupsAndRounds = () => import("./Cup/CupGroupsAndRounds");
+const CupSquadSelect = () => import("./Cup/CupSquadSelect");
+const CupMatchPoints = () => import("./Cup/CupMatchPoints");
+const Matching = () => import("./Matching/Matching");
 
 export default {
   name: "AdminPanel",
@@ -136,7 +202,7 @@ export default {
     CupGroupsAndRounds,
     CupSquadSelect,
     CupMatchPoints,
-    Matching
+    Matching,
   },
   data() {
     return {
@@ -148,7 +214,7 @@ export default {
       showLeagues: false,
       showH2H: false,
       showCup: false,
-      showMatching: false
+      showMatching: false,
     };
   },
   methods: {
@@ -173,11 +239,15 @@ export default {
       } else if (s === "matching") {
         this.showMatching = !this.showMatching;
       }
-    }
+    },
   },
   computed: {},
   watch: {},
-  created() {}
+  created() {},
+  beforeDestroy() {
+    // console.log('destroy', this);
+    // this.$destroy();
+  },
 };
 </script>
 

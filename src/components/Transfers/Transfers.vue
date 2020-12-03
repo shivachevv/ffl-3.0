@@ -285,7 +285,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import LeagueBtn from "../Home/LeagueSelect/LeagueBtn";
+// import LeagueBtn from "../Home/LeagueSelect/LeagueBtn";
+const LeagueBtn = () => import("../Home/LeagueSelect/LeagueBtn");
 import "material-icons/iconfont/material-icons.css";
 
 // import standingsH2HHelper from "../../utils/standingsH2HHelper";

@@ -134,9 +134,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import cupStandingsHelper from "../../utils/cupStandingsHelper";
-import CupMatchPopup from "./CupMatchPopup";
-import Standings from "../H2H/Standings";
-import Eliminations from "./Eliminations";
+// import CupMatchPopup from "./CupMatchPopup";
+// import Standings from "../H2H/Standings";
+// import Eliminations from "./Eliminations";
+const CupMatchPopup = () => import("./CupMatchPopup");
+const Standings = () => import("../H2H/Standings");
+const Eliminations = () => import("./Eliminations");
 
 export default {
   name: "Cup",
