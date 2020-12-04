@@ -121,18 +121,18 @@ export default {
     //     console.log(this.wildcard);
     //   }
     // },
-    fetchCurrentRound(nv) {
-      if (nv && this.players) {
+    currentRound(nv) {
+      if (nv && this.players && this.users) {
         this.$vs.loading.close();
       }
     },
     players(nv) {
-      if (nv) {
+      if (nv && this.users && this.currentRound) {
         this.$vs.loading.close();
       }
     },
     users(nv) {
-      if (nv && this.players) {
+      if (nv && this.players && this.currentRound) {
         this.$vs.loading.close();
 
         // for (const id in nv) {
@@ -152,25 +152,18 @@ export default {
         //   }
         // }
       }
-    },
+    }
   },
   created() {
-    this.$vs.loading();
-    this.fetchUsers();
+    // this.$vs.loading();
+    // this.fetchUsers();
     this.fetchCurrentRound();
-    // this.fetchPlayers();
-  },
-  beforeDestroy() {
-    // console.log('beforeD');
-    // this.closePopup()
-    // this.popupShow = false
   },
   mounted() {
-    // window.onpopstate = function() {
-    //   console.log(this.popupShow);
-    //   this.popupShow = false
-    //   console.log(this.popupShow);
-    // };
+    // if ((this.players, this.users, this.currentRound)) {
+    //   this.$vs.loading.close();
+    //   console.log('here');
+    // }
   },
 };
 </script>

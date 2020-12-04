@@ -92,7 +92,7 @@ export default {
       "fetchLeagues",
       "fetchPlayers",
       "fetchCurrentRound",
-      "fetchUsers",
+      // "fetchUsers",
       "fetchStandings",
       "fetchLoggedUser",
     ]),

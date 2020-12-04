@@ -48,7 +48,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchLoggedUser", "fetchMenuLinks"]),
+    ...mapActions(["fetchLoggedUser", "fetchMenuLinks", "users"]),
 
     loginHandler() {
       this.$v.$touch();
@@ -59,7 +59,7 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(() => {
-          this.fetchLoggedUser();
+          this.fetchLoggedUser(this.users);
           this.$forceUpdate();
         })
         .catch(err => {

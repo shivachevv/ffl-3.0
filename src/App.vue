@@ -45,7 +45,7 @@ export default {
         [enterDate]: {
           user: user.uid,
           loadTime,
-        }
+        },
       };
 
       return fetch(siteEnterUrl, {
@@ -63,7 +63,7 @@ export default {
         });
     },
   },
-  computed: { ...mapGetters(["players", "loggedUser"]) },
+  computed: { ...mapGetters(["players", "loggedUser", "users"]) },
   watch: {
     // leagues(nv) {
     //   if (
@@ -80,7 +80,7 @@ export default {
     async players(nv) {
       if (nv) {
         // this.$vs.loading.close();
-        console.log('end',new Date());
+        console.log("end", new Date());
         this.loadEnd = new Date().getTime();
         const loadTime = (this.loadEnd - this.loadBegin) / 1000;
         this.uploadSiteEnter(this.loggedUser, loadTime);
@@ -145,17 +145,19 @@ export default {
     //   }
     // },
   },
-  created() {
-    console.log('begin',new Date());
+  async created() {
+    console.log("begin", new Date());
     this.loadBegin = new Date().getTime();
     // console.log("App");
     // this.$vs.loading();
-    this.fetchLoggedUser();
     this.fetchStandings();
     this.fetchLeagues();
     this.fetchPlayers();
     this.fetchCurrentRound();
-    this.fetchUsers();
+    await this.fetchUsers();
+    let users = this.users;
+    this.fetchLoggedUser(users);
+    users = null;
   },
 };
 </script>

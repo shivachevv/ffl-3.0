@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loggedUser", "currentRound", "players", "transfers"]),
+    ...mapGetters(["loggedUser", "currentRound", "players", "transfers", "users"]),
     // wildcard: {
     //   get() {
     //     if (this.wcTemp === null) {
@@ -268,7 +268,7 @@ export default {
         this.acceptAlert();
         this.deselectTransfers("in");
         this.deselectTransfers("out");
-        this.fetchLoggedUser();
+        this.fetchLoggedUser(this.users);
       } catch (error) {
         console.log("ERROR", error);
       }

@@ -25,11 +25,11 @@ const actions = {
     fetchLoggedUser({
         dispatch,
         commit
-    }) {
+    }, users) {
         firebase.auth().onAuthStateChanged(async user => {
             if (user) {
-                const users = await getAllUsers()
-                const userObject = users[user.uid]
+                const usersToUse = users ? users : await getAllUsers()
+                const userObject = usersToUse[user.uid]
                 commit('setLoggedUser', userObject)
                 dispatch('fetchMenuLinks')
             }
