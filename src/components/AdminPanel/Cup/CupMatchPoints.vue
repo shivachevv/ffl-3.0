@@ -4,7 +4,12 @@
 
     <!-- CREATE NEW CUP GROUP BUTTON and POPUP -->
     <vs-popup
-      v-if="selectedStatsPlayer && selectedGroup && selectedRoundNum && selectedMatchNum"
+      v-if="
+        selectedStatsPlayer &&
+        selectedGroup &&
+        selectedRoundNum &&
+        selectedMatchNum
+      "
       class="holamundo"
       :title="`Add stats for ${players[selectedStatsPlayer[1].id].name}`"
       :active.sync="homeStatsPopup"
@@ -20,7 +25,12 @@
       />
     </vs-popup>
     <vs-popup
-      v-if="selectedStatsPlayer && selectedGroup && selectedRoundNum && selectedMatchNum"
+      v-if="
+        selectedStatsPlayer &&
+        selectedGroup &&
+        selectedRoundNum &&
+        selectedMatchNum
+      "
       class="holamundo"
       :title="`Add stats for ${players[selectedStatsPlayer[1].id].name}`"
       :active.sync="awayStatsPopup"
@@ -54,7 +64,7 @@
         :key="group"
         @click.prevent="selectGroupHandler(group)"
         :class="{
-          selected: selectedGroup ? group === selectedGroup.name : false
+          selected: selectedGroup ? group === selectedGroup.name : false,
         }"
         >{{ group }}</a
       >
@@ -124,7 +134,7 @@
               selected: selectedMatch
                 ? selectedMatch.team1.id === match.team1.id &&
                   selectedMatch.team2.id === match.team2.id
-                : false
+                : false,
             }"
             >{{ users[match.team1.id].userTeam }} -
             {{ users[match.team2.id].userTeam }}</a
@@ -223,7 +233,7 @@ import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
 export default {
   name: "CupMatchPoints",
   components: {
-    AddPlayerStatsForm
+    AddPlayerStatsForm,
   },
   data() {
     return {
@@ -245,16 +255,16 @@ export default {
       cupSquadAway: {},
       cupPointsSquadHome: {},
       cupPointsSquadAway: {},
-      selectedStatsPlayer: undefined
+      selectedStatsPlayer: undefined,
     };
   },
   methods: {
-    test(){
-      let result = {}
+    test() {
+      let result = {};
       for (const id in this.players) {
-          const player = this.players[id];
-          result[id] = player
-          result[id].points = {}
+        const player = this.players[id];
+        result[id] = player;
+        result[id].points = {};
       }
       console.log(JSON.stringify(result));
     },
@@ -279,7 +289,7 @@ export default {
         text: this.showSuccessMsgPts(merged, type),
         accept: () => {
           this.fetchUpdatedPts(merged, type);
-        }
+        },
       });
     },
     mergePtsWithTeam(points, team) {
@@ -296,7 +306,13 @@ export default {
       return merged;
     },
     selectMatchHandler(match, i) {
-      this.deselectCupSquads()
+      this.deselectCupSquads();
+
+      // IF THE TEAMS DO NOT HAVE SELECTED SQUADS THE POINTS DIV WILL NOT RENDER
+      if (!match.team1.squad || !match.team2.squad) {
+        return this.deselectMatch();
+      }
+
       this.selectedMatch = match;
       this.selectedMatchNum = i + 1;
       if (match.team1.squad) {
@@ -317,19 +333,19 @@ export default {
           method: "PATCH",
           mode: "cors",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
         }
       )
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.success = true;
           this.$vs.loading();
           this.cupGroups = await getAllCupGroups();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
@@ -343,7 +359,7 @@ export default {
       return `You are about to edit the squad for ${teamName} team! 
       Players:
       ${Object.entries(team)
-        .map(player => {
+        .map((player) => {
           const pos = player[0];
           const name = this.players[player[1].id].name;
           const pts = player[1].pts;
@@ -367,7 +383,7 @@ export default {
       this.selectedRoundNum = r;
     },
     roundMatchesArray(rnd) {
-      const result = Object.values(rnd).filter(x => {
+      const result = Object.values(rnd).filter((x) => {
         return typeof x !== "string";
       });
       return result;
@@ -378,7 +394,10 @@ export default {
       this.cupPointsSquadHome = {};
       this.cupPointsSquadAway = {};
       return;
-    }
+    },
+    deselectMatch() {
+      return (this.selectedMatch = undefined);
+    },
     // createEditedUsers(leagueId, leagueTeams) {
     //   let copy = JSON.parse(JSON.stringify(this.users));
 
@@ -763,14 +782,14 @@ export default {
           this.success = false;
         }, 2000);
       }
-    }
+    },
   },
   async created() {
     this.$vs.loading();
     this.cupGroups = await getAllCupGroups();
     this.users = await getAllUsers();
     this.players = await getAllPlayersDataNormal();
-  }
+  },
 };
 </script>
 
