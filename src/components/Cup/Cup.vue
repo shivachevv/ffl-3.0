@@ -402,6 +402,9 @@ con-vs-popup .vs-popup {
   width: 80%;
   background-color: #cccccc;
   margin: 20px 0 0 0;
+  @media #{$mobile} {
+    width: 100%;
+  }
 }
 
 // .gameweeks {
