@@ -10,38 +10,39 @@ const getAllPlayersDataNormal = async () => {
     // await setLastUpdateDB(date)
     // const cache = await caches.open("ffl-cache");
     // cache.add("https://ffl-3-new.firebaseio.com/lastUpdate.json");
-
-
     // const lastUpdate = undefined
-    const lastUpdate = await getLastUpdate()
-    const cachedUpdate = await getCachedPlayers("update")
 
-    if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
-        console.log(1);
-        const players = await getCachedPlayers('players')
 
-        if (!players) {
-            console.log(2);
-            const response = await fetch(`${DATA_URL}players.json`)
-            const players = await response.json()
-            await setLastUpdateCache()
-            await setPlayersCache('players')
-            return players
-        }
 
-        return players
-    } else {
+    // const lastUpdate = await getLastUpdate()
+    // const cachedUpdate = await getCachedPlayers("update")
 
-        console.log(2);
+    // if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
+    //     console.log(1);
+    //     const players = await getCachedPlayers('players')
+
+    //     if (!players) {
+    //         console.log(2);
+    //         const response = await fetch(`${DATA_URL}players.json`)
+    //         const players = await response.json()
+    //         await setLastUpdateCache()
+    //         await setPlayersCache('players')
+    //         return players
+    //     }
+
+    //     return players
+    // } else {
+
+    //     console.log(2);
 
         const response = await fetch(`${DATA_URL}players.json`)
         const players = await response.json()
 
-        await setLastUpdateCache()
-        await setPlayersCache('players')
+        // await setLastUpdateCache()
+        // await setPlayersCache('players')
 
         return players
-    }
+    // }
 }
 
 const getAllPlayersDataCathegorized = async () => {
