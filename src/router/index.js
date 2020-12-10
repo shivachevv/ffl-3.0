@@ -14,6 +14,7 @@ const GetAllPlayers = () => import("../components/GetAllPlayers");
 const tactics = () => import("../components/tactics");
 const AllPlayersTable = () => import("../components/AllPlayersTable");
 const AdminPanel = () => import("../components/AdminPanel/AdminPanel");
+const Stats = () => import("../components/Stats/Stats");
 const NotFound = () => import("../components/common/NotFound");
 // import Login from "../components/Login/Login";
 // import Register from "../components/Register/Register";
@@ -179,6 +180,17 @@ const routes = [{
   props: true,
   component: RulesAndPrizes,
   meta: { title: 'FFL: Rules and prizes' },
+  beforeEnter(to, from, next) {
+    document.title = to.meta.title
+    next()
+  }
+},
+{
+  path: '/stats',
+  name: 'stats',
+  props: true,
+  component: Stats,
+  meta: { title: 'FFL: Stats' },
   beforeEnter(to, from, next) {
     document.title = to.meta.title
     next()

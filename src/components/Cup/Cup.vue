@@ -25,7 +25,7 @@
           href="#"
           class="sha cup-stages-links up"
           :class="{ selected: group.name === selectedGroup.name }"
-          v-for="group in Object.values(cup)"
+          v-for="group in cupGroups"
           @click.prevent="groupSelectionHandler(group)"
           :key="group.name"
           >{{ group.name }}</a
@@ -162,6 +162,14 @@ export default {
     isThereBye() {
       return Object.keys(this.selectedGroup.teams).length % 2 === 1;
     },
+    cupGroups(){
+      return Object.values(this.cup)
+      .filter(x=>{
+        if (x.name === "A" || x.name === "B" || x.name === "C" || x.name === "D") {
+          return x
+        }
+      })
+    }
     // playingTeams(){
     //   if (this.isThereBye) {
     //     return this.

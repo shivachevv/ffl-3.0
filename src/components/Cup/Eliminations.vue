@@ -18,34 +18,52 @@
       <div class="elimination-matches-wrapper">
         <!-- 1/8 FINALS -->
         <div
-          v-for="i in 8"
+          v-for="(match, i) in eightfinals"
           :key="`e${i}`"
-          :class="`sha up eightfinal eight${i}`"
+          :class="`sha up eightfinal eight${i + 1}`"
         >
-          <div class="label ef-label">EF{{ i }}</div>
+          <div class="label ef-label">EF{{ i + 1 }}</div>
           <div class="row1">
-            <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">{{ eightfinals[`ef${i}`].m1 }}</span>
-            <span class="elim-total"></span>
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team1.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team1.id].userTeam }}</span>
+            <!-- <span class="elim-total"></span> -->
           </div>
           <div class="row2">
             <span class="elimination-score match">0 - 0</span>
             <span class="elimination-score match">0 - 0</span>
           </div>
           <div class="row3">
-            <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">{{ eightfinals[`ef${i}`].m2 }}</span>
-            <span class="elim-total"></span>
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team2.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team2.id].userTeam }}</span>
+            <!-- <span class="elim-total"></span> -->
           </div>
         </div>
 
         <!-- 1/4 FINALS -->
-        <div v-for="i in 4" :key="`q${i}`" :class="`sha up quarterfinal quarter${i}`">
+        <div
+          v-for="i in 4"
+          :key="`q${i}`"
+          :class="`sha up quarterfinal quarter${i}`"
+        >
           <div class="label qf-label">QF{{ i }}</div>
           <div class="row1">
             <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">{{quarterfinals[`qf${i}`].m1}}</span>
-            <span class="elim-total"></span>
+            <span class="team1-name">{{ quarterfinals[`qf${i}`].m1 }}</span>
+            <!-- <span class="elim-total"></span> -->
           </div>
           <div class="row2">
             <span class="elimination-score match">0 - 0</span>
@@ -53,8 +71,8 @@
           </div>
           <div class="row3">
             <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">{{quarterfinals[`qf${i}`].m2}}</span>
-            <span class="elim-total"></span>
+            <span class="team1-name">{{ quarterfinals[`qf${i}`].m2 }}</span>
+            <!-- <span class="elim-total"></span> -->
           </div>
         </div>
 
@@ -63,8 +81,8 @@
           <div class="label sf-label">SF{{ i }}</div>
           <div class="row1">
             <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">{{semifinals[`sf${i}`].m1}}</span>
-            <span class="elim-total"></span>
+            <span class="team1-name">{{ semifinals[`sf${i}`].m1 }}</span>
+            <!-- <span class="elim-total"></span> -->
           </div>
           <div class="row2">
             <span class="elimination-score match">0 - 0</span>
@@ -72,8 +90,8 @@
           </div>
           <div class="row3">
             <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">{{semifinals[`sf${i}`].m2}}</span>
-            <span class="elim-total"></span>
+            <span class="team1-name">{{ semifinals[`sf${i}`].m2 }}</span>
+            <!-- <span class="elim-total"></span> -->
           </div>
         </div>
 
@@ -120,7 +138,7 @@
 </template>
 
 <script>
-// import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 // import cupStandingsHelper from "../../utils/cupStandingsHelper";
 // import CupMatchPopup from "./CupMatchPopup";
 // import Standings from "../H2H/Standings";
@@ -131,40 +149,40 @@ export default {
   props: {},
   data() {
     return {
-      eightfinals: {
-        ef1: {
-          m1: "A1",
-          m2: "C4",
-        },
-        ef2: {
-          m1: "A2",
-          m2: "C3",
-        },
-        ef3: {
-          m1: "A3",
-          m2: "C2",
-        },
-        ef4: {
-          m1: "A4",
-          m2: "C1",
-        },
-        ef5: {
-          m1: "B1",
-          m2: "D4",
-        },
-        ef6: {
-          m1: "B2",
-          m2: "D3",
-        },
-        ef7: {
-          m1: "B3",
-          m2: "D2",
-        },
-        ef8: {
-          m1: "B4",
-          m2: "D1",
-        },
-      },
+      // eightfinals: {
+      //   ef1: {
+      //     m1: "A1",
+      //     m2: "C4",
+      //   },
+      //   ef2: {
+      //     m1: "A2",
+      //     m2: "C3",
+      //   },
+      //   ef3: {
+      //     m1: "A3",
+      //     m2: "C2",
+      //   },
+      //   ef4: {
+      //     m1: "A4",
+      //     m2: "C1",
+      //   },
+      //   ef5: {
+      //     m1: "B1",
+      //     m2: "D4",
+      //   },
+      //   ef6: {
+      //     m1: "B2",
+      //     m2: "D3",
+      //   },
+      //   ef7: {
+      //     m1: "B3",
+      //     m2: "D2",
+      //   },
+      //   ef8: {
+      //     m1: "B4",
+      //     m2: "D1",
+      //   },
+      // },
       quarterfinals: {
         qf1: {
           m1: "EF1",
@@ -181,7 +199,7 @@ export default {
         qf4: {
           m1: "EF4",
           m2: "EF8",
-        }
+        },
       },
       semifinals: {
         sf1: {
@@ -191,7 +209,7 @@ export default {
         sf2: {
           m1: "QF3",
           m2: "QF4",
-        }
+        },
       },
       //   selectedGroup: undefined,
       //   cupStandings: undefined,
@@ -200,7 +218,28 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters(["cup", "users", "players"]),
+    ...mapGetters(["cup", "users"]),
+    eightfinals() {
+      if (this.cup) {
+        return Object.values(this.cup.EF.rounds.r1).filter((x) => {
+          if (typeof x !== "string") {
+            return x;
+          }
+        });
+        // const matches = Object.values(this.cup)
+        // .filter((x) => {
+        //   if (x.name === "EF") return x;
+        // })[0].rounds.r1
+        // // .filter(x=>{
+        // //   if (typeof x !== "string") {
+        // //     return x
+        // //   }
+        // // });
+        // return Object.values(matches)
+      } else {
+        return undefined;
+      }
+    },
     // isThereBye() {
     //   return Object.keys(this.selectedGroup.teams).length % 2 === 1;
     // },
@@ -426,7 +465,9 @@ export default {
   grid-column: 5 / span 4;
 }
 
-.eightfinal, .quarterfinal, .semifinal {
+.eightfinal,
+.quarterfinal,
+.semifinal {
   position: relative;
   overflow: hidden;
   .label {
@@ -443,7 +484,7 @@ export default {
       background-color: #893e40;
     }
     &.qf-label {
-      background-color:#3c474d;
+      background-color: #3c474d;
     }
     &.sf-label {
       background-color: #000000;
@@ -454,8 +495,6 @@ export default {
     font-weight: bold;
   }
 }
-
-
 
 .match {
   width: 100%;
@@ -511,13 +550,22 @@ export default {
   position: relative;
   font-size: 1rem;
   text-align: center;
+
+  span {
+    width: 50%;
+    @media #{$mobile} {
+    display: none;
+  }
+  }
 }
 
 .row1 img,
 .row3 img {
   width: 25px;
-  position: absolute;
-  left: 10px;
+  display: none;
+  @media #{$mobile} {
+    display: inline-block;
+  }
 }
 
 .row2 {

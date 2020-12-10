@@ -3,7 +3,11 @@
     <h1 class="section-header">Cup Section</h1>
 
     <!-- CREATE NEW CUP GROUP BUTTON and POPUP -->
-    <vs-popup class="holamundo" title="Create new group!" :active.sync="showPopup1">
+    <vs-popup
+      class="holamundo"
+      title="Create new group!"
+      :active.sync="showPopup1"
+    >
       <AddCupGroupForm :users="users" @updatedCupGroups="cupGroups = $event" />
     </vs-popup>
     <vs-button
@@ -13,7 +17,8 @@
       type="relief"
       size="large"
       @click.prevent="openAddCupGroupPopup"
-    >Create New Cup Group</vs-button>
+      >Create New Cup Group</vs-button
+    >
 
     <vs-button
       color="#59A95D"
@@ -21,7 +26,8 @@
       type="relief"
       size="normal"
       @click.prevent="createH2HRound"
-    >TEST</vs-button>
+      >TEST</vs-button
+    >
 
     <!-- CUP GROUPS -->
     <div class="rounds" v-if="cupGroups">
@@ -31,8 +37,11 @@
         v-for="group in Object.keys(cupGroups)"
         :key="group"
         @click.prevent="selectGroupHandler(group)"
-        :class="{selected: selectedGroup ? group === selectedGroup.name : false}"
-      >{{group}}</a>
+        :class="{
+          selected: selectedGroup ? group === selectedGroup.name : false,
+        }"
+        >{{ group }}</a
+      >
     </div>
     <!-- NOTIFICATIONS -->
     <vs-alert
@@ -40,8 +49,11 @@
       title="Update finished!"
       active="true"
       color="success"
-    >Cup Round successfully updated!</vs-alert>
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+      >Cup Round successfully updated!</vs-alert
+    >
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
 
     <!-- EDIT FORM -->
     <form
@@ -49,8 +61,17 @@
       class="cup-group-details-edit"
       v-if="selectedGroup"
     >
-      <vs-input label-placeholder="Group name" v-model="selectedGroup.name" color="dark" />
-      <vs-select label="Add Team to group" v-model="selectedUser" icon placeholder="Select team">
+      <vs-input
+        label-placeholder="Group name"
+        v-model="selectedGroup.name"
+        color="dark"
+      />
+      <vs-select
+        label="Add Team to group"
+        v-model="selectedUser"
+        icon
+        placeholder="Select team"
+      >
         <vs-select-item
           :key="u"
           :value="u"
@@ -64,28 +85,43 @@
           v-for="user in selectedGroup.teams"
           :key="user"
           @click.prevent="removeUserFromGroup(user)"
-        >{{users[user].userTeam}}</div>
+        >
+          {{ users[user].userTeam }}
+        </div>
       </div>
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Group</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large"
+        >Edit Cup Group</vs-button
+      >
       <vs-button
         color="danger"
         button="button"
         type="relief"
         size="large"
         @click.prevent="deleteHandler('group')"
-      >Delete Group</vs-button>
+        >Delete Group</vs-button
+      >
     </form>
 
     <!-- CUP GROUP ROUNDS -->
     <div v-if="selectedGroup" class="groups-rounds-container">
-      <vs-popup class="holamundo" title="Create new round!" :active.sync="showPopup2">
+      <vs-popup
+        class="holamundo"
+        title="Create new round!"
+        :active.sync="showPopup2"
+      >
         <AddCupRoundForm
-          :group="cupGroups[selectedGroup.name]"
+          v-if="popupGroup"
+          :group="popupGroup"
           :users="users"
           @updatedCupGroups="cupGroups = $event"
         />
       </vs-popup>
+        <!-- <AddCupRoundForm
+          :group="popupGroup"
+          :users="users"
+          @updatedCupGroups="cupGroups = $event"
+        /> -->
       <vs-button
         class="add-league"
         color="#59A95D"
@@ -93,7 +129,8 @@
         type="relief"
         size="large"
         @click.prevent="openAddGroupRoundPopup"
-      >Create New Cup Round</vs-button>
+        >Create New Cup Round</vs-button
+      >
 
       <!-- GROUP ROUNDS -->
       <div class="rounds" v-if="selectedGroup.rounds">
@@ -103,8 +140,9 @@
           v-for="rnd in Object.keys(selectedGroup.rounds)"
           :key="rnd"
           @click.prevent="selectRoundHandler(rnd)"
-          :class="{selected: rnd === selectedRoundNum}"
-        >{{rnd}}</a>
+          :class="{ selected: rnd === selectedRoundNum }"
+          >{{ rnd }}</a
+        >
       </div>
       <form
         @submit.prevent="editCupRoundFormHandler"
@@ -119,7 +157,7 @@
         />
         <!-- MATCHES -->
         <div
-          v-for="match in Object.keys(selectedRound).length -1"
+          v-for="match in Object.keys(selectedRound).length - 1"
           :key="match"
           class="match-container"
         >
@@ -154,14 +192,17 @@
           </vs-select>
         </div>
         <!-- MATCHES END -->
-        <vs-button color="#59A95D" button="submit" type="relief" size="large">Edit Cup Round</vs-button>
+        <vs-button color="#59A95D" button="submit" type="relief" size="large"
+          >Edit Cup Round</vs-button
+        >
         <vs-button
           color="danger"
           button="button"
           type="relief"
           size="large"
           @click.prevent="deleteHandler('round')"
-        >Delete Round</vs-button>
+          >Delete Round</vs-button
+        >
       </form>
     </div>
   </div>
@@ -186,7 +227,7 @@ export default {
   name: "CupGroupsAndRounds",
   components: {
     AddCupGroupForm,
-    AddCupRoundForm
+    AddCupRoundForm,
   },
   data() {
     return {
@@ -200,7 +241,7 @@ export default {
       errorMsg: "",
       showPopup1: false,
       showPopup2: false,
-      selectedRoundNum: undefined
+      selectedRoundNum: undefined,
     };
   },
   methods: {
@@ -218,7 +259,7 @@ export default {
           text: this.showSuccessMsg(this.selectedGroup),
           accept: () => {
             this.fetchUpdatedGroup(this.selectedGroup);
-          }
+          },
         });
       } else {
         this.error = true;
@@ -233,7 +274,7 @@ export default {
           text: this.showSuccessMsgRnd(this.selectedRound),
           accept: () => {
             this.fetchUpdatedRound(this.selectedRound, this.selectedRoundNum);
-          }
+          },
         });
       } else {
         this.error = true;
@@ -245,18 +286,18 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.success = true;
           this.$vs.loading();
           this.cupGroups = await getAllCupGroups();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
@@ -268,18 +309,18 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.success = true;
           this.$vs.loading();
           this.cupGroups = await getAllCupGroups();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
@@ -289,7 +330,7 @@ export default {
       return `You are about to edit group ${name}! 
       Users:
       ${Object.values(teams)
-        .map(team => {
+        .map((team) => {
           return `${this.users[team].userTeam}`;
         })
         .join(", ")}`;
@@ -318,7 +359,7 @@ export default {
     isEditedCupRoundOK() {
       const { selectedRound } = this;
       let flag = true;
-      Object.keys(selectedRound).forEach(matchId => {
+      Object.keys(selectedRound).forEach((matchId) => {
         if (matchId !== "roundHeld") {
           const match = selectedRound[matchId];
           if (match.team1.id === "" || match.team2.id === "") {
@@ -329,9 +370,11 @@ export default {
       return flag;
     },
     removeUserFromGroup(u) {
-      return (this.selectedGroup.teams = this.selectedGroup.teams.filter(x => {
-        return x !== u;
-      }));
+      return (this.selectedGroup.teams = this.selectedGroup.teams.filter(
+        (x) => {
+          return x !== u;
+        }
+      ));
     },
     selectGroupHandler(r) {
       this.selectedRound = undefined;
@@ -353,7 +396,7 @@ export default {
         text: text,
         accept: () => {
           this.fetchDeletedPart(type);
-        }
+        },
       });
     },
     fetchDeletedPart(type) {
@@ -366,11 +409,11 @@ export default {
         method: "DELETE",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.success = true;
           this.$vs.loading();
@@ -378,12 +421,12 @@ export default {
           this.selectedRoundNum = undefined;
           this.cupGroups = await getAllCupGroups();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
         });
-    }
+    },
 
     // createEditedUsers(leagueId, leagueTeams) {
     //   let copy = JSON.parse(JSON.stringify(this.users));
@@ -740,7 +783,15 @@ export default {
     //   return (this.roundTotal = total);
     // }
   },
-  computed: {},
+  computed: {
+    popupGroup() {
+      if (this.selectedGroup) {
+        return this.cupGroups[this.selectedGroup.name];
+      } else {
+        return undefined;
+      }
+    },
+  },
   watch: {
     cupGroups(nv) {
       if (nv && this.users) {
@@ -764,13 +815,13 @@ export default {
           this.success = false;
         }, 2000);
       }
-    }
+    },
   },
   async created() {
     this.$vs.loading();
     this.cupGroups = await getAllCupGroups();
     this.users = await getAllUsers();
-  }
+  },
 };
 </script>
 

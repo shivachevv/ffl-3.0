@@ -11,6 +11,7 @@ import transfers from './modules/transfers'
 import cup from './modules/cup'
 import h2h from './modules/h2h'
 import loggedUser from './modules/loggedUser'
+import stats from './modules/stats'
 
 Vue.use(Vuex);
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
     transfers,
     loggedUser,
     cup,
-    h2h
+    h2h,
+    stats
   }
 });

@@ -1,15 +1,18 @@
 <template>
-  <div class="add-form-container" v-if="group">
-    <vs-alert :active.sync="error" closable close-icon="close">{{errorMsg}}</vs-alert>
+  <div class="add-form-container">
+    <vs-alert :active.sync="error" closable close-icon="close">{{
+      errorMsg
+    }}</vs-alert>
     <vs-alert
       v-if="success"
       title="Upload finished!"
       active="true"
       color="success"
-    >Round succesfully added!</vs-alert>
+      >Round succesfully added!</vs-alert
+    >
 
     <form @submit.prevent="addRoundHandler">
-      <span>Group: {{group.name}}</span>
+      <span>Group: {{ group.name }}</span>
 
       <vs-input
         label="Which play-round will be held during??"
@@ -19,7 +22,11 @@
       />
 
       <!-- MATCHES -->
-      <div v-for="match in groupMatchCount" :key="match" class="match-container">
+      <div
+        v-for="match in groupMatchCount"
+        :key="match"
+        class="match-container"
+      >
         <!-- TEAM 1 -->
         <vs-select
           :label="`Match ${match}. Team 1`"
@@ -27,7 +34,12 @@
           placeholder="Select team"
           v-model="newRound[`match${match}`].team1.id"
         >
-          <vs-select-item :key="u" :value="u" :text="users[u].userTeam" v-for="u in group.teams" />
+          <vs-select-item
+            :key="u"
+            :value="u"
+            :text="users[u].userTeam"
+            v-for="u in group.teams"
+          />
         </vs-select>
 
         <!-- TEAM 2 -->
@@ -37,12 +49,19 @@
           placeholder="Select team"
           v-model="newRound[`match${match}`].team2.id"
         >
-          <vs-select-item :key="u" :value="u" :text="users[u].userTeam" v-for="u in group.teams" />
+          <vs-select-item
+            :key="u"
+            :value="u"
+            :text="users[u].userTeam"
+            v-for="u in group.teams"
+          />
         </vs-select>
       </div>
       <!-- MATCHES END -->
 
-      <vs-button color="#59A95D" button="submit" type="relief" size="large">Create Round</vs-button>
+      <vs-button color="#59A95D" button="submit" type="relief" size="large"
+        >Create Round</vs-button
+      >
     </form>
   </div>
 </template>
@@ -62,12 +81,12 @@ export default {
   props: {
     group: {
       required: true,
-      type: Object
+      type: Object,
     },
     users: {
       required: true,
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -81,7 +100,7 @@ export default {
       //   positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
       error: false,
       errorMsg: "",
-      success: false
+      success: false,
     };
   },
   methods: {
@@ -96,7 +115,7 @@ export default {
     isNewRoundOK() {
       const { newRound } = this;
       let flag = true;
-      Object.keys(newRound).forEach(matchId => {
+      Object.keys(newRound).forEach((matchId) => {
         if (matchId !== "roundHeld") {
           const match = newRound[matchId];
           if (match.team1.id === "" || match.team2.id === "") {
@@ -114,19 +133,19 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.success = true;
           this.$vs.loading.close();
           this.updatedGroups = await getAllCupGroups();
           this.$emit("updatedCupGroups", this.updatedGroups);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
@@ -224,68 +243,137 @@ export default {
     calculateMatchCount() {
       this.groupMatchCount = Math.floor(this.group.teams.length / 2);
       const value = this.groupMatchCount;
+      console.log(value);
       if (value === 1) {
         this.newRound = {
           match1: {
             team1: {
-              id: ""
+              id: "",
             },
             team2: {
-              id: ""
-            }
+              id: "",
+            },
           },
-          roundHeld: ""
+          roundHeld: "",
         };
       } else if (value === 2) {
         this.newRound = {
           match1: {
             team1: {
-              id: ""
+              id: "",
             },
             team2: {
-              id: ""
-            }
+              id: "",
+            },
           },
           match2: {
             team1: {
-              id: ""
+              id: "",
             },
             team2: {
-              id: ""
-            }
+              id: "",
+            },
           },
-          roundHeld: ""
+          roundHeld: "",
         };
       } else if (value === 3) {
         this.newRound = {
           match1: {
             team1: {
-              id: ""
+              id: "",
             },
             team2: {
-              id: ""
-            }
+              id: "",
+            },
           },
           match2: {
             team1: {
-              id: ""
+              id: "",
             },
             team2: {
-              id: ""
-            }
+              id: "",
+            },
           },
           match3: {
             team1: {
-              id: ""
+              id: "",
             },
             team2: {
-              id: ""
-            }
+              id: "",
+            },
           },
-          roundHeld: ""
+          roundHeld: "",
+        };
+      } else if (value === 8) {
+        this.newRound = {
+          match1: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match2: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match3: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match4: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match5: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match6: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match7: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          match8: {
+            team1: {
+              id: "",
+            },
+            team2: {
+              id: "",
+            },
+          },
+          roundHeld: "",
         };
       }
-    }
+    },
   },
   computed: {
     // groupMatchCount() {
@@ -309,11 +397,12 @@ export default {
           this.success = false;
         }, 2000);
       }
-    }
+    },
   },
   created() {
     this.calculateMatchCount();
-  }
+    console.log("here");
+  },
 };
 </script>
 
