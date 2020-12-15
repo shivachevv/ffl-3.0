@@ -39,7 +39,7 @@
         v-for="(pl, i) in Object.entries(rndShow.team)"
         :class="pl[0]"
         :player="players[pl[1]]"
-        :isTripple="rndShow.superCpt === pl[1]"
+        :isTripple="!!rndShow.superCpt && rndShow.cpt === pl[1]"
         :isCap="rndShow.cpt === pl[1]"
         :isVCap="rndShow.viceCpt === pl[1]"
         :isVCActive="isVCActive()"
@@ -68,25 +68,25 @@ export default {
   components: {
     Teammate,
     TeamHeader,
-    Keypress: () => import("vue-keypress")
+    Keypress: () => import("vue-keypress"),
   },
   props: {
     user: {
       type: Object,
-      required: true
+      required: true,
     },
     players: {
       type: Object,
-      required: true
+      required: true,
     },
     currentRound: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      tmpRndShow: Object.keys(this.user.rounds).length
+      tmpRndShow: Object.keys(this.user.rounds).length,
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
       return Number(this.tmpRndShow) === 1;
     },
     rndShow: {
-      get: function() {
+      get: function () {
         if (this.user) {
           return this.user.rounds[`r${this.tmpRndShow}`];
           // return this.user.rounds[`r${this.currentRound}`];
@@ -105,9 +105,9 @@ export default {
           return 1;
         }
       },
-      set: function(v) {
+      set: function (v) {
         return (this.tmpRndShow = v);
-      }
+      },
     },
     rndShowTotal() {
       const total = roundPointsCalculator(
@@ -117,7 +117,7 @@ export default {
         false
       );
       return total;
-    }
+    },
   },
   methods: {
     prevRnd() {
@@ -133,17 +133,17 @@ export default {
     isVCActive() {
       // const isLast = this.tmpRndShow === this.currentRound;
       // if (!isLast) {
-        if (!this.players[this.rndShow.cpt]) {
-          // console.log("1a");
-          return true;
-        }
-        const hasCptPlayed =
-          this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
-            .roundStats.starter ||
-          this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`]
-            .roundStats.sub;
-        // console.log("2a");
-        return !hasCptPlayed;
+      if (!this.players[this.rndShow.cpt]) {
+        // console.log("1a");
+        return true;
+      }
+      const hasCptPlayed =
+        this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`].roundStats
+          .starter ||
+        this.players[this.rndShow.cpt].points[`r${this.tmpRndShow}`].roundStats
+          .sub;
+      // console.log("2a");
+      return !hasCptPlayed;
       // } else {
       //   console.log("3a");
       //   return false;
@@ -151,7 +151,7 @@ export default {
     },
     resetRndShow() {
       this.rndShow = Object.keys(this.user.rounds).length;
-    }
+    },
   },
   created() {},
   watch: {
@@ -159,8 +159,8 @@ export default {
       if (nv) {
         this.resetRndShow();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -15,6 +15,7 @@ import Footer from "./components/common/Footer";
 import Logos from "./components/common/Logos/Logos";
 import { mapActions, mapGetters } from "vuex";
 import { DATA_URL } from "./common";
+// import axios from "axios";
 
 export default {
   name: "App",
@@ -62,6 +63,28 @@ export default {
           console.error("Error:", error);
         });
     },
+    // test() {
+    //   const etag = localStorage.getItem("lightPlayersETag");
+    //   let headers = {};
+    //   if (etag) {
+    //     headers["If-None-Match"] = etag;
+    //   }
+    //   return axios
+    //     .get(
+    //       "https://ffl-3-new.firebaseio.com/lightPlayers/001e0b21-21ef-42db-92de-bc62926be429.json",
+    //       { headers }
+    //     )
+    //     .then((res) => {
+    //       console.log("load resource from DB");
+    //       const etag = res.headers.etag;
+    //       localStorage.setItem("lightPlayersETag", etag);
+    //     })
+    //     .catch((err) => {
+    //       if (err && err.response.status === 304) {
+    //         console.log("load resource from CACHE");
+    //       }
+    //     });
+    // },
   },
   computed: { ...mapGetters(["players", "loggedUser", "users"]) },
   watch: {
@@ -158,6 +181,7 @@ export default {
     let users = this.users;
     this.fetchLoggedUser(users);
     users = null;
+    // this.test();
   },
 };
 </script>
