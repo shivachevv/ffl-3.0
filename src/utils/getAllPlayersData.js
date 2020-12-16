@@ -1,9 +1,11 @@
 import { DATA_URL } from '../common'
 import getCachedPlayers from './getCachedPlayers.js'
-import { setLastUpdateCache } from './setLastUpdate.js'
+// import { setLastUpdateCache } from './setLastUpdate.js'
 import setPlayersCache from './setPlayersCache.js'
 
-import getLastUpdate from './getLastUpdate.js'
+// import getLastUpdate from './getLastUpdate.js'
+import axios from 'axios'
+const lightPlayersUrl = `${DATA_URL}lightPlayers.json`
 
 const getAllPlayersDataNormal = async () => {
     // const date = new Date()
@@ -102,37 +104,82 @@ const cathegorizePlayers = (players) => {
 }
 
 const getAllLightPlayers = async () => {
+    const etag = localStorage.getItem('lightPlayersETag')
+    let headers = {}
+    headers['X-Firebase-ETag'] = true
+    if (etag) {
+        headers["If-None-Match"] = etag;
+    }
 
-    const lastUpdate = await getLastUpdate()
-    const cachedUpdate = await getCachedPlayers("update")
+    try {
+        const lightPlayers = await axios.get(lightPlayersUrl, {
+            headers
+        })
+        console.log("load lightPlayers from DB1");
 
-    if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
-        console.log(11);
-        const players = await getCachedPlayers('light-players')
+        const etag = lightPlayers.headers.etag;
+        localStorage.setItem("lightPlayersETag", etag);
 
-        if (!players) {
-            console.log(22);
-            const response = await fetch(`${DATA_URL}lightPlayers.json`)
-            const players = await response.json()
-            await setLastUpdateCache()
-            await setPlayersCache('lightPlayers')
-            return players
+        setPlayersCache('lightPlayers')
+
+        return lightPlayers.data
+    } catch (error) {
+        if (error && error.response.status === 304) {
+            console.log("load players from CACHE");
+            // const result = await getCachedUsers()
+            
+            const result = await getCachedPlayers('light-players')
+
+            if (!result) {
+                const lightPlayers = await axios.get(lightPlayersUrl)
+
+                const etag = lightPlayers.headers.etag;
+                localStorage.setItem("lightPlayersETag", etag);
+
+                console.log("load players from DB2");
+
+                setPlayersCache('lightPlayers')
+
+                return lightPlayers.data
+            }
+
+            return result
         }
-
-        return players
-    } else {
-
-        console.log(2);
-
-        const response = await fetch(`${DATA_URL}lightPlayers.json`)
-        const players = await response.json()
-
-        await setLastUpdateCache()
-        await setPlayersCache('lightPlayers')
-
-        return players
     }
 }
+
+// const getAllLightPlayers = async () => {
+
+//     const lastUpdate = await getLastUpdate()
+//     const cachedUpdate = await getCachedPlayers("update")
+
+//     if (lastUpdate && cachedUpdate && lastUpdate === cachedUpdate) {
+//         console.log(11);
+//         const players = await getCachedPlayers('light-players')
+
+//         if (!players) {
+//             console.log(22);
+//             const response = await fetch(`${DATA_URL}lightPlayers.json`)
+//             const players = await response.json()
+//             await setLastUpdateCache()
+//             await setPlayersCache('lightPlayers')
+//             return players
+//         }
+
+//         return players
+//     } else {
+
+//         console.log(2);
+
+//         const response = await fetch(`${DATA_URL}lightPlayers.json`)
+//         const players = await response.json()
+
+//         await setLastUpdateCache()
+//         await setPlayersCache('lightPlayers')
+
+//         return players
+//     }
+// }
 
 export {
     getAllPlayersDataNormal,

@@ -49,7 +49,7 @@ import { addUserRound } from "../../../models/User";
 import getAllUsers from "../../../utils/getAllUsers";
 import pointsCalculator from "../../../utils/pointsCalculator";
 import { setLastUpdateDB } from "../../../utils/setLastUpdate";
-import updateLightPlayers from '../../../utils/updateLightPlayers';
+import updateLightPlayers from "../../../utils/updateLightPlayers";
 // import getAllH2HRounds from "../../../utils/getAllH2HRounds";
 
 export default {
@@ -132,7 +132,7 @@ export default {
         .then(async () => {
           this.players = await getAllPlayersDataNormal();
           setLastUpdateDB();
-          updateLightPlayers()
+          updateLightPlayers();
           this.success = true;
           this.$vs.loading.close();
         })
@@ -335,6 +335,81 @@ export default {
         stats.threeAllowed,
         stats.yellowCards
       );
+    },
+    test() {
+      // const teams = Object.values(users)
+      //   .filter((x) => {
+      //     if (x.code && x.code >= 12) {
+      //       return x;
+      //     }
+      //   })
+      //   .map((x) => {
+      //     return x.rounds;
+      //   })
+      //   .map((x) => {
+      //     return Object.values(x);
+      //   })
+      //   .flat()
+      //   .map((x) => {
+      //     return Object.values(x.team);
+      //   })
+      //   .flat();
+      // const uniqueTeamPlayers = [...new Set(teams)];
+      // Object.keys(players).forEach((id) => {
+      //   const isActive = uniqueTeamPlayers.includes(id);
+      //   if (!isActive && Object.values(players[id].available)[1] === false) {
+      //     console.log('MARADONA',",", players[id].name, ",", players[id].club);
+      //   }
+      // });
+      // Object.values(users)
+      //   .filter((x) => {
+      //     if (x.code) {
+      //       return x;
+      //     }
+      //   })
+      //   .sort((a, b) => {
+      //     return a.code - b.code;
+      //   })
+      //   .forEach((x,i) => {
+      //     const team = Object.values(x.rounds.r18.team);
+      //     team.forEach((y) => {
+      //       if (i<11 && Object.values(players[y].available)[0] === true) {
+      //         console.log('PELE', x.userTeam, ",", players[y].name, ",", players[y].club);
+      //       }
+      //       if (i>=11 && Object.values(players[y].available)[1] === true) {
+      //         console.log('MARADONA',x.userTeam, ",", players[y].name, ",", players[y].club);
+      //       }
+      //       // if (i<11) {
+      //       //   Object.values(players).forEach(z=>{
+      //       //     if (z.id !== y && Object.values(z.available)[0]=== false) {
+      //       //       console.log('PELE', x.userTeam, ",", players[y].name, ",", players[y].club);
+      //       //     }
+      //       //   })
+      //       // }
+      //       // if (i>=11) {
+      //       //   Object.values(players).forEach(z=>{
+      //       //     if (z.id !== y && Object.values(z.available)[1]=== false) {
+      //       //       console.log('MARADONA', x.userTeam, ",", players[y].name, ",", players[y].club);
+      //       //     }
+      //       //   })
+      //       // }
+      //     });
+      //   });
+      // Object.values(players)
+      //   .filter((x) => {
+      //     const avail = Object.values(x.available).includes(false);
+      //     if (avail) {
+      //       return x;
+      //     }
+      //   })
+      //   .forEach((x) => {
+      //     console.log(
+      //       x.name,',',
+      //       x.club,',',
+      //       Object.values(x.available)[0],',',
+      //       Object.values(x.available)[1]
+      //     );
+      //   });
     },
   },
   computed: {},

@@ -7,7 +7,7 @@
       title="Create new player!"
       :active.sync="showPopup"
       v-if="players"
-        @close="closePopup"
+      @close="closePopup"
     >
       <AddPlayerForm
         :players="players"
@@ -87,9 +87,9 @@
               v-model="playerEdited.country"
               @change="playerEdited.club = ''"
             >
-              <option :key="l" :value="l" v-for="l in Object.keys(players)">{{
-                countryMap[l]
-              }}</option>
+              <option :key="l" :value="l" v-for="l in Object.keys(players)">
+                {{ countryMap[l] }}
+              </option>
             </select>
             <!-- <vs-select
               :label="playerSelected.country"
@@ -116,8 +116,9 @@
                 :key="l"
                 :value="l"
                 v-for="l in Object.keys(players[playerEdited.country])"
-                >{{ l }}</option
               >
+                {{ l }}
+              </option>
             </select>
 
             <select
@@ -130,8 +131,9 @@
                 :key="l"
                 :value="l"
                 v-for="l in Object.keys(players[leagueSelected])"
-                >{{ l }}</option
               >
+                {{ l }}
+              </option>
             </select>
             <!-- <vs-select
               v-if="players[playerEdited.country]"
@@ -175,9 +177,9 @@
               :label="playerSelected.position"
               v-model="playerEdited.position"
             >
-              <option :key="pos" :value="pos" v-for="pos in positions">{{
-                pos
-              }}</option>
+              <option :key="pos" :value="pos" v-for="pos in positions">
+                {{ pos }}
+              </option>
             </select>
             <!-- <vs-select
               :label="playerSelected.position"
@@ -198,9 +200,9 @@
               @click="selectPlayerAvailability($event, league)"
             />
             <span
-              :style="
-                `color:${playerSelected.available[league] ? 'green' : 'red'}`
-              "
+              :style="`color:${
+                playerSelected.available[league] ? 'green' : 'red'
+              }`"
               >Current status {{ leagues[league] }}:
               {{ playerSelected.available[league] ? "IS" : "NOT" }}
               available!</span
@@ -242,19 +244,19 @@
 import { getAllPlayersDataCathegorized } from "../../../utils/getAllPlayersData";
 import { teamCodes, DATA_URL, countryMap } from "../../../common";
 import AddPlayerForm from "./AddPlayerForm";
-import { setLastUpdateDB } from '../../../utils/setLastUpdate';
-import updateLightPlayers from '../../../utils/updateLightPlayers';
+import { setLastUpdateDB } from "../../../utils/setLastUpdate";
+import updateLightPlayers from "../../../utils/updateLightPlayers";
 
 export default {
   name: "PlayersEdit",
   components: {
-    AddPlayerForm
+    AddPlayerForm,
   },
   data() {
     return {
       leagues: {
         "33c46ff1-1756-41a1-a80f-01b2f4fb4b3c": "Pele",
-        "60e2f9e6-af52-4b5e-8918-94d9c79fd1c4": "Maradona"
+        "60e2f9e6-af52-4b5e-8918-94d9c79fd1c4": "Maradona",
       },
       showPopup: false,
       players: undefined,
@@ -267,27 +269,24 @@ export default {
         id: "",
         name: "",
         position: "",
-        shirt: ""
+        shirt: "",
       },
       playerEditedAvail: {},
       positions: ["GK", "DL", "DC", "DR", "ML", "MC", "MR", "ST"],
       success: false,
-      countryMap: countryMap
+      countryMap: countryMap,
     };
   },
   methods: {
-    closePopup(){
-      return this.showPopup = false
+    closePopup() {
+      return (this.showPopup = false);
     },
     selectPlayerAvailability(e, league) {
       const result = e.target.checked;
       return this.$set(this.playerEditedAvail, league, result);
     },
     makeLeagueToImg(v) {
-      return v
-        .toLowerCase()
-        .split(" ")
-        .join("-");
+      return v.toLowerCase().split(" ").join("-");
     },
     selectLeagueHandler(l) {
       this.teamSelected = "";
@@ -304,14 +303,14 @@ export default {
         id: "",
         name: "",
         position: "",
-        shirt: ""
+        shirt: "",
       };
       this.deselectPlayerAvail();
       return (this.playerSelected = p);
     },
     mergePlayers(_new, _old) {
       let result = {};
-      Object.keys(_old).forEach(atttr => {
+      Object.keys(_old).forEach((atttr) => {
         if (_new[atttr]) {
           result[atttr] = _new[atttr];
         } else {
@@ -321,7 +320,7 @@ export default {
       if (_new["club"]) {
         result["shirt"] = teamCodes[_new["club"]];
       }
-      Object.keys(this.leagues).forEach(l => {
+      Object.keys(this.leagues).forEach((l) => {
         result.available[l] =
           typeof this.playerEditedAvail[l] === "boolean"
             ? this.playerEditedAvail[l]
@@ -337,21 +336,21 @@ export default {
         method: "PATCH",
         mode: "cors",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
-        .then(response => response.json())
-        .then(async data => {
+        .then((response) => response.json())
+        .then(async (data) => {
           console.log("Success:", data);
           this.$vs.loading();
           this.deselectPlayer();
           this.players = await getAllPlayersDataCathegorized();
-          setLastUpdateDB()
-          updateLightPlayers()
+          setLastUpdateDB();
+          updateLightPlayers();
           this.success = true;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
         });
     },
@@ -363,13 +362,13 @@ export default {
           color: "success",
           title: "Confirm Edit",
           text: this.showSuccessMsg(payload),
-          accept: () => this.fetchDataToPlayer(payload)
+          accept: () => this.fetchDataToPlayer(payload),
         });
       } else {
         this.$vs.dialog({
           color: "warning",
           title: "Incorrect Edit",
-          text: "There is no such club in this league!"
+          text: "There is no such club in this league!",
         });
       }
     },
@@ -383,28 +382,28 @@ export default {
         text: `Are you sure you want to delete ${
           this.players[this.leagueSelected][this.teamSelected][id].name
         }?`,
-        accept: () => deletePlayer(id)
+        accept: () => deletePlayer(id),
       });
 
-      const deletePlayer = id => {
+      const deletePlayer = (id) => {
         return fetch(`${DATA_URL}players/${id}.json`, {
           method: "DELETE",
           mode: "cors",
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-          .then(response => response.json())
+          .then((response) => response.json())
           .then(async () => {
             this.playerSelected = "";
             this.$vs.loading();
             this.players = await getAllPlayersDataCathegorized();
-            setLastUpdateDB()
-            updateLightPlayers()
+            setLastUpdateDB();
+            updateLightPlayers();
             this.$vs.loading.close();
             this.success = true;
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Error:", error);
           });
       };
@@ -419,7 +418,7 @@ export default {
     },
     deselectPlayerAvail() {
       return (this.playerEditedAvail = {});
-    }
+    },
   },
   computed: {},
   watch: {
@@ -434,12 +433,12 @@ export default {
           this.success = false;
         }, 2000);
       }
-    }
+    },
   },
   async created() {
     this.$vs.loading();
     this.players = await getAllPlayersDataCathegorized();
-  }
+  },
 };
 </script>
 

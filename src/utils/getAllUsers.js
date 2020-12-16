@@ -25,16 +25,16 @@ const setUsersCache = async () => {
 const getAllUsers = async () => {
     const etag = localStorage.getItem('usersETag')
     let headers = {}
+    headers['X-Firebase-ETag'] = true
     if (etag) {
         headers["If-None-Match"] = etag;
-        headers['X-Firebase-ETag'] = true
     }
 
     try {
         const users = await axios.get(usersUrl, {
             headers
         })
-        console.log("load resource from DB1");
+        console.log("load users from DB1");
 
         const etag = users.headers.etag;
         localStorage.setItem("usersETag", etag);
@@ -44,13 +44,13 @@ const getAllUsers = async () => {
         return users.data
     } catch (error) {
         if (error && error.response.status === 304) {
-            console.log("load resource from CACHE");
+            console.log("load users from CACHE");
             const result = await getCachedUsers()
 
             if (!result) {
                 const users = await axios.get(usersUrl)
 
-                console.log("load resource from DB2");
+                console.log("load users from DB2");
 
                 setUsersCache()
 
