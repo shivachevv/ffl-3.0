@@ -82,7 +82,6 @@ export default {
     },
     transferedOut(nv){
       if (nv.length === 0) {
-         console.log('check');
          this.shirt = this.tmpShirt;
          this.tmpShirt = this.player.shirt;
          this.transferStatus = this.statuses[0];

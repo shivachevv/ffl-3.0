@@ -12,14 +12,20 @@
       :transferedIn="transferedIn"
       :transferedOut="transferedOut"
     ></SelectedTransfers>
-    <transition name="fadeDown" mode="out-in">
-      <div class="error-msg" v-if="maxTransfersReached">
+    <transition-group name="fadeDown" mode="out-in" class="transition-msg">
+      <div key="transfers-msg" class="error-msg" v-if="maxTransfersReached">
         <h1>
           You have a maximum of {{ transfersAvail }}
           {{ transfersAvail === 1 ? "transfer" : "transfers" }} this week!
         </h1>
       </div>
-    </transition>
+      <div key="wildcard-msg" class="wildcard-msg" v-if="wildcard">
+        <h1>
+          Wildcard activated! Please make ALL 3 TRANSFERS TOGETHER!<br />
+          Уайлдкард е активиран! НАПРАВЕТЕ ВСИЧКИТЕ 3 ТРАНСФЕРА НАВЕДНЪЖ!
+        </h1>
+      </div>
+    </transition-group>
 
     <!------------------ USER TEAM  ----------------->
     <div class="team" v-if="players">
@@ -44,12 +50,12 @@
           >{{ transfersAvail }}</span
         >
       </div>
-      <div class="addition wildcard" v-if="!makeSwitchUnavail">
+      <div class="addition wildcard" v-if="!makeSwitchUnavail && hasWildcard">
         <h3 class="up">Wildcard</h3>
         <vs-switch class="switch" color="success" v-model="wildcard" />
       </div>
       <div class="addition wildcard" v-else>
-        <h3 class="up">Wildcard</h3>
+        <h3 class="up">Wildcard<br>taken</h3>
         <vs-switch class="switch-inactive" disabled="true" color="success" />
       </div>
     </div>
@@ -128,6 +134,9 @@ export default {
       // .sort((a, b) => {
       //   return a.position.localeCompare(b.position);
       // });
+    },
+    hasWildcard() {
+      return !this.user.wildCards[1];
     },
   },
   methods: {
@@ -367,17 +376,35 @@ export default {
 .inactiveBtn {
   opacity: 0;
 }
-.error-msg {
+.transition-msg {
   width: 100%;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #793638;
-  h1 {
-    color: lightgrey;
-    font-size: 1.2rem;
+  .error-msg {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #793638;
+    h1 {
+      color: lightgrey;
+      font-size: 1.2rem;
+    }
+  }
+  .wildcard-msg {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #2e762e;
+    h1 {
+      color: lightgrey;
+      font-size: 1.2rem;
+      font-weight: bold;
+      line-height: 1.5rem;
+    }
   }
 }
 .addition {
@@ -439,6 +466,7 @@ export default {
     font-size: 1rem;
     font-weight: bold;
     color: #3c474d;
+    text-align: center;
   }
 }
 /************  TRANSITION   *******************/

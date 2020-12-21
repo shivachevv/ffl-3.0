@@ -29,7 +29,7 @@ export default {
         legend: {
           position: "top",
           labels: {
-            fontSize: 12
+            fontSize: 16
           }
         },
         hover: {
