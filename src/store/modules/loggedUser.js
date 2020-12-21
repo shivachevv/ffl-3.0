@@ -70,11 +70,12 @@ const actions = {
             isMyTeam: false,
             toShow: true
         },
-        // {
-        //     title: "Player Stats",
-        //     path: "/player-stats",
-        //     isMyTeam: false,
-        // },
+        {
+            title: "FFL Stats",
+            path: "/stats",
+            isMyTeam: false,
+            toShow: true
+        },
         {
             title: "Rules & Prizes",
             path: "/rules-prizes",

@@ -50,6 +50,7 @@ import getAllUsers from "../../../utils/getAllUsers";
 import pointsCalculator from "../../../utils/pointsCalculator";
 import { setLastUpdateDB } from "../../../utils/setLastUpdate";
 import updateLightPlayers from "../../../utils/updateLightPlayers";
+import updateStats from '../../../utils/updateStats'
 // import getAllH2HRounds from "../../../utils/getAllH2HRounds";
 
 export default {
@@ -83,6 +84,7 @@ export default {
           this.fetchNewRound();
           this.fetchNewRndDataToPlayers(editedPlayers);
           this.fetchNewRndDataToUsers(editedUsers);
+          updateStats()
         },
       });
     },

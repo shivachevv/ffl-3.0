@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="statsNames">
+  <div class="container" v-if="stats && statsNames && typeSelected">
     <div class="stats-header">
       <h1>FFL Statistics Page</h1>
     </div>
@@ -8,8 +8,8 @@
         <div class="con-tab-ejemplo stats-container">
           <div v-for="stat in statsNames[typeSelected]" :key="stat" class="chart">
             <Chart
-              :labels="makeGraphData(stats.stats[typeSelected][stat]).names"
-              :dataSet="makeGraphData(stats.stats[typeSelected][stat]).values"
+              :labels="makeGraphData(stats[typeSelected][stat]).names"
+              :dataSet="makeGraphData(stats[typeSelected][stat]).values"
               :title="titleMap[stat]"
             ></Chart>
           </div>

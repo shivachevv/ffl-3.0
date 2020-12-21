@@ -1,7 +1,7 @@
-import { API_URL } from '../common'
+import { DATA_URL } from '../common'
 
 const getStats = async () => {
-    const response = await fetch(`${API_URL}stats`, {
+    const response = await fetch(`${DATA_URL}stats.json`, {
         method: "GET",
     })
     const stats = response.json()
