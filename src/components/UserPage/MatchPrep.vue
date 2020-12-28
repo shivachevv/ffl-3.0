@@ -66,9 +66,9 @@
         <label class="select">
           Choose your Captain!
           <select class="cpt-field" v-model="nextRnd.cpt" icon>
-            <option :value="p" v-for="(p, i) of userRoundStats.team" :key="i">{{
-              players[p].name
-            }}</option>
+            <option :value="p" v-for="(p, i) of userRoundStats.team" :key="i">
+              {{ players[p].name }}
+            </option>
           </select>
         </label>
 
@@ -88,9 +88,9 @@
         <label class="select">
           Choose your Vice Captain!
           <select class="cpt-field" v-model="nextRnd.viceCpt" icon>
-            <option :value="p" v-for="(p, i) of userRoundStats.team" :key="i">{{
-              players[p].name
-            }}</option>
+            <option :value="p" v-for="(p, i) of userRoundStats.team" :key="i">
+              {{ players[p].name }}
+            </option>
           </select>
         </label>
         <!-- <vs-select
@@ -108,7 +108,7 @@
         </vs-select> -->
       </div>
       <div class="form-down">
-        <div>
+        <div v-if="isSuperCptAvailable">
           <input
             class="check"
             type="checkbox"
@@ -117,6 +117,9 @@
             v-model="nextRnd.superCpt"
           />
           <label for="superCpt" class="up">SUPER CAPTAIN</label>
+        </div>
+        <div v-else>
+          <label class="up">SUPER CAPTAIN<br />TAKEN</label>
         </div>
         <vs-button color="#59A95D" type="relief" size="normal" button="submit"
           >SUBMIT CAPTAINS</vs-button
@@ -135,10 +138,11 @@
 <script>
 // import { mapGetters } from "vuex";
 // import Timer from "./Timer";
-const Timer = ()=> import("./Timer")
+const Timer = () => import("./Timer");
 import deadline from "../../utils/deadlineHelper";
 import { mapActions } from "vuex";
 import { DATA_URL } from "../../common";
+import isItFirstHalfSeason from "../../utils/isItFirstHalfSeason";
 
 export default {
   name: "MatchPrep",
@@ -146,24 +150,24 @@ export default {
   props: {
     isThisLoggedTeam: {
       type: Boolean,
-      required: true
+      required: true,
     },
     owner: {
       type: String,
-      required: true
+      required: true,
     },
     user: {
       type: Object,
-      required: true
+      required: true,
     },
     players: {
       type: Object,
-      required: true
+      required: true,
     },
     currentRound: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -181,15 +185,15 @@ export default {
         status: {
           expired: "",
           running: "",
-          upcoming: ""
-        }
+          upcoming: "",
+        },
       },
       nextRnd: {
         cpt: "",
         viceCpt: "",
-        superCpt: false
+        superCpt: false,
       },
-      cptError: false
+      cptError: false,
     };
   },
   computed: {
@@ -203,7 +207,13 @@ export default {
       } else {
         return undefined;
       }
-    }
+    },
+    isSuperCptAvailable() {
+      if (this.currentRound && this.user) {
+        const arrayNumber = isItFirstHalfSeason(this.currentRound) ? 1 : 2;
+        return !this.user.superCpt[arrayNumber];
+      } else return undefined;
+    },
   },
   methods: {
     ...mapActions(["fetchUsers"]),
@@ -212,7 +222,7 @@ export default {
     },
     mergeCaptains(_old, _new) {
       let result = {};
-      Object.keys(_old).forEach(atttr => {
+      Object.keys(_old).forEach((atttr) => {
         if (_new[atttr]) {
           result[atttr] = _new[atttr];
         } else {
@@ -224,19 +234,21 @@ export default {
     },
     captainHandler() {
       const merged = this.mergeCaptains(this.userRoundStats, this.nextRnd);
-      console.log(merged);
+
+      // console.log(merged);
+      this.updateSuperCptArray(this.user, this.currentRound);
       if (merged.cpt !== merged.viceCpt) {
         return this.$vs.dialog({
           color: "success",
           title: "Confirm Captains",
           text: this.showSuccessMsg(merged),
-          accept: () => this.fetchCaptains(merged)
+          accept: () => this.fetchCaptains(merged),
         });
       } else {
         return this.$vs.dialog({
           color: "danger",
           title: "Please change Captain and ViceCaptain!",
-          text: "Captain and Vice Captain cannot be the same player!"
+          text: "Captain and Vice Captain cannot be the same player!",
         });
       }
     },
@@ -248,47 +260,80 @@ export default {
              },
              Super Captain: ${superCpt ? "activated:" : "not activated"}?`;
     },
+    updateSuperCptArray(user, round) {
+      const arrayNumber = isItFirstHalfSeason(round) ? 1 : 2;
+      let superCptArr = user.superCpt;
+      superCptArr[arrayNumber] = true;
+      const payload = {
+        superCpt: superCptArr,
+      };
+      return fetch(
+        `${DATA_URL}users/${user.uid}/.json`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      )
+        .then((response) => response.json())
+        .then(async () => {
+          console.log("Success:");
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          this.error = true;
+          this.errorMsg = error;
+        });
+    },
     fetchCaptains(payload) {
       const { uid } = this.user;
       const round = this.currentRound;
+
+      if (payload.superCpt) {
+        this.updateSuperCptArray(this.user, round);
+      }
+
       return fetch(
         `${DATA_URL}users/${uid}/rounds/r${round}/nextRndInfo.json`,
         {
           method: "PATCH",
           mode: "cors",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
         }
       )
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(async () => {
           console.log("Success:");
           this.$vs.loading();
           await this.fetchUsers();
           this.$vs.loading.close();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error:", error);
           this.error = true;
           this.errorMsg = error;
         });
-    }
+    },
   },
   watch: {
-    "nextRnd.cpt": function(nv) {
+    "nextRnd.cpt": function (nv) {
       if (nv === this.nextRnd.viceCpt) {
         this.cptError = true;
       }
     },
-    "nextRnd.viceCpt": function(nv) {
+    "nextRnd.viceCpt": function (nv) {
       if (nv === this.nextRnd.cpt) {
         this.cptError = true;
       }
-    }
+    },
   },
-  async created() {}
+  async created() {},
 };
 </script>
 

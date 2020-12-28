@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="stats && statsNames && typeSelected">
-    <div class="stats-header">
+    <div class="stats-header sha">
       <h1>FFL Statistics Page</h1>
     </div>
     <vs-tabs :color="colorx">
@@ -174,6 +174,7 @@ export default {
     align-items: center;
     padding: 20px;
     background-color: #3d474d;
+    border-bottom: 5px solid #863d3e;
     margin: 20px 0 20px 0;
 
     h1 {

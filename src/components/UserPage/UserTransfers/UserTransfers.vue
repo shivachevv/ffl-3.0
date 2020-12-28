@@ -43,6 +43,7 @@ import { DATA_URL } from "../../../common";
 import makeNewTransfer from "../../../models/Transfer";
 import { setLastUpdateDB } from "../../../utils/setLastUpdate";
 import updateLightPlayers from "../../../utils/updateLightPlayers";
+import isItFirstHalfSeason from "../../../utils/isItFirstHalfSeason";
 
 export default {
   name: "UserTransfers",
@@ -338,9 +339,12 @@ export default {
     },
     fetchUpdatedWildcard() {
       const [empty, firstWC, secondWC] = this.loggedUser.wildCards;
-      const now = new Date();
-      const endOfFirstHalf = new Date("2020/12/29");
-      const isItFirstHalf = endOfFirstHalf - now > 0;
+
+      // const now = new Date();
+      // const endOfFirstHalf = new Date("2020/12/29");
+      // const isItFirstHalf = endOfFirstHalf - now > 0;
+      const isItFirstHalf = isItFirstHalfSeason(this.currentRound)
+
       const wildCards = isItFirstHalf
         ? [empty, true, secondWC]
         : [empty, firstWC, true];
