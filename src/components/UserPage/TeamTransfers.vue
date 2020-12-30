@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import isItFirstHalfSeason from '../../utils/isItFirstHalfSeason';
 
 export default {
   name: "TeamTransfers",
@@ -105,7 +106,11 @@ export default {
   computed: {
     // ...mapGetters(["standings", "WCandTripple"]),
     hasWildcard() {
-      return !this.user.wildCards[1];
+      // return !this.user.wildCards[1];
+      if (this.currentRound && this.user) {
+        const arrayNumber = isItFirstHalfSeason(this.currentRound) ? 1 : 2;
+        return !this.user.wildCards[arrayNumber];
+      } else return undefined;
     },
     isWCActive() {
       return this.user.rounds[`r${this.currentRound}`].wildCard;

@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import isItFirstHalfSeason from '../../../utils/isItFirstHalfSeason'
 const TransfersTeammate = () => import("./TransfersTeammate");
 const TeamHeader = () => import("../UserTeam/TeamHeader");
 const SelectedTransfers = () => import("./SelectedTransfers");
@@ -136,7 +137,11 @@ export default {
       // });
     },
     hasWildcard() {
-      return !this.user.wildCards[1];
+      // return !this.user.wildCards[1];
+      if (this.currentRound && this.user) {
+        const arrayNumber = isItFirstHalfSeason(this.currentRound) ? 1 : 2;
+        return !this.user.wildCards[arrayNumber];
+      } else return undefined;
     },
   },
   methods: {
