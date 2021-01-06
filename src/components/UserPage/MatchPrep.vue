@@ -263,7 +263,7 @@ export default {
     updateSuperCptArray(user, round) {
       const arrayNumber = isItFirstHalfSeason(round) ? 1 : 2;
       let superCptArr = user.superCpt;
-      superCptArr[arrayNumber] = true;
+      superCptArr[arrayNumber] = this.nextRnd.superCpt;
       const payload = {
         superCpt: superCptArr,
       };

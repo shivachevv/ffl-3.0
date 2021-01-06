@@ -134,25 +134,8 @@ export default {
     users(nv) {
       if (nv && this.players && this.currentRound) {
         this.$vs.loading.close();
-
-        // for (const id in nv) {
-        //   const user = nv[id];
-        //   const team = user.rounds.r10.team;
-        //   for (const iid in team) {
-        //     const player = team[iid];
-        //     // console.log(iid, pos);
-        //     const newId = iid !== "gk" ? iid.substring(0, 2) : iid;
-        //     if (this.players[player]) {
-        //       const pos = this.players[player].position;
-        //       const check = newId === pos.toLowerCase()
-        //       if (!check) {
-        //         console.log(this.players[player].name ,player, id, user.userTeam);
-        //       }
-        //     }
-        //   }
-        // }
       }
-    }
+    },
   },
   created() {
     // this.$vs.loading();

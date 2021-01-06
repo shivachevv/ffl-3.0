@@ -12,11 +12,6 @@
       </div>
 
       <div class="filter-by-league sha">
-        <!-- <div class="filter-header">
-            <img src="images/football-field.png" alt="" />
-            <h3 class="up">Filter by league</h3>
-          </div> -->
-
         <div class="filter-by-league-buttons">
           <LeagueBtn
             used="transfers"
@@ -30,6 +25,25 @@
           />
         </div>
       </div>
+      <ByPosition
+        @filterPositions="setFilters('position', $event)"
+        :clearFilter="clearFilters"
+      />
+      <ByRound
+        :currentRound="currentRound"
+        @filterRounds="setFilters('round', $event)"
+        :clearFilter="clearFilters"
+      />
+      <ByStatus
+        @filterStatuses="setFilters('status', $event)"
+        :clearFilter="clearFilters"
+      />
+      <ByTeam
+        @filterTeams="setFilters('team', $event)"
+        :users="users"
+        :clearFilter="clearFilters"
+      />
+
       <!-- <div class="filter-by-team sha">
         <div class="header up">
           <h2 class="up">Filters</h2>
@@ -193,10 +207,15 @@
         </div>
 
         <input class="" type="text" name="name" id="player_name" />
-      </div>
+      </div>-->
       <div class="reset-filters">
-        <button class="up sha reset-filters-button">Clear filters</button>
-      </div> -->
+        <button
+          class="up sha reset-filters-button"
+          @click.prevent="clearFiltersHandler"
+        >
+          Clear filters
+        </button>
+      </div>
     </section>
 
     <!---------------- PELE TRANSFERS -------------------------------------->
@@ -219,10 +238,14 @@
             v-for="(round, i) in sortedRounds"
             :key="i"
           > -->
-        <div class="transfer-round sha" v-for="(round, i) in sortedRounds" :key="i">
+        <div
+          class="transfer-round sha"
+          v-for="(round, i) in sortedRounds"
+          :key="i"
+        >
           <div class="round-header">Round {{ round.substring(1) }}</div>
 
-          <div class="round-container ">
+          <div class="round-container">
             <div class="transfers-header">
               <h3 class="header-pos up">Pos</h3>
               <h3 class="header-pos up">Status</h3>
@@ -235,7 +258,7 @@
             <div
               class="trans-row"
               v-for="(transfer, i) in groupRoundTransfers(
-                dividedTransfers[selectedLeague][round]
+                transfersToShow[selectedLeague][round]
               )"
               :key="i"
             >
@@ -285,7 +308,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-// import LeagueBtn from "../Home/LeagueSelect/LeagueBtn";
+const ByPosition = () => import("./Filters/ByPosition");
+const ByRound = () => import("./Filters/ByRound");
+const ByStatus = () => import("./Filters/ByStatus");
+const ByTeam = () => import("./Filters/ByTeam");
 const LeagueBtn = () => import("../Home/LeagueSelect/LeagueBtn");
 import "material-icons/iconfont/material-icons.css";
 
@@ -295,15 +321,24 @@ import "material-icons/iconfont/material-icons.css";
 export default {
   name: "Transfers",
   components: {
-    LeagueBtn
+    LeagueBtn,
+    ByPosition,
+    ByRound,
+    ByStatus,
+    ByTeam,
   },
   props: {},
   data() {
     return {
-      selectedLeague: undefined
-      //   standings: undefined
-      //   matchPopup: false,
-      //   selectedMatch: undefined
+      filters: {
+        position: [],
+        round: [],
+        status: [],
+        team: [],
+      },
+      filteredTransfers: {},
+      selectedLeague: undefined,
+      clearFilters: false,
     };
   },
   computed: {
@@ -311,10 +346,10 @@ export default {
     dividedTransfers() {
       if (this.transfers && this.leagues) {
         let result = {};
-        Object.keys(this.transfers).forEach(round => {
+        Object.keys(this.transfers).forEach((round) => {
           const usersArr = Object.keys(this.transfers[round]);
 
-          usersArr.forEach(user => {
+          usersArr.forEach((user) => {
             const teamLeague = this.calcTeamLeague(user);
 
             if (!result[teamLeague]) result[teamLeague] = {};
@@ -323,24 +358,61 @@ export default {
             result[teamLeague][round][user] = this.transfers[round][user];
           });
         });
+        // console.log(result);
         return result;
       }
       return "";
     },
+    areFiltersOn() {
+      let result = false;
+      for (const filter in this.filters) {
+        const filterArr = this.filters[filter];
+        if (filterArr.length) result = true;
+      }
+      return result;
+    },
     sortedRounds() {
-      return Object.keys(this.dividedTransfers[this.selectedLeague]).sort(
+      // console.log(this.transfersToShow);
+      return Object.keys(this.transfersToShow[this.selectedLeague]).sort(
         (a, b) => {
           const round1 = Number(a.substring(1));
           const round2 = Number(b.substring(1));
           return round2 - round1;
         }
       );
-    }
+    },
+    transfersOnly() {
+      if (this.dividedTransfers) {
+        let result = {};
+        const leagues = Object.keys(this.dividedTransfers);
+        for (const league of leagues) {
+          const transfers = this.dividedTransfers[league];
+          result[league] = [];
+          for (const round in transfers) {
+            for (const user in transfers[round]) {
+              const userTransfers = transfers[round][user];
+              for (const num in userTransfers) {
+                const transfer = userTransfers[num];
+                result[league].push(transfer);
+              }
+            }
+          }
+        }
+        return result;
+      } else return undefined;
+    },
+    transfersToShow() {
+      if (this.areFiltersOn) {
+        return this.filteredTransfers;
+      } else {
+        return this.dividedTransfers;
+      }
+    },
   },
   methods: {
     ...mapActions(["fetchTransfers", "fetchLeagues"]),
     calcTeamLeague(user) {
-      return Object.values(this.leagues).filter(league => {
+      return Object.values(this.leagues).filter((league) => {
         if (league.teams.includes(user)) {
           return league;
         }
@@ -351,7 +423,7 @@ export default {
     },
     groupRoundTransfers(round) {
       const result = Object.values(round)
-        .map(x => {
+        .map((x) => {
           return Object.values(x).flat(1);
         })
         .flat(1)
@@ -359,56 +431,79 @@ export default {
           return a.team.localeCompare(b.team);
         });
       return result;
-    }
-    // roundIntoArray(target) {
-    //   return Object.values(target).slice(0, -1);
-    // },
-    // showByeTeam(i) {
-    //   const roundNum = `r${i + 1}`;
-    //   const round = this.selectedGroup.rounds[roundNum];
-    //   const matches = Object.values(round).slice(0, -1);
+    },
+    setFilters(type, values) {
+      this.clearFilters = false;
+      this.filters[type] = values;
 
-    //   // console.log(round, matches);
+      const leagues = Object.keys(this.dividedTransfers);
+      for (const league of leagues) {
+        const filteredArray = this.applyFilters(
+          this.transfersOnly[league],
+          this.filters
+        );
+        this.filteredTransfers[league] = this.groupFiltered(filteredArray);
+      }
 
-    //   return this.selectedGroup.teams.filter(x => {
-    //     let teamsPlayed = [];
-    //     matches.forEach(match => {
-    //       teamsPlayed.push(match.team1.id);
-    //       teamsPlayed.push(match.team2.id);
-    //     });
-    //     if (!teamsPlayed.includes(x)) {
-    //       return x;
-    //     }
-    //   })[0];
-    // },
-    // groupSelectionHandler(v) {
-    //   return (this.selectedGroup = v);
-    // },
-    // calculateTeamPts(team) {
-    //   // console.log("team", team);
-    //   return Object.values(team).reduce((acc, player) => {
-    //     return player.pts + acc;
-    //   }, 0);
-    // },
-    // sortStandingsTeams(teams) {
-    //   return Object.entries(teams)
-    //     .sort((a, b) => {
-    //       return b[1].goaldiff - a[1].goaldiff;
-    //     })
-    //     .sort((a, b) => {
-    //       return b[1].pts - a[1].pts;
-    //     });
-    // },
-    // openMatchPopupHandler(match) {
-    //   this.selectedMatch = match;
-    //   return (this.matchPopup = true);
-    // }
+      for (const u in this.users) {
+          const user = this.users[u];
+          console.log(user.userTeam, user.superCpt);
+      }
+    },
+    applyFilters(transfers, filters) {
+      return transfers
+        .filter((tr) => {
+          if (!filters.position.length) return tr;
+          else if (filters.position.includes(tr.position)) return tr;
+        })
+        .filter((tr) => {
+          if (!filters.round.length) return tr;
+          else if (filters.round.includes(tr.round)) return tr;
+        })
+        .filter((tr) => {
+          if (!filters.status.length) return tr;
+          else if (filters.status.includes(tr.status)) return tr;
+        })
+        .filter((tr) => {
+          if (!filters.team.length) return tr;
+          else if (filters.team.includes(tr.team)) return tr;
+        });
+    },
+    groupFiltered(transfers) {
+      let result = {};
+      result = {};
+      for (const transfer of transfers) {
+        let num = 1;
+        if (!result[`r${transfer.round}`]) result[`r${transfer.round}`] = {};
+        if (!result[`r${transfer.round}`][transfer.team])
+          result[`r${transfer.round}`][transfer.team] = {};
+
+        if (result[`r${transfer.round}`][transfer.team][`t${num}`]) num = 2;
+        if (result[`r${transfer.round}`][transfer.team][`t2`]) num = 3;
+        if (result[`r${transfer.round}`][transfer.team][`t3`]) num = 4;
+
+        if (!result[`r${transfer.round}`][transfer.team][`t${num}`])
+          result[`r${transfer.round}`][transfer.team][`t${num}`] = {};
+
+        result[`r${transfer.round}`][transfer.team][`t${num}`] = transfer;
+      }
+      return result;
+      // return { [this.selectedLeague]: result };
+    },
+    clearFiltersHandler() {
+      this.clearFilters = true;
+      return (this.filters = {
+        position: [],
+        round: [],
+        status: [],
+        team: [],
+      });
+    },
   },
   watch: {
     players(nv) {
       if (nv && this.transfers && this.users) {
         this.$vs.loading.close();
-        // this.standings = standingsH2HHelper(this.h2h, this.players, this.users);
       }
     },
     transfers(nv) {
@@ -430,7 +525,7 @@ export default {
       if (nv) {
         this.selectedLeague = Object.keys(nv)[0];
       }
-    }
+    },
   },
   async created() {
     this.$vs.loading();
@@ -438,7 +533,7 @@ export default {
     await this.fetchLeagues();
     // await this.fetchLoggedUser()
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
@@ -504,15 +599,6 @@ header {
     padding: 5px;
   }
 }
-.filter-by-team {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: #d3d3d3;
-  margin: 20px 0 0 0;
-}
 
 .header {
   // margin: 20px 0 0 0;
@@ -547,10 +633,6 @@ header {
   margin: 10px;
 }
 
-.filter-by-pos img {
-  margin-left: 0px;
-}
-
 .filter-header h3 {
   height: 24px;
   width: 100%;
@@ -560,21 +642,6 @@ header {
   align-items: center;
   border-bottom: 1px solid #893e40;
   margin: 0 3% 0 0;
-  font-size: 0.875rem;
-}
-
-.filter-by-team select,
-.by-team-select {
-  padding: 0 0 0 10px;
-  width: 94%;
-  margin: 10px;
-  background-color: #c6c6c6;
-  height: 30px;
-  color: #3b464d;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  //   background: url(../images/down-arrow.png) 100% / 10% no-repeat #eee;
   font-size: 0.875rem;
 }
 
@@ -589,17 +656,6 @@ select::-ms-expand {
     background: none\9;
     padding: 5px\9;
   }
-}
-
-.filter-by-pos {
-  margin: 20px 0 0 0;
-  padding: 0 10px 10px 10px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: #d3d3d3;
 }
 
 .by-pos-select {
@@ -680,10 +736,6 @@ select::-ms-expand {
   position: relative;
 }
 
-.pos-check-label:hover {
-  /*background-color: #64737d;*/
-}
-
 .pos-check-label::after {
   position: absolute;
   top: auto;
@@ -702,31 +754,6 @@ select::-ms-expand {
 .pos-check-label:hover::after {
   max-width: 140%;
   max-height: 140%;
-}
-
-.filter-by-round {
-  margin: 20px 0 0 0;
-  padding: 0 10px 10px 10px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: #d3d3d3;
-}
-
-.by-round-select {
-  padding: 0 0 0 10px;
-  width: 94%;
-  margin: 10px;
-  background-color: #c6c6c6;
-  height: 30px;
-  color: #3b464d;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  //   background: url(../images/down-arrow.png) 100% / 10% no-repeat #eee;
-  font-size: 0.875rem;
 }
 
 .filter-by-name {
@@ -763,55 +790,53 @@ select::-ms-expand {
 .reset-filters {
   text-align: right;
   margin: 20px 0 0 0;
-}
 
-.reset-filters-button {
-  width: 50%;
-  padding: 10px 5px;
-  background-color: #893e40;
-  color: lightgrey;
-  border: none;
-  font-size: 0.875rem;
-  position: relative;
-  transition: all 0.3s;
-}
+  .reset-filters-button {
+    width: 50%;
+    padding: 10px 5px;
+    background-color: #893e40;
+    color: lightgrey;
+    border: none;
+    font-size: 0.875rem;
+    position: relative;
+    transition: all 0.3s;
 
-.reset-filters-button:hover {
-  background-color: #aa5a5d;
-  color: lightgrey;
-  padding: 10px 0 10px 30px;
-}
+    &:hover {
+      background-color: #aa5a5d;
+      color: lightgrey;
+      padding: 10px 0 10px 30px;
+      cursor: pointer;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 20px;
+      width: 2px;
+      height: 20px;
+      background-color: lightgrey;
+      display: none;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 17px;
+      left: 11px;
+      width: 20px;
+      height: 2px;
+      background-color: lightgrey;
+      display: none;
+    }
+    &:hover::before {
+      display: inline-block;
+      transform: rotate(-45deg);
+    }
 
-.reset-filters-button::before {
-  content: "";
-  position: absolute;
-  top: 8px;
-  left: 25px;
-  width: 2px;
-  height: 20px;
-  background-color: lightgrey;
-  display: none;
-}
-
-.reset-filters-button::after {
-  content: "";
-  position: absolute;
-  top: 17px;
-  left: 16px;
-  width: 20px;
-  height: 2px;
-  background-color: lightgrey;
-  display: none;
-}
-
-.reset-filters-button:hover::before {
-  display: inline-block;
-  transform: rotate(-45deg);
-}
-
-.reset-filters-button:hover::after {
-  display: inline-block;
-  transform: rotate(-45deg);
+    &:hover::after {
+      display: inline-block;
+      transform: rotate(-45deg);
+    }
+  }
 }
 
 /***********************************************************

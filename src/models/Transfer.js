@@ -1,3 +1,6 @@
+const date = new Date();
+const prettyDate = date.toLocaleString('en-US', { timeZone: 'Europe/Sofia' });
+
 const makeNewTransfer = (
     round,
     team,
@@ -12,7 +15,7 @@ const makeNewTransfer = (
         transferIn,
         transferOut,
         status: 'pending',
-        timeMade: new Date(new Date().getTime())
+        timeMade: prettyDate
     }
 }
 

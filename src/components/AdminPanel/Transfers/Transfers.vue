@@ -40,7 +40,7 @@
           <span class="in">{{ players[transfer[1].transferIn].name }}</span>
           <span class="out">{{ players[transfer[1].transferOut].name }}</span>
           <span class="status">{{ transfer[1].status }}</span>
-          <span class="time">
+          <span class="time" v-if="transfer[1].timeMade.includes(`T`)">
             {{
               transfer[1].timeMade
                 .split("T")
@@ -48,6 +48,10 @@
                 .split(".")
                 .shift()
             }}
+          </span>
+          <span class="time" v-else>
+            {{
+              transfer[1].timeMade}}
           </span>
           <vs-button
             v-if="transfer[1].status === 'pending'"
