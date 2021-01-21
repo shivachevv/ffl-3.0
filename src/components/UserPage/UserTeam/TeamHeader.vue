@@ -2,7 +2,7 @@
   <div class="team-header">
     <div class="team-name-venue">
       <h1 class="up">{{ user.userTeam }}</h1>
-      <!-- <div class="venue">
+      <div class="venue">
         <svg
           version="1.1"
           id="Capa_1"
@@ -44,8 +44,8 @@
             />
           </g>
         </svg>
-        <h3>Копнежа</h3>
-      </div> -->
+        <h3>{{user.stadium}}</h3>
+      </div>
     </div>
 
     <div class="logo-cont">

@@ -76,37 +76,39 @@
               :key="i"
               @click="openMatchPopupHandler(match)"
             >
-              <span class="team1">{{ users[match.team1.id].userTeam }}</span>
-              <img
-                :src="
-                  require(`@/assets/images/team-logos/${
-                    users[match.team1.id].userLogo
-                  }.webp`)
-                "
-                alt=""
-                srcset=""
-              />
-              <span class="score" v-if="match.team1.squad && match.team2.squad"
-                >{{ calculateTeamPts(match.team1.squad) }} -
-                {{ calculateTeamPts(match.team2.squad) }}</span
-              >
-              <span class="score" v-else> - </span>
-
-              <img
-                :src="
-                  require(`@/assets/images/team-logos/${
-                    users[match.team2.id].userLogo
-                  }.webp`)
-                "
-                alt=""
-                srcset=""
-              />
-              <span class="team2">{{ users[match.team2.id].userTeam }}</span>
-              <!-- <a href="#" class="match-details"
-                ><img
-                  :src="require(`@/assets/images/cup/soccer-field.png`)"
+              <div class="match-teams">
+                <span class="team1">{{ users[match.team1.id].userTeam }}</span>
+                <img
+                  :src="
+                    require(`@/assets/images/team-logos/${
+                      users[match.team1.id].userLogo
+                    }.webp`)
+                  "
                   alt=""
-              /></a> -->
+                  srcset=""
+                />
+                <span
+                  class="score"
+                  v-if="match.team1.squad && match.team2.squad"
+                  >{{ calculateTeamPts(match.team1.squad) }} -
+                  {{ calculateTeamPts(match.team2.squad) }}</span
+                >
+                <span class="score" v-else> - </span>
+
+                <img
+                  :src="
+                    require(`@/assets/images/team-logos/${
+                      users[match.team2.id].userLogo
+                    }.webp`)
+                  "
+                  alt=""
+                  srcset=""
+                />
+                <span class="team2">{{ users[match.team2.id].userTeam }}</span>
+              </div>
+              <div class="venue">
+                <h3>Venue: {{ users[match.team1.id].stadium }}</h3>
+              </div>
             </div>
 
             <span class="bye-team up" v-if="isThereBye"
@@ -122,7 +124,6 @@
           </div>
         </div>
         <Eliminations v-if="selectedGroup === 'elimination'" />
-         
       </div>
       <!-- <div class="group-right">
         <img src="images/cup.png" alt="Group A" srcset="" />
@@ -146,7 +147,7 @@ export default {
   components: {
     CupMatchPopup,
     Standings,
-    Eliminations
+    Eliminations,
   },
   props: {},
   data() {
@@ -162,14 +163,18 @@ export default {
     isThereBye() {
       return Object.keys(this.selectedGroup.teams).length % 2 === 1;
     },
-    cupGroups(){
-      return Object.values(this.cup)
-      .filter(x=>{
-        if (x.name === "A" || x.name === "B" || x.name === "C" || x.name === "D") {
-          return x
+    cupGroups() {
+      return Object.values(this.cup).filter((x) => {
+        if (
+          x.name === "A" ||
+          x.name === "B" ||
+          x.name === "C" ||
+          x.name === "D"
+        ) {
+          return x;
         }
-      })
-    }
+      });
+    },
     // playingTeams(){
     //   if (this.isThereBye) {
     //     return this.
@@ -362,7 +367,7 @@ con-vs-popup .vs-popup {
 .group-a,
 .group-b,
 .group-c,
-.group-d{
+.group-d {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -371,7 +376,6 @@ con-vs-popup .vs-popup {
   margin: 20px 0 0 0;
   transition: all 0.3s;
 }
-
 
 // .elimination {
 //   width: 130%;
@@ -466,9 +470,9 @@ con-vs-popup .vs-popup {
 
 .gameweeks-match-wrapper {
   width: 100%;
-  height: 50px;
+  // height: 50px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #b1b2b2;
@@ -476,45 +480,57 @@ con-vs-popup .vs-popup {
   transition: all 0.4s;
   font-size: 0.9rem;
   font-weight: bold;
-}
 
-.gameweeks-match-wrapper:hover {
-  background-color: #bbbbbb;
-  cursor: pointer;
-}
+  &:hover {
+    background-color: #bbbbbb;
+    cursor: pointer;
+  }
+  .match-teams {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0 10px 0;
 
-.gameweeks-match-wrapper .team1,
-.gameweeks-match-wrapper .team2 {
-  width: 37%;
-}
+    .team1,
+    .team2 {
+      width: 37%;
+    }
 
-.gameweeks-match-wrapper .score {
-  width: 10%;
-  @media #{$mobile} {
-    width: 20%;
+    .score {
+      width: 10%;
+      @media #{$mobile} {
+        width: 20%;
+      }
+    }
+
+    img {
+      width: 5%;
+    }
+  }
+
+  .venue {
+    margin: 0 0 10px 0;
   }
 }
 
-.gameweeks-match-wrapper img {
-  width: 5%;
-}
+// .match-details {
+//   position: absolute;
+//   right: 30px;
+//   @media #{$mobile} {
+//     display: none;
+//   }
+// }
 
-.match-details {
-  position: absolute;
-  right: 30px;
-  @media #{$mobile} {
-    display: none;
-  }
-}
+// .match-details img {
+//   width: 20px;
+//   transition: all 0.2s;
+// }
 
-.match-details img {
-  width: 20px;
-  transition: all 0.2s;
-}
-
-.match-details img:hover {
-  transform: scale(1.5);
-}
+// .match-details img:hover {
+//   transform: scale(1.5);
+// }
 
 .bye-team {
   margin: 20px 0 0 0;
@@ -528,6 +544,4 @@ con-vs-popup .vs-popup {
   width: 30px;
   margin: 0 10px 0 0;
 }
-
-
 </style>

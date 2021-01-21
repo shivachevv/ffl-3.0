@@ -32,6 +32,12 @@
       @click.prevent="test"
       >TEST</vs-button
     >
+    <vs-progress
+      v-if="progress"
+      :height="8"
+      :percent="progress"
+      color="success"
+    ></vs-progress>
 
     <!-- <div class="league-selection">
       <vs-alert
@@ -129,7 +135,7 @@
 <script>
 import AddH2HRoundForm from "./AddH2HRoundForm";
 // import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
-import { DATA_URL, API_URL } from "../../../common";
+import { DATA_URL } from "../../../common";
 // import getAllLeagues from "../../../utils/getAllLeagues";
 // import { getCurrentRound } from "../../../utils/getCurrentRound";
 import getAllUsers from "../../../utils/getAllUsers";
@@ -139,6 +145,8 @@ import uploadAllPlayers from "../../../utils/uploadAllPlayers";
 // import makeNewLeague from "../../../models/League";
 // import makeNewTransfer from "../../../models/Transfer";
 // import roundPointsCalculator from "../../../utils/roundPointsCalculator";
+
+// import axios from "axios";
 
 export default {
   name: "H2HLeagues",
@@ -166,23 +174,31 @@ export default {
       errorMsg: "",
       showPopup: false,
       selectedUser: undefined,
-
+      progress: 0,
       //   newViceCpt: "",
       //   roundTotal: 0
     };
   },
   methods: {
     test() {
-      fetch(`${API_URL}players/light-upload`, {
-        method: "GET",
-        // mode: "no-cors",
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          console.log('done');
-        })
-        .catch((err) => console.log('errorr', err));
+      // return axios
+      //   .get(DATA_URL + "h2h.json", {
+      //     onDownloadProgress: (progressEvent) => {
+      //       const loadingProgress = Math.floor(
+      //         (progressEvent.loaded / progressEvent.total) * 100
+      //       );
+      //       this.progress = loadingProgress;
+      //       if (loadingProgress === 100) {
+      //         setTimeout(() => {
+      //           this.progress = 0
+      //         }, 500);
+      //       }
+      //     },
+      //   })
+      //   .then((x) => {
+      //     console.log(x);
+      //     // this.progress = 0;
+      //   });
     },
     createH2HRound() {
       uploadAllPlayers();
@@ -700,6 +716,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.loading {
+  height: 10px;
+  background-color: red;
+}
 .leagues-section-container {
   width: 100%;
   display: flex;

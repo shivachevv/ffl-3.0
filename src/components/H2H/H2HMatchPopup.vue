@@ -1,5 +1,8 @@
 <template>
   <div class="popup">
+    <div class="venue">
+      <h3 class="up">Venue: {{ users[match.match.team1].stadium }}</h3>
+    </div>
     <!-- POPUP STATS TEAM1 -->
     <div class="popup-stats up">
       <div class="popup-stats-team1 sha">
@@ -254,7 +257,7 @@ export default {
 .popup {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   @media #{$mobile} {
@@ -262,8 +265,21 @@ export default {
     flex-direction: column;
   }
 
+  .venue {
+    width: 100%;
+    padding: 10px 0 10px 12px;
+    text-align: left;
+    background-color: #f2f2f2;
+    border-top: 2px solid #3c474d;
+
+
+    h3 {
+      font-weight: bold;
+    }
+  }
+
   .popup-stats {
-    margin: 0 0 0 10px;
+    // margin: 0 0 0 10px;
     width: 100%;
     //   height: 700px;
     display: flex;
