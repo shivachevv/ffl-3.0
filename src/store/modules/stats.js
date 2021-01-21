@@ -1,4 +1,5 @@
-import getStats from "../../utils/getStats";
+// import getStats from "../../utils/getStats";
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,7 +14,7 @@ const actions = {
     async fetchStats({
         commit
     }) {
-        const stats = await getStats()
+        const stats = await loadResource('stats')
         commit('setStats', stats)
     }
 };

@@ -1,4 +1,5 @@
-import getAllH2HRounds from "../../utils/getAllH2HRounds";
+// import getAllH2HRounds from "../../utils/getAllH2HRounds";
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,7 +14,7 @@ const actions = {
     async fetchH2h({
         commit
     }) {
-        const h2h = await getAllH2HRounds()
+        const h2h = await loadResource('h2h')
         commit('setH2h', h2h)
     }
 };

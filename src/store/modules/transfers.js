@@ -1,4 +1,5 @@
-import getAllTransfers from "../../utils/getAllTransfers";
+// import getAllTransfers from "../../utils/getAllTransfers";
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,7 +14,7 @@ const actions = {
     async fetchTransfers({
         commit
     }) {
-        const transfers = await getAllTransfers()
+        const transfers = await loadResource('transfers')
         commit('setTransfers', transfers)
     }
 };

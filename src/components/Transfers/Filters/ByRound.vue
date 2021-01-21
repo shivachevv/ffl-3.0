@@ -13,26 +13,24 @@
   </div> -->
   <div class="filter-by-round sha">
     <h3 class="title up">Round filter</h3>
-    <h3 v-if="filterRoundsArray[0]" class="rounds-label up">
-      From: {{ filterRoundsArray[0] }} to {{ filterRoundsArray[1] }} round
-    </h3>
-    <h3 v-else class="rounds-label up">Select round range!</h3>
-    <div class="slider-container">
-      <vs-slider
-        color="dark"
+      <select
         @change="filterSelectHandler"
-        step="1"
-        v-model="filterRoundsArray"
-        :min="min"
-        :max="currentRound"
-      />
-    </div>
+        v-model="filterRound"
+        class="by-round-select up"
+      >
+        <option
+          v-for="round of currentRound"
+          :key="round"
+          :value="round"
+          class="up"
+        >
+          Round {{ round }}
+        </option>
+      </select>
   </div>
 </template>
 
 <script>
-// import "material-icons/iconfont/material-icons.css";
-
 export default {
   name: "ByRound",
   components: {},
@@ -48,22 +46,20 @@ export default {
   },
   data() {
     return {
-      min: 1,
-      filterRoundsArray: [],
+      filterRound: undefined,
     };
   },
   computed: {},
   methods: {
     filterSelectHandler() {
-      this.$emit("filterRounds", this.filterRoundsArray);
+      this.$emit("filterRounds", [this.filterRound]);
     },
   },
   watch: {
-    clearFilter(nv){
+    clearFilter() {
       // if (nv) this.filterRoundsArray = new Array(2).fill(1)
-      if (nv) this.filterRoundsArray = new Array()
-
-    }
+      // if (nv) this.filterRound = new Array();
+    },
   },
   async created() {},
   mounted() {},
@@ -101,16 +97,18 @@ export default {
     margin: 5px;
   }
 
-  .slider-container {
+  .by-round-select {
+    padding: 5px;
+    width: 94%;
     margin: 10px;
-    width: 90%;
-
-    .con-vs-slider {
-      min-width: auto;
-      .vs-slider {
-        width: 93% !important;
-      }
-    }
+    background-color: #c6c6c6;
+    height: 30px;
+    color: #3b464d;
+    // -webkit-appearance: none;
+    // -moz-appearance: none;
+    // appearance: none;
+    //   background: url(../images/down-arrow.png) 100% / 10% no-repeat #eee;
+    font-size: 1rem;
   }
 }
 </style>

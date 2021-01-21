@@ -1,4 +1,5 @@
-import getCup from "../../utils/getCup";
+// import getCup from "../../utils/getCup";
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,7 +14,7 @@ const actions = {
     async fetchCup({
         commit
     }) {
-        const cup = await getCup()
+        const cup = await loadResource('cup')
         commit('setCup', cup)
     }
 };

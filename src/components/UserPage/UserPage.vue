@@ -25,12 +25,13 @@
           :user="user"
           :currentRound="currentRound"
           :players="players"
+          :isAdminLogged="loggedUser.isAdmin"
         ></MatchPrep>
 
         <!-- TRANSFERS INFORMATION -->
 
         <TeamTransfers
-          v-if="isThisLoggedTeam"
+          v-if="isThisLoggedTeam || loggedUser.isAdmin"
           :user="user"
           :currentRound="currentRound"
         ></TeamTransfers>

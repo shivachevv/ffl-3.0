@@ -1,4 +1,5 @@
-import getAllUsers from "../../utils/getAllUsers";
+// import getAllUsers from "../../utils/getAllUsers";
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,7 +14,7 @@ const actions = {
     async fetchUsers({
         commit
     }) {
-        const users = await getAllUsers()
+        const users = await loadResource('users')
         commit('setUsers', users)
     }
 };

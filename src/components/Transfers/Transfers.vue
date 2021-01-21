@@ -34,10 +34,6 @@
         @filterRounds="setFilters('round', $event)"
         :clearFilter="clearFilters"
       />
-      <ByStatus
-        @filterStatuses="setFilters('status', $event)"
-        :clearFilter="clearFilters"
-      />
       <ByTeam
         @filterTeams="setFilters('team', $event)"
         :users="users"
@@ -128,78 +124,6 @@
           </div>
         </div>
 
-        <div class="filter-header">
-          <img src="images/user.png" alt="" />
-          <h3 class="up">Filter by team</h3>
-        </div>
-        <select class="by-team-select up">
-          <option value="" hidden="">Choose team</option>
-          <option value="all">All teams</option>
-          <option value="Eu4ia">Eu4ia</option>
-          <option value="Pinky and de Bruyne" data-team="Pinky and de Bruyne"
-            >Pinky and de Bruyne</option
-          >
-          <option value="The Asses" data-team="The Asses">The Asses</option>
-          <option value="Retardisimos" data-team="Retardisimos"
-            >Retardisimos</option
-          >
-          <option
-            value="Bianconero Londoneros"
-            data-team="Bianconero Londoneros"
-            >Bianconero Londoneros</option
-          >
-          <option value="Cocky Caucasians" data-team="Cocky Caucasians"
-            >Cocky Caucasians</option
-          >
-          <option value="Kar6iaka Pedestrians" data-team="Kar6iaka Pedestrians"
-            >Kar6iaka Pedestrians</option
-          >
-          <option value="Smaky Team" data-team="Smaky Team<">Smaky Team</option>
-          <option
-            value="EuOlympique Plovdiv4ia"
-            data-team="EuOlympique Plovdiv4ia"
-            >Olympique Plovdiv</option
-          >
-          <option value="Bohemians" data-team="Bohemians">Bohemians</option>
-          <option value="Cowpocalypse Now" data-team="Cowpocalypse Now"
-            >Cowpocalypse Now</option
-          >
-          <option value="Foolosophy Wanderers" data-team="Foolosophy Wanderers"
-            >Foolosophy Wanderers</option
-          >
-          <option value="Arbitragers" data-team="Arbitragers"
-            >Arbitragers</option
-          >
-          <option value="SS Lazio Chirpan" data-team="SS Lazio Chirpan"
-            >SS Lazio Chirpan</option
-          >
-          <option value="Zlodeite" data-team="Zlodeite">Zlodeite</option>
-          <option value="Big Boys" data-team="Big Boys">Big Boys</option>
-          <option value="Aquile FC" data-team="Aquile FC">Aquile FC</option>
-          <option value="Cheloprachene" data-team="Cheloprachene"
-            >Cheloprachene</option
-          >
-          <option value="Thracian Separatists" data-team="Thracian Separatists"
-            >Thracian Separatists</option
-          >
-          <option value="Red Glory" data-team="Red Glory">Red Glory</option>
-        </select>
-      </div>
-
-      <div class="filter-by-round sha">
-        <div class="filter-header">
-          <img src="images/timetable.png" alt="" />
-          <h3 class="up">Filter by round</h3>
-        </div>
-
-        <select class="by-round-select up sha">
-          <option value="" hidden="">Choose round</option>
-          <option value="all">All rounds</option>
-
-          <option value="1">Round 1</option>
-        </select>
-      </div>
-
       <div class="filter-by-name sha">
         <div class="filter-header">
           <img src="images/tshirt.png" alt="" />
@@ -233,11 +157,6 @@
       </div>
 
       <div class="transfers-container">
-        <!-- <vs-collapse type="margin"> -->
-        <!-- <vs-collapse-item
-            v-for="(round, i) in sortedRounds"
-            :key="i"
-          > -->
         <div
           class="transfer-round sha"
           v-for="(round, i) in sortedRounds"
@@ -299,8 +218,6 @@
             </div>
           </div>
         </div>
-        <!-- </vs-collapse-item> -->
-        <!-- </vs-collapse> -->
       </div>
     </section>
   </div>
@@ -310,7 +227,6 @@
 import { mapGetters, mapActions } from "vuex";
 const ByPosition = () => import("./Filters/ByPosition");
 const ByRound = () => import("./Filters/ByRound");
-const ByStatus = () => import("./Filters/ByStatus");
 const ByTeam = () => import("./Filters/ByTeam");
 const LeagueBtn = () => import("../Home/LeagueSelect/LeagueBtn");
 import "material-icons/iconfont/material-icons.css";
@@ -324,7 +240,6 @@ export default {
     LeagueBtn,
     ByPosition,
     ByRound,
-    ByStatus,
     ByTeam,
   },
   props: {},
@@ -445,10 +360,10 @@ export default {
         this.filteredTransfers[league] = this.groupFiltered(filteredArray);
       }
 
-      for (const u in this.users) {
-          const user = this.users[u];
-          console.log(user.userTeam, user.superCpt);
-      }
+      // for (const u in this.users) {
+      //     const user = this.users[u];
+      //     console.log(user.userTeam, user.superCpt[1], user.superCpt[2  ]);
+      // }
     },
     applyFilters(transfers, filters) {
       return transfers

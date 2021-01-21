@@ -1,4 +1,5 @@
-import { getCurrentRound } from "../../utils/getCurrentRound";
+// import { getCurrentRound } from "../../utils/getCurrentRound";
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,8 +14,8 @@ const actions = {
     async fetchCurrentRound({
         commit
     }) {
-        const round = await getCurrentRound()
-        commit('setCurrentRound', round)
+        const round = await loadResource('round')
+        commit('setCurrentRound', round.currentRound)
     }
 };
 

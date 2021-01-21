@@ -128,7 +128,7 @@ const getAllLightPlayers = async () => {
             console.log("load players from CACHE");
             // const result = await getCachedUsers()
             
-            const result = await getCachedPlayers('light-players')
+            const result = await getCachedPlayers('lightPlayers')
 
             if (!result) {
                 const lightPlayers = await axios.get(lightPlayersUrl)

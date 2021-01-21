@@ -1,4 +1,6 @@
-import getAllLeagues from "../../utils/getAllLeagues";
+// import getAllLeagues from "../../utils/getAllLeagues";
+
+import loadResource from "../../utils/resources/loadResource";
 
 
 const state = {
@@ -13,7 +15,7 @@ const actions = {
     async fetchLeagues({
         commit
     }) {
-        const leagues = await getAllLeagues()
+        const leagues = await loadResource('leagues')
         commit('setLeagues', leagues)
     },
 };

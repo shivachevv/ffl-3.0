@@ -1,6 +1,10 @@
-import { getAllLightPlayers } from '../../utils/getAllPlayersData'
+// import { getAllLightPlayers } from '../../utils/getAllPlayersData'
 // import { getAllLightPlayers, getAllPlayersDataNormal } from '../../utils/getAllPlayersData'
 // import lightenPlayers from '../../utils/lightenPlayers'
+
+import loadResource from "../../utils/resources/loadResource";
+
+
 
 
 const state = {
@@ -20,7 +24,7 @@ const actions = {
         // const lighterPlayers = await lightenPlayers(copy)
         // copy = null
         // players = null
-        const lightPlayers = await getAllLightPlayers()
+        const lightPlayers = await loadResource('lightPlayers')
 
         commit('setPlayers', lightPlayers)
     },

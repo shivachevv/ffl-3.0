@@ -15,9 +15,9 @@
         :endtimeRaw="endtimeRaw"
       ></Timer>
     </div>
-    <div class="captain-selected">
-      <h2 v-if="isThisLoggedTeam">Next Round Captains:</h2>
-      <h2 v-if="isThisLoggedTeam">
+    <div class="captain-selected" v-if="isThisLoggedTeam || isAdminLogged">
+      <h2 >Next Round Captains:</h2>
+      <h2>
         Captain:
         {{
           userRoundStats.cpt
@@ -25,7 +25,7 @@
             : "Not Selected!"
         }}
       </h2>
-      <h2 v-if="isThisLoggedTeam">
+      <h2>
         Vice Captain:
         {{
           userRoundStats.viceCpt
@@ -33,17 +33,16 @@
             : "Not Selected!"
         }}
       </h2>
-      <h2 v-if="isThisLoggedTeam">
+      <h2>
         Super Captain:
         {{ userRoundStats.superCpt ? "Activated!" : "Not Activated!" }}
       </h2>
     </div>
 
     <!---------------- CAPTAIN SELECTION -------------------------------------->
-
     <form
       class="captain-select"
-      v-if="isThisLoggedTeam"
+      v-if="isThisLoggedTeam || isAdminLogged"
       @submit.prevent="captainHandler"
     >
       <div class="form-up">
@@ -128,7 +127,7 @@
     </form>
     <!---------------- CAPTAIN SELECTION END -------------------------------------->
 
-    <div v-if="!isThisLoggedTeam" class="please-login">
+    <div v-if="!isThisLoggedTeam && !isAdminLogged" class="please-login">
       <img src="@/assets/images/user-page/sad-face.png" alt />
       <h2>You should be the coach of {{ owner }} <br />to view this panel!</h2>
     </div>
@@ -148,6 +147,10 @@ export default {
   name: "MatchPrep",
   components: { Timer },
   props: {
+    isAdminLogged:{
+      type: Boolean,
+      required: true,
+    },
     isThisLoggedTeam: {
       type: Boolean,
       required: true,
