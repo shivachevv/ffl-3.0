@@ -27,19 +27,20 @@ export default {
 /*********** HEADER & NAVIGATION ***************/
 header {
   width: 100%;
-  margin: 0px;
-  padding: 0px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  position: relative;
+    margin: 0px;
+    padding: 0px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column-reverse;
 
   @media #{$mobile} {
     position: inherit;
+    flex-direction: column;
   }
 
   > img {
     width: 100%;
-    float: left;
     @media #{$mobile} {
       display: none;
     }

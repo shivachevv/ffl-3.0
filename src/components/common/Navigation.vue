@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav :class="{ scrolled: scrollPosition > 50 }">
     <router-link to="/">
       <img src="@/assets/images/home/logo.png" alt="Logo" />
     </router-link>
@@ -7,8 +7,8 @@
     <!---------------- NAVIGATION -------------------------------------->
 
     <ul class="navigation">
-      <li class="nav-links up" v-for="link in filteredLinks" :key="link.title" >
-        <router-link v-if="link.path && link.toShow" :to="link.path">
+      <li class="nav-links" v-for="link in filteredLinks" :key="link.title">
+        <router-link v-if="link.path && link.toShow" :to="link.path" class="up">
           {{ link.title }}
           <!-- <img
             v-if="link.isMyTeam && link.title !== 'Logout'"
@@ -17,7 +17,7 @@
         </router-link>
       </li>
       <li class="nav-links up" v-if="loggedUser">
-        <a href @click.prevent="logoutHandler">Logout</a>
+        <a href @click.prevent="logoutHandler">LOGOUT</a>
       </li>
       <li>
         <form
@@ -58,7 +58,9 @@ export default {
   name: "Navigation",
   components: {},
   data() {
-    return {};
+    return {
+      scrollPosition: null,
+    };
   },
   methods: {
     ...mapActions(["fetchLoggedUser", "fetchMenuLinks"]),
@@ -67,35 +69,36 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          console.log('logout');
+          console.log("logout");
           this.fetchLoggedUser();
           // this.$router.push('/')
           location.reload();
         });
-    }
+    },
+    updateScroll() {
+      const width = window.innerWidth
+      if (width > 500) {  
+        this.scrollPosition = window.scrollY;
+      }
+    },
   },
   computed: {
     ...mapGetters(["leagues", "menuLinks", "loggedUser"]),
-    filteredLinks(){
-      return this.menuLinks.filter(x=>{
+    filteredLinks() {
+      return this.menuLinks.filter((x) => {
         if (x.path && x.toShow) {
-          return x
+          return x;
         }
-      })
-    }
+      });
+    },
   },
   beforeCreate() {},
   created() {
     this.fetchMenuLinks();
   },
-  filters: {
-    // routeFilter: function(v) {
-    //   return v
-    //     .toLowerCase()
-    //     .split(" ")
-    //     .join("-");
-    // }
-  }
+  mounted() {
+    window.addEventListener("scroll", this.updateScroll);
+  },
 };
 </script>
 
@@ -106,16 +109,44 @@ export default {
 
 nav {
   width: 100%;
-  height: 60px;
-  background-color: rgb(35, 47, 55, 0.6);
+  /* height: 60px; */
+  background-color: rgba(35, 47, 55, 0.6);
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  margin: 80px 0 0 0;
-  position: absolute;
-  top: 20px;
-  left: 0;
+  justify-content: flex-end;
+  margin: 40px 0 0 0;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  /* top: 20px; */
+  /* left: 0; */
+  box-shadow: 0px 6px 19px -8px rgba(0, 0, 0, 0.75);
+  transition: all 0.2s;
+
+  &.scrolled {
+    background-color: rgba(59, 70, 77, 1);
+    margin: 0 0 0 0;
+    >a {
+      position: relative;
+    }
+    a {
+      width: 40px;
+      position: static;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 0 0 0 10px;
+
+      img {
+        width: 120%;
+        margin: 0 0 0 10px;
+      }
+    }
+  }
 
   @media #{$mobile} {
     height: auto;
@@ -125,14 +156,24 @@ nav {
   }
 
   > a {
+    /*border-right: 2px solid #c6c6c6; */
+    width: 100px;
+    /* display: inline-block; */
+    /* margin: 5px; */
+    /* padding: 5px; */
+    position: absolute;
+    top: -38px;
+    left: 2%;
+
     @media #{$mobile} {
       display: none;
     }
     > img {
-      width: 148px;
-      position: absolute;
-      left: 6%;
-      top: -55px;
+      width: 120%;
+      /* position: absolute; */
+      /* left: 6%; */
+      /* top: -55px; */
+      /* margin: 0 5px 0 0;*/
     }
   }
 }
@@ -141,8 +182,8 @@ nav {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  padding: 0 0 0 200px;
+  justify-content: flex-end;
+  padding: 0 2% 0 0;
   @media #{$mobile} {
     padding: 0px;
     width: 100%;
@@ -152,14 +193,15 @@ nav {
   .nav-links {
     text-align: center;
     letter-spacing: 1px;
-    height: 60px;
-    width: 160px;
+    /* height: 60px; */
+    /* width: 160px; */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     transition: all 0.1s;
     position: relative;
+    padding: 0 30px;
 
     @media #{$mobile} {
       height: 35px;

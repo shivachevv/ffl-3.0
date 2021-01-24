@@ -186,6 +186,7 @@ const CupGroupsAndRounds = () => import("./Cup/CupGroupsAndRounds");
 const CupSquadSelect = () => import("./Cup/CupSquadSelect");
 const CupMatchPoints = () => import("./Cup/CupMatchPoints");
 const Matching = () => import("./Matching/Matching");
+const AdminHomeSection = () => import("./AdminHomeSection/AdminHomeSection");
 
 export default {
   name: "AdminPanel",
@@ -203,10 +204,11 @@ export default {
     CupSquadSelect,
     CupMatchPoints,
     Matching,
+    AdminHomeSection
   },
   data() {
     return {
-      chosenComponent: "PlayersEdit",
+      chosenComponent: "AdminHomeSection",
       showRounds: false,
       showPlayers: false,
       showUsers: false,

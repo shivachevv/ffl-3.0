@@ -44,7 +44,7 @@
             />
           </g>
         </svg>
-        <h3>{{user.stadium}}</h3>
+        <h3>{{ user.stadium }}</h3>
       </div>
     </div>
 
@@ -133,10 +133,10 @@ export default {
   padding: 0 120px 0 15px;
   // margin: 0 0 0 15px;
   @media #{$mobile} {
-    height: 50px;
+    height: fit-content;
     font-size: 1.1rem;
-    margin: 0 40px 0 15px;
-    padding: 0 40px 0 15px;
+    margin: 0 0px 0 0px;
+    padding: 0 20px 0 15px;
   }
 
   &:before {
@@ -148,8 +148,9 @@ export default {
     height: 70px;
     background-color: #9d5659;
     @media #{$mobile} {
-      top: 10px;
-      height: 30px;
+      top: 15%;
+      height: 70%;
+      left: 10px;
     }
   }
 
@@ -161,9 +162,17 @@ export default {
     align-items: flex-start;
     height: 80%;
     width: 50%;
+    z-index: 99;
+    @media #{$mobile} {
+      margin: 0 0 0 10px;
+      width: 100%;
+    }
 
     h1 {
       font-size: 1.5rem;
+      @media #{$mobile} {
+        margin: 3px 0 3px 0;
+      }
     }
 
     .venue {
@@ -172,6 +181,9 @@ export default {
       flex-direction: row;
       align-items: center;
       justify-content: flex-start;
+      @media #{$mobile} {
+        margin: 3px 0 3px 0;
+      }
 
       svg {
         width: 10%;
@@ -179,6 +191,7 @@ export default {
       }
       h3 {
         margin: 0 0 0 10px;
+        font-size: 1.1rem;
       }
     }
   }

@@ -43,6 +43,12 @@
           <span>{{ players[player].club }}</span>
         </div>
         <input type="text" v-model="updatedMatching[player]" />
+        <button
+          class="delete-player"
+          @click.prevent="deletePlayerHandler(player)"
+        >
+          Delete Player
+        </button>
       </div>
 
       <vs-button
@@ -135,116 +141,32 @@ export default {
     checkAvailability(pl) {
       return Object.values(this.players[pl].available).includes(false);
     },
-    //     makeLeagueToImg(v) {
-    //       return v
-    //         .toLowerCase()
-    //         .split(" ")
-    //         .join("_");
-    //     },
-    //     selectLeagueHandler(l) {
-    //       this.teamSelected = "";
-    //       return (this.leagueSelected = l);
-    //     },
-    //     selectTeamHandler(t) {
-    //       this.playerSelected = "";
-    //       return (this.teamSelected = t);
-    //     },
-    //     selectPlayerHandler(p) {
-    //       this.playerEdited = {
-    //         club: "",
-    //         country: "",
-    //         id: "",
-    //         name: "",
-    //         position: "",
-    //         shirt: ""
-    //       };
-    //       return (this.playerSelected = p);
-    //     },
-    //     mergePlayers(_new, _old) {
-    //       let result = {};
-    //       Object.keys(_old).forEach(atttr => {
-    //         if (_new[atttr]) {
-    //           result[atttr] = _new[atttr];
-    //         } else {
-    //           result[atttr] = _old[atttr];
-    //         }
-    //       });
-    //       if (_new["club"]) {
-    //         result["shirt"] = teamCodes[_new["club"]];
-    //       }
-    //       return result;
-    //     },
-    //     showSuccessMsg({ club, country, name, position }) {
-    //       return `You are about to edit ${name}!\nLeague: ${country},\nClub: ${club},\nName: ${name},\nPosition: ${position}`;
-    //     },
-    //     fetchDataToPlayer(payload) {
-    //       return fetch(`${DATA_URL}players/${payload.id}.json`, {
-    //         method: "PATCH",
-    //         mode: "cors",
-    //         headers: {
-    //           "Content-Type": "application/json"
-    //         },
-    //         body: JSON.stringify(payload)
-    //       })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //           console.log("Success:", data);
-    //           this.success = true;
-    //         })
-    //         .catch(error => {
-    //           console.error("Error:", error);
-    //         });
-    //     },
-    //     editPlayerFormHandler() {
-    //       const payload = this.mergePlayers(this.playerEdited, this.playerSelected);
-    //       if (this.players[payload.country][payload.club]) {
-    //         this.$vs.dialog({
-    //           color: "success",
-    //           title: "Confirm Edit",
-    //           text: this.showSuccessMsg(payload),
-    //           accept: () => this.fetchDataToPlayer(payload)
-    //         });
-    //       } else {
-    //         this.$vs.dialog({
-    //           color: "warning",
-    //           title: "Incorrect Edit",
-    //           text: "There is no such club in this league!"
-    //         });
-    //       }
-    //     },
-    //     openAddPlayerPopup() {
-    //       return (this.showPopup = true);
-    //     },
-    //     deletePlayerHandler(id) {
-    //       this.$vs.dialog({
-    //         color: "success",
-    //         title: "Confirm Delete",
-    //         text: `Are you sure you want to delete ${
-    //           this.players[this.leagueSelected][this.teamSelected][id].name
-    //         }?`,
-    //         accept: () => deletePlayer(id)
-    //       });
-    //       const deletePlayer = id => {
-    //         return fetch(`${DATA_URL}players/${id}.json`, {
-    //           method: "DELETE",
-    //           mode: "cors",
-    //           headers: {
-    //             "Content-Type": "application/json"
-    //           }
-    //         })
-    //           .then(response => response.json())
-    //           .then(async () => {
-    //             this.playerSelected = "";
-    //             this.$vs.loading();
-    //             this.players = await getAllPlayersDataCathegorized();
-    //             this.$vs.loading.close();
-    //             this.success = true;
-    //           })
-    //           .catch(error => {
-    //             console.error("Error:", error);
-    //           });
-    //       };
-    //     }
+    deletePlayerHandler(id) {
+      this.$vs.dialog({
+        color: "success",
+        title: "Confirm Delete",
+        text: `Are you sure you want to delete ${this.players[id].name}?`,
+        accept: () => deletePlayer(id),
+      });
+
+      const deletePlayer = (id) => {
+        return fetch(`${DATA_URL}players/${id}.json`, {
+          method: "DELETE",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then(async () => {
+            this.matchingData = await getMatching();
+            this.success = true;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      };
+    },
   },
   computed: {
     emptyMatching() {
@@ -342,7 +264,7 @@ export default {
   }
 }
 .matching-container {
-  width: 40%;
+  width: 60%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -392,6 +314,18 @@ export default {
     input {
       padding: 5px;
       width: 25%;
+    }
+    .delete-player {
+      width: 20%;
+      margin: 0 0 0 10px;
+      border-radius: 5px;
+      border: none;
+      padding: 5px;
+      transition: all 0.2s;
+        background-color: #ff9797;
+      &:hover {
+        background-color: #d66161;
+      }
     }
   }
 }
