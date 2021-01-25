@@ -236,6 +236,12 @@ export default {
     this.players = await getAllPlayersDataNormal();
     this.matchingData = await getMatching();
   },
+  beforeDestroy() {
+    console.log("destroy", this.players);
+    this.players = null;
+    this.matchingData = null;
+    console.log("destroyed", this.players);
+  },
 };
 </script>
 
@@ -322,7 +328,7 @@ export default {
       border: none;
       padding: 5px;
       transition: all 0.2s;
-        background-color: #ff9797;
+      background-color: #ff9797;
       &:hover {
         background-color: #d66161;
       }

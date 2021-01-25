@@ -1,5 +1,22 @@
 <template>
   <section class="elimination">
+    <!-- POPUP -->
+
+    <vs-popup
+      @close="deselectMatch"
+      v-if="players && selectedMatch"
+      class="holamundo"
+      :title="`${users[selectedMatch.team1.id].userTeam} vs ${
+        users[selectedMatch.team2.id].userTeam
+      }`"
+      :active.sync="matchPopup"
+      stylePopup="width:70%"
+    >
+      <CupMatchPopup :players="players" :match="selectedMatch" :users="users" />
+    </vs-popup>
+
+    <!-- POPUP END -->
+
     <div class="elimination-matches sha">
       <div class="matches-header">
         <h2 class="up">Elimination Stage</h2>
@@ -36,8 +53,35 @@
             <!-- <span class="elim-total"></span> -->
           </div>
           <div class="row2">
-            <span class="elimination-score match">0 - 0</span>
-            <span class="elimination-score match">0 - 0</span>
+            <!-- EF TEAM 1 -->
+            <span
+              v-if="match.team1.squad && match.team2.squad"
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >{{ calculateTeamPts(match.team1.squad) }} -
+              {{ calculateTeamPts(match.team2.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >0 - 0</span
+            >
+
+            <!-- EF TEAM 2 -->
+            <span
+              v-if="eightfinals2[i].team1.squad && eightfinals2[i].team2.squad"
+              @click="openMatchPopupHandler(eightfinals2[i])"
+              class="elimination-score match"
+              >{{ calculateTeamPts(eightfinals2[i].team1.squad) }} -
+              {{ calculateTeamPts(eightfinals2[i].team2.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(eightfinals2[i])"
+              class="elimination-score match"
+              >0 - 0</span
+            >
           </div>
           <div class="row3">
             <img
@@ -138,51 +182,32 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 // import cupStandingsHelper from "../../utils/cupStandingsHelper";
-// import CupMatchPopup from "./CupMatchPopup";
+import CupMatchPopup from "./CupMatchPopup";
 // import Standings from "../H2H/Standings";
 
 export default {
   name: "Eliminations",
-  components: {},
-  props: {},
+  components: {
+    CupMatchPopup,
+  },
+  props: {
+    players: {
+      type: Object,
+      required: true,
+    },
+    users: {
+      type: Object,
+      required: true,
+    },
+    cup: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      // eightfinals: {
-      //   ef1: {
-      //     m1: "A1",
-      //     m2: "C4",
-      //   },
-      //   ef2: {
-      //     m1: "A2",
-      //     m2: "C3",
-      //   },
-      //   ef3: {
-      //     m1: "A3",
-      //     m2: "C2",
-      //   },
-      //   ef4: {
-      //     m1: "A4",
-      //     m2: "C1",
-      //   },
-      //   ef5: {
-      //     m1: "B1",
-      //     m2: "D4",
-      //   },
-      //   ef6: {
-      //     m1: "B2",
-      //     m2: "D3",
-      //   },
-      //   ef7: {
-      //     m1: "B3",
-      //     m2: "D2",
-      //   },
-      //   ef8: {
-      //     m1: "B4",
-      //     m2: "D1",
-      //   },
-      // },
       quarterfinals: {
         qf1: {
           m1: "EF1",
@@ -211,14 +236,14 @@ export default {
           m2: "QF4",
         },
       },
-      //   selectedGroup: undefined,
+      // selectedGroup: undefined,
       //   cupStandings: undefined,
-      //   matchPopup: false,
-      //   selectedMatch: undefined,
+      matchPopup: false,
+      selectedMatch: undefined,
     };
   },
   computed: {
-    ...mapGetters(["cup", "users"]),
+    // ...mapGetters(["cup", "users"]),
     eightfinals() {
       if (this.cup) {
         return Object.values(this.cup.EF.rounds.r1).filter((x) => {
@@ -226,16 +251,17 @@ export default {
             return x;
           }
         });
-        // const matches = Object.values(this.cup)
-        // .filter((x) => {
-        //   if (x.name === "EF") return x;
-        // })[0].rounds.r1
-        // // .filter(x=>{
-        // //   if (typeof x !== "string") {
-        // //     return x
-        // //   }
-        // // });
-        // return Object.values(matches)
+      } else {
+        return undefined;
+      }
+    },
+    eightfinals2() {
+      if (this.cup) {
+        return Object.values(this.cup.EF.rounds.r2).filter((x) => {
+          if (typeof x !== "string") {
+            return x;
+          }
+        });
       } else {
         return undefined;
       }
@@ -271,12 +297,12 @@ export default {
     // groupSelectionHandler(v) {
     //   return (this.selectedGroup = v);
     // },
-    // calculateTeamPts(team) {
-    //   // console.log("team", team);
-    //   return Object.values(team).reduce((acc, player) => {
-    //     return player.pts + acc;
-    //   }, 0);
-    // },
+    calculateTeamPts(team) {
+      // console.log("team", team);
+      return Object.values(team).reduce((acc, player) => {
+        return player.pts + acc;
+      }, 0);
+    },
     // sortStandingsTeams(teams) {
     //   return Object.entries(teams)
     //     .sort((a, b) => {
@@ -286,14 +312,14 @@ export default {
     //       return b[1].pts - a[1].pts;
     //     });
     // },
-    // openMatchPopupHandler(match) {
-    //   this.deselectMatch();
-    //   this.selectedMatch = match;
-    //   return (this.matchPopup = true);
-    // },
-    // deselectMatch() {
-    //   this.selectedMatch = undefined;
-    // },
+    openMatchPopupHandler(match) {
+      this.deselectMatch();
+      this.selectedMatch = match;
+      return (this.matchPopup = true);
+    },
+    deselectMatch() {
+      this.selectedMatch = undefined;
+    },
   },
   watch: {
     // cup(nv) {
@@ -554,8 +580,8 @@ export default {
   span {
     width: 50%;
     @media #{$mobile} {
-    display: none;
-  }
+      display: none;
+    }
   }
 }
 

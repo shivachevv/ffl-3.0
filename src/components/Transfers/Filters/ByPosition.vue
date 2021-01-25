@@ -48,7 +48,6 @@ export default {
   computed: {},
   methods: {
     filterSelectHandler() {
-      console.log(this.filterPosArray);
       this.$emit("filterPositions", this.filterPosArray);
     },
   },

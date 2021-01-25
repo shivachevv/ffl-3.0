@@ -246,10 +246,9 @@ export default {
   computed: {},
   watch: {},
   created() {},
-  beforeDestroy() {
-    // console.log('destroy', this);
-    // this.$destroy();
-  },
+  // beforeDestroy() {
+  //   console.log('destroy', this);
+  // },
 };
 </script>
 

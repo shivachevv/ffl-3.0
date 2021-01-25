@@ -123,7 +123,7 @@
             >
           </div>
         </div>
-        <Eliminations v-if="selectedGroup === 'elimination'" />
+        <Eliminations v-if="selectedGroup === 'elimination'" :players="players" :users="users" :cup="cup"/>
       </div>
       <!-- <div class="group-right">
         <img src="images/cup.png" alt="Group A" srcset="" />
