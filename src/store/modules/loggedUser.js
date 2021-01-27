@@ -89,7 +89,7 @@ const actions = {
         // },
         {
             title: "Admin",
-            path: "/admin",
+            path: "/ffl-admin",
             isMyTeam: false,
             toShow: loggedUser.uid === 'bPMzc3E7h6OnYOZQCzGJG4otli72' || loggedUser.uid === 'USEqk1zX3bg8saW9biddsDm9P4R2'
         }

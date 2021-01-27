@@ -132,7 +132,7 @@ const routes = [{
   component: AllPlayersTable
 },
 {
-  path: '/admin',
+  path: '/ffl-admin',
   name: 'admin',
   meta: { title: 'FFL: Admin Panel' },
   component: AdminPanel,

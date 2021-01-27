@@ -19,7 +19,7 @@
         button="submit"
         type="relief"
         size="normal"
-        @click.prevent="createUpdatedPlayersObject"
+        @click.prevent="test"
         >TEST</vs-button
       >
     </div>
@@ -80,11 +80,11 @@ export default {
         text: `Are you sure you want to add new round ${
           this.currentRound + 1
         }?`,
-        accept: () => {
+        accept: async () => {
+          await updateStats()
           this.fetchNewRound();
           this.fetchNewRndDataToPlayers(editedPlayers);
           this.fetchNewRndDataToUsers(editedUsers);
-          updateStats()
         },
       });
     },
@@ -339,6 +339,8 @@ export default {
       );
     },
     test() {
+      console.log('stats call');
+      updateStats()
       // const teams = Object.values(users)
       //   .filter((x) => {
       //     if (x.code && x.code >= 12) {

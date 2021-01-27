@@ -4,9 +4,13 @@
       <h1>FFL Statistics Page</h1>
     </div>
     <vs-tabs :color="colorx">
-      <vs-tab @click="colorx = '#3d474d'" label="Players Stats">
+      <vs-tab @click="statsSelectHandler('players')" label="Players Stats">
         <div class="con-tab-ejemplo stats-container">
-          <div v-for="stat in statsNames[typeSelected]" :key="stat" class="chart">
+          <div
+            v-for="stat in statsNames[typeSelected]"
+            :key="stat"
+            class="chart"
+          >
             <Chart
               :labels="makeGraphData(stats[typeSelected][stat]).names"
               :dataSet="makeGraphData(stats[typeSelected][stat]).values"
@@ -15,7 +19,21 @@
           </div>
         </div>
       </vs-tab>
-
+      <vs-tab @click="statsSelectHandler('clubs')" label="Clubs Stats">
+        <div class="con-tab-ejemplo stats-container">
+          <div
+            v-for="stat in statsNames[typeSelected]"
+            :key="stat"
+            class="chart"
+          >
+            <Chart
+              :labels="makeGraphData(stats[typeSelected][stat]).names"
+              :dataSet="makeGraphData(stats[typeSelected][stat]).values"
+              :title="titleMap[stat]"
+            ></Chart>
+          </div>
+        </div>
+      </vs-tab>
       <!-- <vs-tab @click="colorx = 'danger'" label="Danger">
         <div class="con-tab-ejemplo">
           Danger
@@ -83,6 +101,15 @@ export default {
         playersTop10: "Players Top 10",
         playersTurkeyTop10: "Turkey Top 10",
         userBestScore: "User Best Round Score",
+        clubsMostPlayers: "Clubs With Most Players",
+        clubsMostPlayersMaradona: "Clubs With Most Players Maradona League",
+        clubsMostPlayersPele: "Clubs With Most Players Pele League",
+        leaguesPlayersTop100: "Leagues with players in top 100",
+        playersPerLeagueActive: "Active players per country",
+        playersPerLeagueActiveMaradona: "Active players per country in Maradona",
+        playersPerLeagueActivePele: "Active players per country in Pele",
+        teamsByLeague: "Chosen players by team in league",
+        teamsPlayersTop100: "Teams with players in top 100",
       },
       statsNames: {
         players: [
@@ -108,6 +135,17 @@ export default {
           "playersPortugalTop10",
           "playersTurkeyTop10",
           "mostTimesOver15",
+        ],
+        clubs: [
+          "clubsMostPlayers",
+          "clubsMostPlayersMaradona",
+          "clubsMostPlayersPele",
+          "leaguesPlayersTop100",
+          "playersPerLeagueActive",
+          "playersPerLeagueActiveMaradona",
+          "playersPerLeagueActivePele",
+          "teamsByLeague",
+          "teamsPlayersTop100",
         ],
       },
     };
@@ -146,6 +184,9 @@ export default {
         names,
         values,
       };
+    },
+    statsSelectHandler(value) {
+      this.typeSelected = value;
     },
   },
   watch: {},
