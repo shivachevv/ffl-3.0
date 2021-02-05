@@ -48,14 +48,7 @@
           <td class="up table-total">{{ t[1].total }}</td>
           <td class="up table-rnd">{{ t[1].thisRndTotal }}</td>
           <td class="up table-move">
-            <img
-              :src="
-                require(`@/assets/images/home/team-mov/${movement(
-                  t[1].movement
-                )}.png`)
-              "
-              :alt="`${t[1].movement} logo`"
-            />
+            <MovementArrow :movement="t[1].movement" />
           </td>
         </router-link>
       </tbody>
@@ -64,11 +57,13 @@
 </template>
 
 <script>
-// import { mapActions, mapGetters } from "vuex";
-// import standingsHelper from '../../../utils/standingsHelper'
+const MovementArrow = () => import("./MovementArrow");
 
 export default {
   name: "LeagueStandings",
+  components:{
+    MovementArrow
+  },
   data() {
     return {};
   },

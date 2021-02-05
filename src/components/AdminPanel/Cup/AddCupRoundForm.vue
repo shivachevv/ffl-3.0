@@ -243,7 +243,6 @@ export default {
     calculateMatchCount() {
       this.groupMatchCount = Math.floor(this.group.teams.length / 2);
       const value = this.groupMatchCount;
-      console.log(value);
       if (value === 1) {
         this.newRound = {
           match1: {
@@ -401,7 +400,6 @@ export default {
   },
   created() {
     this.calculateMatchCount();
-    console.log("here");
   },
 };
 </script>

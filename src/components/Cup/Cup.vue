@@ -213,15 +213,6 @@ export default {
         return player.pts + acc;
       }, 0);
     },
-    sortStandingsTeams(teams) {
-      return Object.entries(teams)
-        .sort((a, b) => {
-          return b[1].goaldiff - a[1].goaldiff;
-        })
-        .sort((a, b) => {
-          return b[1].pts - a[1].pts;
-        });
-    },
     openMatchPopupHandler(match) {
       this.deselectMatch();
       this.selectedMatch = match;
@@ -241,7 +232,7 @@ export default {
   async created() {
     await this.fetchCup();
     this.$vs.loading.close();
-    this.selectedGroup = Object.values(this.cup)[0];
+    this.selectedGroup = 'elimination';
   },
   mounted() {},
 };

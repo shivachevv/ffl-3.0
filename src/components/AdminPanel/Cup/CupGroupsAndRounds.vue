@@ -796,6 +796,7 @@ export default {
     cupGroups(nv) {
       if (nv && this.users) {
         this.$vs.loading.close();
+        console.log('cup watcher')
         this.selectedGroup = this.cupGroups[this.selectedGroup.name];
       }
     },

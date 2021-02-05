@@ -282,6 +282,7 @@ export default {
         type === "home" ? this.cupPointsSquadHome : this.cupPointsSquadAway;
       const team = type === "home" ? this.cupSquadHome : this.cupSquadAway;
       const merged = this.mergePtsWithTeam(points, team);
+      console.log(points, team, merged);
 
       this.$vs.dialog({
         color: "success",

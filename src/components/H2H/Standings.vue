@@ -6,12 +6,13 @@
     <div class="standings-header sha">
       <span class="up position">Pos</span>
       <span class="up team">Team</span>
-      <span class="up games">Games</span>
+      <!-- <span class="up games">Games</span> -->
       <span class="up win-draw-lose">W/D/L</span>
       <span class="up goal-diff">Goal Diff</span>
       <span class="up goal-diff-total">+ / -</span>
       <span class="up points">Pts</span>
       <span class="up form">Form</span>
+      <span class="up move">Move</span>
     </div>
 
     <!-- TEAMS -->
@@ -23,16 +24,16 @@
       :class="{
         first_place: place === 0,
         second_place: place === 1,
-        third_place: type === 'cup' ? place === 2 || place === 3 : place === 2
+        third_place: type === 'cup' ? place === 2 || place === 3 : place === 2,
       }"
-      v-for="(team, place) in sortStandingsTeams(standings)"
+      v-for="(team, place) in standings"
       :key="team[0]"
     >
       <span class="up position">{{ place + 1 }}.</span>
       <span class="up team"
         ><a href="" class="clickable">{{ users[team[0]].userTeam }}</a></span
       >
-      <span class="up games">{{ team[1].games }}</span>
+      <!-- <span class="up games">{{ team[1].games }}</span> -->
       <span class="up win-draw-lose"
         >{{ team[1].wdl.win }}/{{ team[1].wdl.draw }}/{{
           team[1].wdl.loss
@@ -44,50 +45,47 @@
       <span class="up goal-diff-total">{{ team[1].goaldiff }}</span>
       <span class="up points">{{ team[1].pts }}</span>
       <span class="up form">{{ team[1].form }}</span>
+      <span class="up move"
+        ><MovementArrow :movement="team[1].movement"
+      /></span>
     </router-link>
   </div>
 </template>
 
 <script>
+const MovementArrow = () => import("../Home/LeagueStandings/MovementArrow");
+
 export default {
   name: "Standings",
-  components: {},
+  components: {
+    MovementArrow
+  },
   props: {
     type: {
       type: String,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     standings: {
-      type: Object,
-      required: true
+      type: Array,
+      required: true,
     },
     users: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {};
   },
   computed: {},
-  methods: {
-    sortStandingsTeams(teams) {
-      return Object.entries(teams)
-        .sort((a, b) => {
-          return b[1].goaldiff - a[1].goaldiff;
-        })
-        .sort((a, b) => {
-          return b[1].pts - a[1].pts;
-        });
-    }
-  },
+  methods: {},
   watch: {},
   created() {},
-  mounted() {}
+  mounted() {},
 };
 </script>
 
@@ -235,6 +233,14 @@ export default {
     font-weight: bold;
     @media #{$mobile} {
       display: none;
+    }
+  }
+  .move {
+    width: 10%;
+    text-align: center;
+    font-weight: bold;
+    @media #{$mobile} {
+      // display: none;
     }
   }
 }

@@ -89,8 +89,14 @@ const cupStandingsHelper = (cupData) => {
         })
 
     })
-
-    return result
+    const sortedResult = Object.entries(result).reduce((acc, group) => {
+        acc[group[0]] = Object.entries(group[1])
+            .sort((a, b) => b[1].goaldiff - a[1].goaldiff)
+            .sort((a, b) => b[1].pts - a[1].pts)
+        return acc
+    }, {})
+    
+    return sortedResult
 }
 
 export default cupStandingsHelper

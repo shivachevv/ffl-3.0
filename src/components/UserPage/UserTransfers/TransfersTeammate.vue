@@ -1,7 +1,10 @@
 <template>
   <div class="teammate" @click="transferOutHandler(player)">
     <div class="player-shirt">
-      <img :src="`https://ff-legends.com/team-kits/${shirt}.png?version=1`" alt />
+      <img
+        :src="`https://ff-legends.com/team-kits/${shirt}.png?version=1`"
+        alt
+      />
     </div>
     <div class="player-stats-cont">
       <div class="name-cont">
@@ -22,54 +25,51 @@ export default {
   props: {
     player: {
       type: Object,
-      required: true
+      required: true,
     },
     transfersAvail: {
       type: Number,
-      required: true
+      required: true,
     },
     transferedOut: {
       type: Array,
-      required: true
+      required: true,
     },
     reset: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       shirt: this.player.shirt,
-      tmpShirt: "",
+      // tmpShirt: this.player.shirt,
       transferStatus: "Transfer OUT",
-      statuses: ["Transfer Out", "Return to Squad"]
+      statuses: ["Transfer Out", "Return to Squad"],
     };
   },
   computed: {
     limitReached() {
       return this.transferedOut.length >= this.transfersAvail;
-    }
+    },
   },
   methods: {
     transferOutHandler(x) {
       const isAlreadyOut = this.transferedOut.includes(x);
       if (!this.limitReached && !isAlreadyOut) {
-        this.tmpShirt = this.player.shirt;
         this.shirt = "tr-out";
         this.transferStatus = this.statuses[1];
         return this.$emit("makeTransferOut", x);
       }
       if (isAlreadyOut) {
-        this.shirt = this.tmpShirt;
-        this.tmpShirt = this.player.shirt;
+        this.shirt = this.player.shirt;
         this.transferStatus = this.statuses[0];
-
         return this.$emit("makeTransferOut", `remove ${this.player.id}`);
       }
       if (this.limitReached) {
         return this.$emit("max", true);
       }
-    }
+    },
   },
   watch: {
     reset(nv) {
@@ -80,15 +80,15 @@ export default {
     limitReached(nv) {
       return this.$emit("max", nv);
     },
-    transferedOut(nv){
+    transferedOut(nv) {
       if (nv.length === 0) {
-         this.shirt = this.tmpShirt;
-         this.tmpShirt = this.player.shirt;
-         this.transferStatus = this.statuses[0];
-       }
-    }
+        this.shirt = this.player.shirt;
+        // this.tmpShirt = this.player.shirt;
+        this.transferStatus = this.statuses[0];
+      }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
 

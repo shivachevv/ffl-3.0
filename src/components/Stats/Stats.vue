@@ -4,7 +4,12 @@
       <h1>FFL Statistics Page</h1>
     </div>
     <vs-tabs :color="colorx">
-      <vs-tab @click="statsSelectHandler('players')" label="Players Stats">
+      <vs-tab
+        @click="statsSelectHandler(`${category}`)"
+        :label="category | capitalize"
+        v-for="category in Object.keys(statsNames)"
+        :key="category"
+      >
         <div class="con-tab-ejemplo stats-container">
           <div
             v-for="stat in statsNames[typeSelected]"
@@ -19,7 +24,7 @@
           </div>
         </div>
       </vs-tab>
-      <vs-tab @click="statsSelectHandler('clubs')" label="Clubs Stats">
+      <!-- <vs-tab @click="statsSelectHandler('clubs')" label="Clubs Stats">
         <div class="con-tab-ejemplo stats-container">
           <div
             v-for="stat in statsNames[typeSelected]"
@@ -34,6 +39,21 @@
           </div>
         </div>
       </vs-tab>
+      <vs-tab @click="statsSelectHandler('draft')" label="Draft Stats">
+        <div class="con-tab-ejemplo stats-container">
+          <div
+            v-for="stat in statsNames[typeSelected]"
+            :key="stat"
+            class="chart"
+          >
+            <Chart
+              :labels="makeGraphData(stats[typeSelected][stat]).names"
+              :dataSet="makeGraphData(stats[typeSelected][stat]).values"
+              :title="titleMap[stat]"
+            ></Chart>
+          </div>
+        </div>
+      </vs-tab> -->
       <!-- <vs-tab @click="colorx = 'danger'" label="Danger">
         <div class="con-tab-ejemplo">
           Danger
@@ -106,10 +126,18 @@ export default {
         clubsMostPlayersPele: "Clubs With Most Players Pele League",
         leaguesPlayersTop100: "Leagues with players in top 100",
         playersPerLeagueActive: "Active players per country",
-        playersPerLeagueActiveMaradona: "Active players per country in Maradona",
+        playersPerLeagueActiveMaradona:
+          "Active players per country in Maradona",
         playersPerLeagueActivePele: "Active players per country in Pele",
         teamsByLeague: "Chosen players by team in league",
         teamsPlayersTop100: "Teams with players in top 100",
+        draftOriginalMaradona: "Original teams total points in Maradona",
+        draftOriginalPele: "Original teams total points in Pele",
+        draftPlayersIn: "Count of draft players still in",
+        draftTop5Maradona: "Top 5 players total in Maradona",
+        draftTop5Pele: "Top 5 players total in Pele",
+        draftBestPickPele: "Best Draft Pick in Pele",
+        draftBestPickMaradona: "Best Draft Pick in Maradona",
       },
       statsNames: {
         players: [
@@ -146,6 +174,15 @@ export default {
           "playersPerLeagueActivePele",
           "teamsByLeague",
           "teamsPlayersTop100",
+        ],
+        draft: [
+          "draftOriginalMaradona",
+          "draftOriginalPele",
+          "draftPlayersIn",
+          "draftTop5Maradona",
+          "draftTop5Pele",
+          "draftBestPickPele",
+          "draftBestPickMaradona",
         ],
       },
     };
@@ -193,7 +230,11 @@ export default {
   async created() {
     this.fetchStats();
   },
-  mounted() {},
+  filters: {
+    capitalize: function (value) {
+      return value.charAt(0).toUpperCase() + value.slice(1) + " Stats";
+    },
+  },
 };
 </script>
 
