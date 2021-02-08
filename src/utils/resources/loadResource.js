@@ -1,9 +1,9 @@
 import { setCachedResource, getCachedResource } from './cacheFunctions'
-import { DATA_URL } from '../../common'
-import axios from 'axios'
+// import { DATA_URL } from '../../common'
+import requester from '../html-requests/requester' 
 
 const loadResource = async (type) => {
-    const resourseUrl = `${DATA_URL}${type}.json`
+    const resourseUrl = `${type}`
 
     const etag = localStorage.getItem(`${type}Etag`)
     let headers = {}
@@ -13,9 +13,7 @@ const loadResource = async (type) => {
     }
 
     try {
-        const response = await axios.get(resourseUrl, {
-            headers
-        })
+        const response = await requester.get(resourseUrl, headers)
         console.log(`load ${type} from DB1`);
 
         const etag = response.headers.etag;
@@ -30,7 +28,7 @@ const loadResource = async (type) => {
             const result = await getCachedResource(type)
 
             if (!result) {
-                const response = await axios.get(resourseUrl)
+                const response = await requester.get(resourseUrl)
 
                 const etag = response.headers.etag;
                 localStorage.setItem(`${type}Etag`, etag);

@@ -14,8 +14,7 @@ import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Logos from "./components/common/Logos/Logos";
 import { mapActions, mapGetters } from "vuex";
-import { DATA_URL } from "./common";
-// import axios from "axios";
+// import { DATA_URL } from "./common";
 
 export default {
   name: "App",
@@ -39,75 +38,40 @@ export default {
       "fetchCurrentRound",
       "fetchUsers",
     ]),
-    uploadSiteEnter(user, loadTime) {
-      const siteEnterUrl = `${DATA_URL}/enters.json`;
-      const enterDate = new Date();
-      const payload = {
-        [enterDate]: {
-          user: user.uid,
-          loadTime,
-        },
-      };
+    // uploadSiteEnter(user, loadTime) {
+    //   const siteEnterUrl = `${DATA_URL}/enters.json`;
+    //   const enterDate = new Date();
+    //   const payload = {
+    //     [enterDate]: {
+    //       user: user.uid,
+    //       loadTime,
+    //     },
+    //   };
 
-      return fetch(siteEnterUrl, {
-        method: "PATCH",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((response) => response.json())
-        .then(() => {})
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    },
-    // test() {
-    //   const etag = localStorage.getItem("lightPlayersETag");
-    //   let headers = {};
-    //   if (etag) {
-    //     headers["If-None-Match"] = etag;
-    //   }
-    //   return axios
-    //     .get(
-    //       "https://ffl-3-new.firebaseio.com/lightPlayers/001e0b21-21ef-42db-92de-bc62926be429.json",
-    //       { headers }
-    //     )
-    //     .then((res) => {
-    //       console.log("load resource from DB");
-    //       const etag = res.headers.etag;
-    //       localStorage.setItem("lightPlayersETag", etag);
-    //     })
-    //     .catch((err) => {
-    //       if (err && err.response.status === 304) {
-    //         console.log("load resource from CACHE");
-    //       }
-    
+    //   return fetch(siteEnterUrl, {
+    //     method: "PATCH",
+    //     mode: "cors",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(payload),
+    //   })
+    //     .then((response) => response.json())
+    //     .then(() => {})
+    //     .catch((error) => {
+    //       console.error("Error:", error);
     //     });
     // },
   },
   computed: { ...mapGetters(["players", "loggedUser", "users"]) },
   watch: {
-    // leagues(nv) {
-    //   if (
-    //     nv &&
-    //     this.players &&
-    //     this.currentRound &&
-    //     this.users &&
-    //     this.loggedUser &&
-    //     this.standings
-    //   ) {
-    //     this.$vs.loading.close();
-    //   }
-    // },
     async players(nv) {
       if (nv) {
         // this.$vs.loading.close();
         console.log("end", new Date());
-        this.loadEnd = new Date().getTime();
-        const loadTime = (this.loadEnd - this.loadBegin) / 1000;
-        this.uploadSiteEnter(this.loggedUser, loadTime);
+        // this.loadEnd = new Date().getTime();
+        // const loadTime = (this.loadEnd - this.loadBegin) / 1000;
+        // this.uploadSiteEnter(this.loggedUser, loadTime);
         // console.log("players", new Date());
         // const cache = await caches.open("ffl-cache");
         // const playersRes = await cache.match("https://ffl-3-new.firebaseio.com/players.json")
@@ -171,9 +135,7 @@ export default {
   },
   async created() {
     console.log("begin", new Date());
-    this.loadBegin = new Date().getTime();
-    // console.log("App");
-    // this.$vs.loading();
+    // this.loadBegin = new Date().getTime();
     this.fetchStandings();
     this.fetchLeagues();
     this.fetchPlayers();
@@ -182,7 +144,6 @@ export default {
     let users = this.users;
     this.fetchLoggedUser(users);
     users = null;
-    // this.test();
   },
 };
 </script>
