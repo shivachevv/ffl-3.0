@@ -83,6 +83,7 @@ export default {
     //       if (err && err.response.status === 304) {
     //         console.log("load resource from CACHE");
     //       }
+    
     //     });
     // },
   },
