@@ -1,6 +1,6 @@
 import { setCachedResource, getCachedResource } from './cacheFunctions'
 // import { DATA_URL } from '../../common'
-import requester from '../html-requests/requester' 
+import requester from '../http-requests/requester' 
 
 const loadResource = async (type) => {
     const resourseUrl = `${type}`
