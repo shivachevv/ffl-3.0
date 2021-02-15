@@ -73,8 +73,8 @@
               v-if="eightfinals2[i].team1.squad && eightfinals2[i].team2.squad"
               @click="openMatchPopupHandler(eightfinals2[i])"
               class="elimination-score match"
-              >{{ calculateTeamPts(eightfinals2[i].team1.squad) }} -
-              {{ calculateTeamPts(eightfinals2[i].team2.squad) }}</span
+              >{{ calculateTeamPts(eightfinals2[i].team2.squad) }} -
+              {{ calculateTeamPts(eightfinals2[i].team1.squad) }}</span
             >
             <span
               v-else
