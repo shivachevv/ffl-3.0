@@ -6,9 +6,11 @@
       @close="deselectMatch"
       v-if="players && selectedMatch"
       class="holamundo"
-      :title="`${users[selectedMatch.team1.id].userTeam} vs ${
-        users[selectedMatch.team2.id].userTeam
-      }`"
+      :title="
+        `${users[selectedMatch.team1.id].userTeam} vs ${
+          users[selectedMatch.team2.id].userTeam
+        }`
+      "
       :active.sync="matchPopup"
       stylePopup="width:70%"
     >
@@ -40,7 +42,12 @@
           :class="`sha up eightfinal eight${i + 1}`"
         >
           <div class="label ef-label">EF{{ i + 1 }}</div>
-          <div class="row1">
+          <div
+            :class="[
+              'row1',
+              { eliminated: isLoser('home', match, eightfinals2, i) }
+            ]"
+          >
             <img
               :src="
                 require(`@/assets/images/team-logos/${
@@ -83,7 +90,10 @@
               >0 - 0</span
             >
           </div>
-          <div class="row3">
+          <div :class="[
+              'row3',
+              { eliminated: isLoser('away', match, eightfinals2, i) }
+            ]">
             <img
               :src="
                 require(`@/assets/images/team-logos/${
@@ -184,88 +194,88 @@
 <script>
 // import { mapGetters } from "vuex";
 // import cupStandingsHelper from "../../utils/cupStandingsHelper";
-import CupMatchPopup from "./CupMatchPopup";
+import CupMatchPopup from './CupMatchPopup'
 // import Standings from "../H2H/Standings";
 
 export default {
-  name: "Eliminations",
+  name: 'Eliminations',
   components: {
-    CupMatchPopup,
+    CupMatchPopup
   },
   props: {
     players: {
       type: Object,
-      required: true,
+      required: true
     },
     users: {
       type: Object,
-      required: true,
+      required: true
     },
     cup: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       quarterfinals: {
         qf1: {
-          m1: "EF1",
-          m2: "EF5",
+          m1: 'EF1',
+          m2: 'EF5'
         },
         qf2: {
-          m1: "EF2",
-          m2: "EF6",
+          m1: 'EF2',
+          m2: 'EF6'
         },
         qf3: {
-          m1: "EF3",
-          m2: "EF7",
+          m1: 'EF3',
+          m2: 'EF7'
         },
         qf4: {
-          m1: "EF4",
-          m2: "EF8",
-        },
+          m1: 'EF4',
+          m2: 'EF8'
+        }
       },
       semifinals: {
         sf1: {
-          m1: "QF1",
-          m2: "QF2",
+          m1: 'QF1',
+          m2: 'QF2'
         },
         sf2: {
-          m1: "QF3",
-          m2: "QF4",
-        },
+          m1: 'QF3',
+          m2: 'QF4'
+        }
       },
       // selectedGroup: undefined,
       //   cupStandings: undefined,
       matchPopup: false,
-      selectedMatch: undefined,
-    };
+      selectedMatch: undefined
+    }
   },
   computed: {
     // ...mapGetters(["cup", "users"]),
-    eightfinals() {
+    eightfinals () {
       if (this.cup) {
-        return Object.values(this.cup.EF.rounds.r1).filter((x) => {
-          if (typeof x !== "string") {
-            return x;
+        return Object.values(this.cup.EF.rounds.r1).filter(x => {
+          if (typeof x !== 'string') {
+            return x
           }
-        });
+        })
       } else {
-        return undefined;
+        return undefined
       }
     },
-    eightfinals2() {
+    eightfinals2 () {
       if (this.cup) {
-        return Object.values(this.cup.EF.rounds.r2).filter((x) => {
-          if (typeof x !== "string") {
-            return x;
+        return Object.values(this.cup.EF.rounds.r2).filter(x => {
+          if (typeof x !== 'string') {
+            return x
           }
-        });
+        })
       } else {
-        return undefined;
+        return undefined
       }
-    },
+    }
     // isThereBye() {
     //   return Object.keys(this.selectedGroup.teams).length % 2 === 1;
     // },
@@ -276,6 +286,16 @@ export default {
     // }
   },
   methods: {
+    isLoser (type, ef1, ef2, i) {
+      const scoreHome =
+        this.calculateTeamPts(ef1.team1.squad) +
+        this.calculateTeamPts(ef2[i].team2.squad)
+      const scoreAway =
+        this.calculateTeamPts(ef1.team2.squad) +
+        this.calculateTeamPts(ef2[i].team1.squad)
+
+      return type === 'home' ? scoreHome < scoreAway : scoreAway < scoreHome
+    },
     // ...mapActions(["fetchCup"]),
     // roundIntoArray(target) {
     //   return Object.values(target).slice(0, -1);
@@ -297,11 +317,11 @@ export default {
     // groupSelectionHandler(v) {
     //   return (this.selectedGroup = v);
     // },
-    calculateTeamPts(team) {
+    calculateTeamPts (team) {
       // console.log("team", team);
       return Object.values(team).reduce((acc, player) => {
-        return player.pts + acc;
-      }, 0);
+        return player.pts + acc
+      }, 0)
     },
     // sortStandingsTeams(teams) {
     //   return Object.entries(teams)
@@ -312,14 +332,14 @@ export default {
     //       return b[1].pts - a[1].pts;
     //     });
     // },
-    openMatchPopupHandler(match) {
-      this.deselectMatch();
-      this.selectedMatch = match;
-      return (this.matchPopup = true);
+    openMatchPopupHandler (match) {
+      this.deselectMatch()
+      this.selectedMatch = match
+      return (this.matchPopup = true)
     },
-    deselectMatch() {
-      this.selectedMatch = undefined;
-    },
+    deselectMatch () {
+      this.selectedMatch = undefined
+    }
   },
   watch: {
     // cup(nv) {
@@ -328,18 +348,18 @@ export default {
     //   }
     // },
   },
-  async created() {
+  async created () {
     // await this.fetchCup();
     // this.$vs.loading.close();
     // this.selectedGroup = Object.values(this.cup)[0];
   },
-  mounted() {},
-};
+  mounted () {}
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "../../common/breakpoints.scss";
+@import '../../common/breakpoints.scss';
 
 .elimination {
   width: 130%;
@@ -582,6 +602,15 @@ export default {
     @media #{$mobile} {
       display: none;
     }
+  }
+}
+
+.eliminated {
+  img {
+    filter: opacity(0.5);
+  }
+  span {
+    filter: opacity(0.5);
   }
 }
 
