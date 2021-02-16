@@ -57,7 +57,6 @@
               alt=""
             />
             <span class="team1-name">{{ users[match.team1.id].userTeam }}</span>
-            <!-- <span class="elim-total"></span> -->
           </div>
           <div class="row2">
             <!-- EF TEAM 1 -->
@@ -90,10 +89,12 @@
               >0 - 0</span
             >
           </div>
-          <div :class="[
+          <div
+            :class="[
               'row3',
               { eliminated: isLoser('away', match, eightfinals2, i) }
-            ]">
+            ]"
+          >
             <img
               :src="
                 require(`@/assets/images/team-logos/${
@@ -103,30 +104,70 @@
               alt=""
             />
             <span class="team1-name">{{ users[match.team2.id].userTeam }}</span>
-            <!-- <span class="elim-total"></span> -->
           </div>
         </div>
 
         <!-- 1/4 FINALS -->
         <div
-          v-for="i in 4"
-          :key="`q${i}`"
-          :class="`sha up quarterfinal quarter${i}`"
+          v-for="(match, i) in quarterfinals"
+          :key="`e${i}`"
+          :class="`sha up quarterfinal quarter${i + 1}`"
         >
-          <div class="label qf-label">QF{{ i }}</div>
-          <div class="row1">
-            <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">{{ quarterfinals[`qf${i}`].m1 }}</span>
-            <!-- <span class="elim-total"></span> -->
+          <div class="label qf-label">QF{{ i + 1 }}</div>
+          <div :class="['row1']">
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team1.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team1.id].userTeam }}</span>
           </div>
           <div class="row2">
-            <span class="elimination-score match">0 - 0</span>
-            <span class="elimination-score match">0 - 0</span>
+            <!-- QF TEAM 1 -->
+            <span
+              v-if="match.team1.squad && match.team2.squad"
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >{{ calculateTeamPts(match.team1.squad) }} -
+              {{ calculateTeamPts(match.team2.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >0 - 0</span
+            >
+
+            <!-- QF TEAM 2 -->
+            <span
+              v-if="
+                quarterfinals2[i].team1.squad && quarterfinals2[i].team2.squad
+              "
+              @click="openMatchPopupHandler(quarterfinals2[i])"
+              class="elimination-score match"
+              >{{ calculateTeamPts(quarterfinals2[i].team2.squad) }} -
+              {{ calculateTeamPts(quarterfinals2[i].team1.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(quarterfinals2[i])"
+              class="elimination-score match"
+              >0 - 0</span
+            >
           </div>
           <div class="row3">
-            <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">{{ quarterfinals[`qf${i}`].m2 }}</span>
-            <!-- <span class="elim-total"></span> -->
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team2.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team2.id].userTeam }}</span>
           </div>
         </div>
 
@@ -218,24 +259,24 @@ export default {
   },
   data () {
     return {
-      quarterfinals: {
-        qf1: {
-          m1: 'EF1',
-          m2: 'EF5'
-        },
-        qf2: {
-          m1: 'EF2',
-          m2: 'EF6'
-        },
-        qf3: {
-          m1: 'EF3',
-          m2: 'EF7'
-        },
-        qf4: {
-          m1: 'EF4',
-          m2: 'EF8'
-        }
-      },
+      // quarterfinals: {
+      //   qf1: {
+      //     m1: 'EF1',
+      //     m2: 'EF5'
+      //   },
+      //   qf2: {
+      //     m1: 'EF2',
+      //     m2: 'EF6'
+      //   },
+      //   qf3: {
+      //     m1: 'EF3',
+      //     m2: 'EF7'
+      //   },
+      //   qf4: {
+      //     m1: 'EF4',
+      //     m2: 'EF8'
+      //   }
+      // },
       semifinals: {
         sf1: {
           m1: 'QF1',
@@ -268,6 +309,28 @@ export default {
     eightfinals2 () {
       if (this.cup) {
         return Object.values(this.cup.EF.rounds.r2).filter(x => {
+          if (typeof x !== 'string') {
+            return x
+          }
+        })
+      } else {
+        return undefined
+      }
+    },
+    quarterfinals () {
+      if (this.cup) {
+        return Object.values(this.cup.QF.rounds.r1).filter(x => {
+          if (typeof x !== 'string') {
+            return x
+          }
+        })
+      } else {
+        return undefined
+      }
+    },
+    quarterfinals2 () {
+      if (this.cup) {
+        return Object.values(this.cup.QF.rounds.r2).filter(x => {
           if (typeof x !== 'string') {
             return x
           }
