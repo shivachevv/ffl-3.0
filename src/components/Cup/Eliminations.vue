@@ -110,7 +110,7 @@
         <!-- 1/4 FINALS -->
         <div
           v-for="(match, i) in quarterfinals"
-          :key="`e${i}`"
+          :key="`q${i}`"
           :class="`sha up quarterfinal quarter${i + 1}`"
         >
           <div class="label qf-label">QF{{ i + 1 }}</div>
@@ -172,21 +172,66 @@
         </div>
 
         <!-- 1/2 FINALS -->
-        <div v-for="i in 2" :key="`s${i}`" :class="`sha up semifinal semi${i}`">
-          <div class="label sf-label">SF{{ i }}</div>
-          <div class="row1">
-            <!-- <img src="images/teamlogos/arbitragers.png" alt="" /> -->
-            <span class="team1-name">{{ semifinals[`sf${i}`].m1 }}</span>
-            <!-- <span class="elim-total"></span> -->
+        <div
+          v-for="(match, i) in semifinals"
+          :key="`s${i}`"
+          :class="`sha up semifinal semi${i + 1}`"
+        >
+          <div class="label sf-label">SF{{ i + 1 }}</div>
+          <div :class="['row1']">
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team1.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team1.id].userTeam }}</span>
           </div>
           <div class="row2">
-            <span class="elimination-score match">0 - 0</span>
-            <span class="elimination-score match">0 - 0</span>
+            <!-- SF TEAM 1 -->
+            <span
+              v-if="match.team1.squad && match.team2.squad"
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >{{ calculateTeamPts(match.team1.squad) }} -
+              {{ calculateTeamPts(match.team2.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >0 - 0</span
+            >
+
+            <!-- SF TEAM 2 -->
+            <span
+              v-if="
+                semifinals2[i].team1.squad && semifinals2[i].team2.squad
+              "
+              @click="openMatchPopupHandler(semifinals2[i])"
+              class="elimination-score match"
+              >{{ calculateTeamPts(semifinals2[i].team2.squad) }} -
+              {{ calculateTeamPts(semifinals2[i].team1.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(semifinals2[i])"
+              class="elimination-score match"
+              >0 - 0</span
+            >
           </div>
           <div class="row3">
-            <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
-            <span class="team1-name">{{ semifinals[`sf${i}`].m2 }}</span>
-            <!-- <span class="elim-total"></span> -->
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team2.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team2.id].userTeam }}</span>
           </div>
         </div>
 
@@ -277,16 +322,16 @@ export default {
       //     m2: 'EF8'
       //   }
       // },
-      semifinals: {
-        sf1: {
-          m1: 'QF1',
-          m2: 'QF2'
-        },
-        sf2: {
-          m1: 'QF3',
-          m2: 'QF4'
-        }
-      },
+      // semifinals: {
+      //   sf1: {
+      //     m1: 'QF1',
+      //     m2: 'QF2'
+      //   },
+      //   sf2: {
+      //     m1: 'QF3',
+      //     m2: 'QF4'
+      //   }
+      // },
       // selectedGroup: undefined,
       //   cupStandings: undefined,
       matchPopup: false,
@@ -331,6 +376,28 @@ export default {
     quarterfinals2 () {
       if (this.cup) {
         return Object.values(this.cup.QF.rounds.r2).filter(x => {
+          if (typeof x !== 'string') {
+            return x
+          }
+        })
+      } else {
+        return undefined
+      }
+    },
+    semifinals () {
+      if (this.cup) {
+        return Object.values(this.cup.SF.rounds.r1).filter(x => {
+          if (typeof x !== 'string') {
+            return x
+          }
+        })
+      } else {
+        return undefined
+      }
+    },
+    semifinals2 () {
+      if (this.cup) {
+        return Object.values(this.cup.SF.rounds.r2).filter(x => {
           if (typeof x !== 'string') {
             return x
           }

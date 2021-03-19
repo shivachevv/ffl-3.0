@@ -87,108 +87,168 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-const Chart = () => import("./Chart");
+import { mapGetters, mapActions } from 'vuex'
+const Chart = () => import('./Chart')
 
 export default {
-  name: "Stats",
+  name: 'Stats',
   components: { Chart },
   props: {},
-  data() {
+  data () {
     return {
-      colorx: "#3d474d",
-      typeSelected: "players",
+      colorx: '#3d474d',
+      typeSelected: 'players',
       titleMap: {
-        mostCptPts: "Most Captain Points",
-        mostPtsInRnd: "Most Points in Round",
-        mostTimesOver15: "Most Times Over 15 pts",
-        playersBestCaptainEfficiency: "Players Best Captain Efficiency",
-        playersDCTop10: "DC Top 10",
-        playersDLTop10: "DL Top 10",
-        playersDRTop10: "DR Top 10",
-        playersEnglandTop10: "England Top 10",
-        playersFranceTop10: "France Top 10",
-        playersGKTop10: "GK Top 10",
-        playersGermanyTop10: "Germany Top 10",
-        playersItalyTop10: "Italy Top 10",
-        playersMCTop10: "MC Top 10",
-        playersMLTop10: "ML Top 10",
-        playersMRTop10: "MR Top 10",
-        playersNetherlandsTop10: "Netherlands Top 10",
-        playersPortugalTop10: "Portugal Top 10",
-        playersSTTop10: "ST Top 10",
-        playersSpainTop10: "Spain Top 10",
-        playersTop10: "Players Top 10",
-        playersTurkeyTop10: "Turkey Top 10",
-        userBestScore: "User Best Round Score",
-        clubsMostPlayers: "Clubs With Most Players",
-        clubsMostPlayersMaradona: "Clubs With Most Players Maradona League",
-        clubsMostPlayersPele: "Clubs With Most Players Pele League",
-        leaguesPlayersTop100: "Leagues with players in top 100",
-        playersPerLeagueActive: "Active players per country",
+        mostCptPts: 'Most Captain Points',
+        mostPtsInRnd: 'Most Points in Round',
+        mostTimesOver15: 'Most Times Over 15 pts',
+        playersBestCaptainEfficiency: 'Players Best Captain Efficiency',
+        playersDCTop10: 'DC Top 10',
+        playersDLTop10: 'DL Top 10',
+        playersDRTop10: 'DR Top 10',
+        playersEnglandTop10: 'England Top 10',
+        playersFranceTop10: 'France Top 10',
+        playersGKTop10: 'GK Top 10',
+        playersGermanyTop10: 'Germany Top 10',
+        playersItalyTop10: 'Italy Top 10',
+        playersMCTop10: 'MC Top 10',
+        playersMLTop10: 'ML Top 10',
+        playersMRTop10: 'MR Top 10',
+        playersNetherlandsTop10: 'Netherlands Top 10',
+        playersPortugalTop10: 'Portugal Top 10',
+        playersSTTop10: 'ST Top 10',
+        playersSpainTop10: 'Spain Top 10',
+        playersTop10: 'Players Top 10',
+        playersTurkeyTop10: 'Turkey Top 10',
+        userBestScore: 'User Best Round Score',
+        clubsMostPlayers: 'Clubs With Most Players',
+        clubsMostPlayersMaradona: 'Clubs With Most Players Maradona League',
+        clubsMostPlayersPele: 'Clubs With Most Players Pele League',
+        leaguesPlayersTop100: 'Leagues with players in top 100',
+        playersPerLeagueActive: 'Active players per country',
         playersPerLeagueActiveMaradona:
-          "Active players per country in Maradona",
-        playersPerLeagueActivePele: "Active players per country in Pele",
-        teamsByLeague: "Chosen players by team in league",
-        teamsPlayersTop100: "Teams with players in top 100",
-        draftOriginalMaradona: "Original teams total points in Maradona",
-        draftOriginalPele: "Original teams total points in Pele",
-        draftPlayersIn: "Count of draft players still in",
-        draftTop5Maradona: "Top 5 players total in Maradona",
-        draftTop5Pele: "Top 5 players total in Pele",
-        draftBestPickPele: "Best Draft Pick in Pele",
-        draftBestPickMaradona: "Best Draft Pick in Maradona",
+          'Active players per country in Maradona',
+        playersPerLeagueActivePele: 'Active players per country in Pele',
+        teamsByLeague: 'Chosen players by team in league',
+        teamsPlayersTop100: 'Teams with players in top 100',
+        draftOriginalMaradona: 'Original teams total points in Maradona',
+        draftOriginalPele: 'Original teams total points in Pele',
+        draftPlayersIn: 'Count of draft players still in',
+        draftTop5Maradona: 'Top 5 players total in Maradona',
+        draftTop5Pele: 'Top 5 players total in Pele',
+        draftBestPickPele: 'Best Draft Pick in Pele',
+        draftBestPickMaradona: 'Best Draft Pick in Maradona',
+        bestNonDraft: 'Best Post Draft Players',
+        transfersPerLeague: 'Transfers Per League',
+        transfersPerPosition: 'Transfers Per Position',
+        transfersPerPositionArbitragers: 'Transfers Per Position Arbitragers',
+        transfersPerPositionAtleticoPlovdiv: 'Transfers Per Position Atletico Plovdiv',
+        transfersPerPositionBigBoys: 'Transfers Per Position Big Boys',
+        transfersPerPositionBohemians: 'Transfers Per Position Bohemians',
+        transfersPerPositionCheloprachene: 'Transfers Per Position Cheloprachene',
+        transfersPerPositionCockyCaucasians: 'Transfers Per Position Cocky Caucasians',
+        transfersPerPositionCowpocalypse: 'Transfers Per Position Cowpocalypse',
+        transfersPerPositionFCMadrid: 'Transfers Per Position FC Madrid',
+        transfersPerPositionFoolosophyWanderers: 'Transfers Per Position Foolosophy Wanderers',
+        transfersPerPositionHornets: 'Transfers Per Position Hornets',
+        transfersPerPositionKar6iakaPedestrians: 'Transfers Per Position Kar6iaka Pedestrians',
+        transfersPerPositionOpalchencite: 'Transfers Per Position Opalchencite',
+        transfersPerPositionPinkyanddeBruyne: 'Transfers Per Position Pinky and de Bruyne',
+        transfersPerPositionRedGlory: 'Transfers Per Position Red Glory',
+        transfersPerPositionSSLazioChirpan: 'Transfers Per Position SSLazio Chirpan',
+        transfersPerPositionSmakyTeam: 'Transfers Per Position Smaky Team',
+        transfersPerPositionTheAsses: 'Transfers Per Position The Asses',
+        transfersPerPositionTheTardigrades: 'Transfers Per Position The Tardigrades',
+        transfersPerPositionThracianSeparatists: 'Transfers Per Position Thracian Separatists',
+        transfersPerPositionTrolleyN10: 'Transfers Per Position Trolley N10',
+        transfersPerPositionUnchosenOnes: 'Transfers Per Position Unchosen Ones',
+        transfersPerPositionZlodeite: 'Transfers Per Position Zlodeite',
+        transfersPerRound: 'Transfers Per Round',
+        transfersPerRoundMaradona: 'Transfers Per Round in Maradona',
+        transfersPerRoundPele: 'Transfers Per Round in Pele',
+        transfersPerTeam: 'Transfers Per Team'
       },
       statsNames: {
         players: [
-          "mostPtsInRnd",
-          "userBestScore",
-          "mostCptPts",
-          "playersBestCaptainEfficiency",
-          "playersTop10",
-          "playersGKTop10",
-          "playersDLTop10",
-          "playersDCTop10",
-          "playersDRTop10",
-          "playersMLTop10",
-          "playersMCTop10",
-          "playersMRTop10",
-          "playersSTTop10",
-          "playersEnglandTop10",
-          "playersFranceTop10",
-          "playersGermanyTop10",
-          "playersItalyTop10",
-          "playersSpainTop10",
-          "playersNetherlandsTop10",
-          "playersPortugalTop10",
-          "playersTurkeyTop10",
-          "mostTimesOver15",
+          'mostPtsInRnd',
+          'userBestScore',
+          'mostCptPts',
+          'playersBestCaptainEfficiency',
+          'playersTop10',
+          'playersGKTop10',
+          'playersDLTop10',
+          'playersDCTop10',
+          'playersDRTop10',
+          'playersMLTop10',
+          'playersMCTop10',
+          'playersMRTop10',
+          'playersSTTop10',
+          'playersEnglandTop10',
+          'playersFranceTop10',
+          'playersGermanyTop10',
+          'playersItalyTop10',
+          'playersSpainTop10',
+          'playersNetherlandsTop10',
+          'playersPortugalTop10',
+          'playersTurkeyTop10',
+          'mostTimesOver15'
         ],
         clubs: [
-          "clubsMostPlayers",
-          "clubsMostPlayersMaradona",
-          "clubsMostPlayersPele",
-          "leaguesPlayersTop100",
-          "playersPerLeagueActive",
-          "playersPerLeagueActiveMaradona",
-          "playersPerLeagueActivePele",
-          "teamsByLeague",
-          "teamsPlayersTop100",
+          'clubsMostPlayers',
+          'clubsMostPlayersMaradona',
+          'clubsMostPlayersPele',
+          'leaguesPlayersTop100',
+          'playersPerLeagueActive',
+          'playersPerLeagueActiveMaradona',
+          'playersPerLeagueActivePele',
+          'teamsByLeague',
+          'teamsPlayersTop100'
         ],
         draft: [
-          "draftOriginalMaradona",
-          "draftOriginalPele",
-          "draftPlayersIn",
-          "draftTop5Maradona",
-          "draftTop5Pele",
-          "draftBestPickPele",
-          "draftBestPickMaradona",
+          'draftOriginalMaradona',
+          'draftOriginalPele',
+          'draftPlayersIn',
+          'draftTop5Maradona',
+          'draftTop5Pele',
+          'draftBestPickPele',
+          'draftBestPickMaradona'
         ],
-      },
-    };
+        transfers: [
+          'bestNonDraft',
+          'transfersPerLeague',
+          'transfersPerPosition',
+          'transfersPerPositionArbitragers',
+          'transfersPerPositionAtleticoPlovdiv',
+          'transfersPerPositionBigBoys',
+          'transfersPerPositionBohemians',
+          'transfersPerPositionCheloprachene',
+          'transfersPerPositionCockyCaucasians',
+          'transfersPerPositionCowpocalypse',
+          'transfersPerPositionFCMadrid',
+          'transfersPerPositionFoolosophyWanderers',
+          'transfersPerPositionHornets',
+          'transfersPerPositionKar6iakaPedestrians',
+          'transfersPerPositionOpalchencite',
+          'transfersPerPositionPinkyanddeBruyne',
+          'transfersPerPositionRedGlory',
+          'transfersPerPositionSSLazioChirpan',
+          'transfersPerPositionSmakyTeam',
+          'transfersPerPositionTheAsses',
+          'transfersPerPositionTheTardigrades',
+          'transfersPerPositionThracianSeparatists',
+          'transfersPerPositionTrolleyN10',
+          'transfersPerPositionUnchosenOnes',
+          'transfersPerPositionZlodeite',
+          'transfersPerRound',
+          'transfersPerRoundMaradona',
+          'transfersPerRoundPele',
+          'transfersPerTeam'
+        ]
+      }
+    }
   },
   computed: {
-    ...mapGetters(["stats"]),
+    ...mapGetters(['stats'])
     // statsNames() {
     //   if (this.stats) {
     //     console.log(Object.keys(this.stats.stats[this.typeSelected]))
@@ -213,34 +273,34 @@ export default {
     // },
   },
   methods: {
-    ...mapActions(["fetchStats"]),
-    makeGraphData(stat) {
-      const names = stat.map((x) => x.name);
-      const values = stat.map((x) => x.value);
+    ...mapActions(['fetchStats']),
+    makeGraphData (stat) {
+      const names = stat.map(x => x.name)
+      const values = stat.map(x => x.value)
       return {
         names,
-        values,
-      };
+        values
+      }
     },
-    statsSelectHandler(value) {
-      this.typeSelected = value;
-    },
+    statsSelectHandler (value) {
+      this.typeSelected = value
+    }
   },
   watch: {},
-  async created() {
-    this.fetchStats();
+  async created () {
+    this.fetchStats()
   },
   filters: {
     capitalize: function (value) {
-      return value.charAt(0).toUpperCase() + value.slice(1) + " Stats";
-    },
-  },
-};
+      return value.charAt(0).toUpperCase() + value.slice(1) + ' Stats'
+    }
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "../../common/breakpoints.scss";
+@import '../../common/breakpoints.scss';
 
 .container {
   width: 80%;
