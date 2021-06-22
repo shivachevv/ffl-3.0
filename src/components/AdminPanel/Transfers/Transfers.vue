@@ -21,18 +21,18 @@
     <vs-alert :active.sync="error" closable close-icon="close">{{
       errorMsg
     }}</vs-alert>
-    
+
     <div v-if="selectedRoundTransfers" class="transfers-container">
       <div
         v-for="userTransfers in sortedRoundTransfers"
         :key="userTransfers[0]"
         class="user-transfers"
       >
-        <div class="user-trans-heading">{{ users[userTransfers[0]].userTeam }}</div>
+        <div class="user-trans-heading">
+          {{ users[userTransfers[0]].userTeam }}
+        </div>
         <div
-          v-for="(transfer, i) in sortUserTransfers(
-            userTransfers[1]
-          )"
+          v-for="(transfer, i) in sortUserTransfers(userTransfers[1])"
           :key="i"
           class="user-transfer"
         >
@@ -43,15 +43,14 @@
           <span class="time" v-if="transfer[1].timeMade.includes(`T`)">
             {{
               transfer[1].timeMade
-                .split("T")
-                .join(" ")
-                .split(".")
+                .split('T')
+                .join(' ')
+                .split('.')
                 .shift()
             }}
           </span>
           <span class="time" v-else>
-            {{
-              transfer[1].timeMade}}
+            {{ transfer[1].timeMade }}
           </span>
           <vs-button
             v-if="transfer[1].status === 'pending'"
@@ -90,20 +89,20 @@
 
 <script>
 // import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
-import { DATA_URL } from "../../../common";
-import getAllUsers from "../../../utils/getAllUsers";
-import { getCurrentRound } from "../../../utils/getCurrentRound";
-import getAllTransfers from "../../../utils/getAllTransfers";
-import makeNewTransfer from "../../../models/Transfer";
-import { getAllPlayersDataNormal } from "../../../utils/getAllPlayersData";
-import { setLastUpdateDB } from '../../../utils/setLastUpdate';
-import updateLightPlayers from '../../../utils/updateLightPlayers';
+import { DATA_URL } from '../../../common'
+import getAllUsers from '../../../utils/getAllUsers'
+import { getCurrentRound } from '../../../utils/getCurrentRound'
+import getAllTransfers from '../../../utils/getAllTransfers'
+import makeNewTransfer from '../../../models/Transfer'
+import { getAllPlayersDataNormal } from '../../../utils/getAllPlayersData'
+import { setLastUpdateDB } from '../../../utils/setLastUpdate'
+import updateLightPlayers from '../../../utils/updateLightPlayers'
 // import roundPointsCalculator from "../../../utils/roundPointsCalculator";
 
 export default {
-  name: "Transfers",
+  name: 'Transfers',
   components: {},
-  data() {
+  data () {
     return {
       users: undefined,
       currentRound: undefined,
@@ -116,261 +115,259 @@ export default {
       //   userEdited: {},
       success: false,
       error: false,
-      errorMsg: ""
+      errorMsg: ''
       //   newCpt: "",
       //   newViceCpt: "",
       //   roundTotal: 0
-    };
+    }
   },
   methods: {
-    fillTransfers() {
+    fillTransfers () {
       const newTransfer = makeNewTransfer(
         4,
-        "smAQwrSzWYPsoBVXhL1yWUmU1CE3",
-        "DC",
-        "c6969c32-f562-4fc5-8550-59e43be4a6af",
-        "c6752392-58b2-4855-ae56-613e90da8b85"
-      );
-      this.fetchNewTransfer(newTransfer);
+        'smAQwrSzWYPsoBVXhL1yWUmU1CE3',
+        'DC',
+        'c6969c32-f562-4fc5-8550-59e43be4a6af',
+        'c6752392-58b2-4855-ae56-613e90da8b85'
+      )
+      this.fetchNewTransfer(newTransfer)
     },
-    fetchNewTransfer(payload) {
+    fetchNewTransfer (payload) {
       return fetch(
         `${DATA_URL}transfers/r${payload.round}/${payload.team}/t2.json`,
         {
-          method: "PATCH",
-          mode: "cors",
+          method: 'PATCH',
+          mode: 'cors',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         }
       )
         .then(response => response.json())
         .then(async data => {
-          console.log("Success:", data);
-          //   this.success = true;
-          this.$vs.loading();
-          this.transfers = await getAllTransfers();
+          console.log('Success:', data)
+          this.transfers = await getAllTransfers()
         })
         .catch(error => {
-          console.error("Error:", error);
+          console.error('Error:', error)
           //   this.error = true;
           //   this.errorMsg = error;
-        });
+        })
     },
-    selectRoundHandler(r) {
-      this.selectedRound = r;
+    selectRoundHandler (r) {
+      this.selectedRound = r
       if (this.transfers) {
-        this.selectedRoundTransfers = this.transfers[`r${r}`];
-        console.log(this.selectedRoundTransfers);
+        this.selectedRoundTransfers = this.transfers[`r${r}`]
+        console.log(this.selectedRoundTransfers)
       }
     },
-    async confirmTransfer(tr) {
-      console.log(tr);
+    async confirmTransfer (tr) {
+      console.log(tr)
       try {
-        await this.updateTransferStatus(tr, "confirmed");
-        const team = this.editTeamForNextRnd(tr);
-        const count = this.updateTransferCounts(tr, "confirmed");
-        const userLeague = this.users[tr[1].team].league;
+        this.$vs.loading()
+        await this.updateTransferStatus(tr, 'confirmed')
+        const team = this.editTeamForNextRnd(tr)
+        const count = this.updateTransferCounts(tr, 'confirmed')
+        const userLeague = this.users[tr[1].team].league
 
-        await this.uploadUserTransfersCount(count, tr);
-        await this.uploadUserUpdatedTeam(team, tr);
+        await this.uploadUserTransfersCount(count, tr)
+        await this.uploadUserUpdatedTeam(team, tr)
         await this.updatePlayerAvailableStatus(
           tr[1].transferIn,
           tr[1].transferOut,
-          "confirmed",
+          'confirmed',
           userLeague
-        );
+        )
 
-        this.success = true;
-        this.$vs.loading();
-        this.transfers = await getAllTransfers();
-        this.users = await getAllUsers();
-        this.selectRoundHandler(this.selectedRound);
+        this.success = true
+        this.transfers = await getAllTransfers()
+        this.users = await getAllUsers()
+        this.selectRoundHandler(this.selectedRound)
+        this.$vs.loading.close()
       } catch (error) {
-        console.error(error);
-        this.error = true;
-        this.errorMsg = error;
+        console.error(error)
+        this.error = true
+        this.errorMsg = error
       }
     },
-    async cancelTransfer(tr) {
+    async cancelTransfer (tr) {
       try {
-        const count = this.updateTransferCounts(tr, "cancelled");
-        const userLeague = this.users[tr[1].team].league;
+        this.$vs.loading()
+        const count = this.updateTransferCounts(tr, 'cancelled')
+        const userLeague = this.users[tr[1].team].league
 
-        await this.updateTransferStatus(tr, "cancelled");
-        await this.uploadUserTransfersCount(count, tr);
+        await this.updateTransferStatus(tr, 'cancelled')
+        await this.uploadUserTransfersCount(count, tr)
         await this.updatePlayerAvailableStatus(
           tr[1].transferIn,
           tr[1].transferOut,
-          "cancelled",
+          'cancelled',
           userLeague
-        );
+        )
 
-        this.success = true;
-        this.$vs.loading();
-        this.transfers = await getAllTransfers();
-        this.users = await getAllUsers();
-        this.selectRoundHandler(this.selectedRound);
+        this.success = true
+        this.transfers = await getAllTransfers()
+        this.users = await getAllUsers()
+        this.selectRoundHandler(this.selectedRound)
+        this.$vs.loading.close()
       } catch (error) {
-        console.error(error);
-        this.error = true;
-        this.errorMsg = error;
+        console.error(error)
+        this.error = true
+        this.errorMsg = error
       }
     },
-    uploadUserTransfersCount(count, tr) {
+    uploadUserTransfersCount (count, tr) {
       const payload = {
         transfersMade: count
-      };
+      }
       return fetch(
         `${DATA_URL}users/${tr[1].team}/rounds/r${this.selectedRound}.json`,
         {
-          method: "PATCH",
-          mode: "cors",
+          method: 'PATCH',
+          mode: 'cors',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         }
       )
         .then(response => response.json())
         .then(async data => {
-          console.log("Success:", data);
+          console.log('Success:', data)
           // this.success = true;
           // this.deselectUser();
-          // this.$vs.loading();
           // this.users = await getAllUsers();
         })
         .catch(error => {
-          console.error("Error:", error);
+          console.error('Error:', error)
           // this.error = true;
           // this.errorMsg = error;
-        });
+        })
     },
-    async uploadUserUpdatedTeam(team, tr) {
+    async uploadUserUpdatedTeam (team, tr) {
       const payload = {
         team
-      };
+      }
       return await fetch(
         `${DATA_URL}users/${tr[1].team}/rounds/r${this.selectedRound}/nextRndInfo.json`,
         {
-          method: "PATCH",
-          mode: "cors",
+          method: 'PATCH',
+          mode: 'cors',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         }
       )
         .then(response => response.json())
         .then(async data => {
-          console.log("SuccessTeam:", data);
+          console.log('SuccessTeam:', data)
           // this.success = true;
           // this.deselectUser();
-          // this.$vs.loading();
           // this.users = await getAllUsers();
         })
         .catch(error => {
-          console.error("Error:", error);
+          console.error('Error:', error)
           // this.error = true;
           // this.errorMsg = error;
-        });
+        })
     },
-    updateTransferCounts(tr, action) {
-      const [, transfer] = tr;
-      const number = action === "confirmed" ? 0 : -1;
+    updateTransferCounts (tr, action) {
+      const [, transfer] = tr
+      const number = action === 'confirmed' ? 0 : -1
       return (
         this.users[transfer.team].rounds[`r${this.selectedRound}`]
           .transfersMade + number
-      );
+      )
     },
-    editTeamForNextRnd(tr) {
-      const [, transfer] = tr;
+    editTeamForNextRnd (tr) {
+      const [, transfer] = tr
       const userTeam = this.users[transfer.team].rounds[
         `r${this.selectedRound}`
-      ].team;
+      ].team
       const userTeamForNext = this.users[transfer.team].rounds[
         `r${this.selectedRound}`
-      ].nextRndInfo.team;
-      const editTeam = userTeamForNext ? userTeamForNext : userTeam;
-      const _in = transfer.transferIn;
-      const _out = transfer.transferOut;
+      ].nextRndInfo.team
+      const editTeam = userTeamForNext ? userTeamForNext : userTeam
+      const _in = transfer.transferIn
+      const _out = transfer.transferOut
 
-      let result = {};
+      let result = {}
       Object.keys(editTeam).forEach(pos => {
         if (editTeam[pos] === _out) {
-          result[pos] = _in;
+          result[pos] = _in
         } else {
-          result[pos] = editTeam[pos];
+          result[pos] = editTeam[pos]
         }
         // return x === _out ? _in : x;
-      });
-      return result;
+      })
+      return result
     },
-    updateTransferStatus(tr, status) {
-      const payload = { status };
+    updateTransferStatus (tr, status) {
+      const payload = { status }
       return fetch(
         `${DATA_URL}transfers/r${this.selectedRound}/${tr[1].team}/${tr[0]}.json`,
         {
-          method: "PATCH",
-          mode: "cors",
+          method: 'PATCH',
+          mode: 'cors',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         }
       )
         .then(response => response.json())
         .then(async data => {
-          console.log("Success:", data);
+          console.log('Success:', data)
           // this.success = true;
-          // this.$vs.loading();
           // this.transfers = await getAllTransfers();
           // this.selectRoundHandler(this.selectedRound);
         })
         .catch(error => {
-          console.error("Error:", error);
+          console.error('Error:', error)
           // this.error = true;
           // this.errorMsg = error;
-        });
+        })
     },
-    updatePlayerAvailableStatus(idIn, idOut, action, userLeague) {
-      const statusIn = action === "confirmed" ? false : true;
-      const statusOut = action === "confirmed" ? true : false;
+    async updatePlayerAvailableStatus (idIn, idOut, action, userLeague) {
+      const statusIn = action === 'confirmed' ? false : true
+      const statusOut = action === 'confirmed' ? true : false
       const payloadIn = {
         [userLeague]: statusIn
-      };
+      }
       const payloadOut = {
         [userLeague]: statusOut
-      };
-      this.fetchNewPlayerAvailableStatus(idIn, payloadIn);
-      this.fetchNewPlayerAvailableStatus(idOut, payloadOut);
+      }
+      await this.fetchNewPlayerAvailableStatus(idIn, payloadIn)
+      await this.fetchNewPlayerAvailableStatus(idOut, payloadOut)
     },
-    fetchNewPlayerAvailableStatus(playerId, payload) {
-      console.log(playerId, payload);
+    fetchNewPlayerAvailableStatus (playerId, payload) {
+      console.log(playerId, payload)
+
       return fetch(`${DATA_URL}players/${playerId}/available/.json`, {
-        method: "PATCH",
-        mode: "cors",
+        method: 'PATCH',
+        mode: 'cors',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
       })
         .then(response => response.json())
         .then(async data => {
-          console.log("Success:", data);
-          setLastUpdateDB()
-          updateLightPlayers()
+          console.log('Success:', data)
+          await setLastUpdateDB()
+          await updateLightPlayers()
         })
         .catch(error => {
-          console.error("Error:", error);
-          this.error = true;
-          this.errorMsg = error;
-        });
+          console.error('Error:', error)
+          this.error = true
+          this.errorMsg = error
+        })
     },
-    sortUserTransfers(transfers){
-      return Object.entries(transfers).sort((a,b)=>{
-        return new Date(b[1].timeMade) - new Date(a[1].timeMade);
+    sortUserTransfers (transfers) {
+      return Object.entries(transfers).sort((a, b) => {
+        return new Date(b[1].timeMade) - new Date(a[1].timeMade)
       })
     }
     // changeCaptainsHandler() {
@@ -417,7 +414,6 @@ export default {
     //       console.log("Success:", data);
     //       this.success = true;
     //       this.deselectUser();
-    //       this.$vs.loading();
     //       this.users = await getAllUsers();
     //     })
     //     .catch(error => {
@@ -487,7 +483,6 @@ export default {
     //       console.log("Success:", data);
     //       this.success = true;
     //       this.deselectUsers();
-    //       this.$vs.loading();
     //       this.users = await getAllUsers();
     //     })
     //     .catch(error => {
@@ -509,51 +504,29 @@ export default {
     // }
   },
   computed: {
-    sortedRoundTransfers() {
+    sortedRoundTransfers () {
       if (this.selectedRoundTransfers) {
-        const result = Object.entries(this.selectedRoundTransfers).sort((a, b) => {
-          const user1 = this.users[a[0]];
-          const user2 = this.users[b[0]]
-          return user1.league.localeCompare(user2.league)
-        });
-        console.log(result);
+        const result = Object.entries(this.selectedRoundTransfers).sort(
+          (a, b) => {
+            const user1 = this.users[a[0]]
+            const user2 = this.users[b[0]]
+            return user1.league.localeCompare(user2.league)
+          }
+        )
+        console.log(result)
         return result
       } else return ''
     }
   },
-  watch: {
-    players(nv) {
-      if (nv && this.users) {
-        this.$vs.loading.close();
-      }
-    },
-    users(nv) {
-      if (nv && this.players) {
-        this.$vs.loading.close();
-      }
-    },
-    transfers(nv) {
-      if (nv && this.users && this.players) {
-        console.log(nv);
-        this.$vs.loading.close();
-      }
-    },
-    success(nv) {
-      if (nv === true) {
-        setTimeout(() => {
-          this.success = false;
-        }, 2000);
-      }
-    }
-  },
-  async created() {
-    this.$vs.loading();
-    this.players = await getAllPlayersDataNormal();
-    this.users = await getAllUsers();
-    this.currentRound = await getCurrentRound();
-    this.transfers = await getAllTransfers();
+  async created () {
+    this.$vs.loading()
+    this.players = await getAllPlayersDataNormal()
+    this.users = await getAllUsers()
+    this.currentRound = await getCurrentRound()
+    this.transfers = await getAllTransfers()
+    this.$vs.loading.close()
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

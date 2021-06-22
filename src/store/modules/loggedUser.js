@@ -28,6 +28,7 @@ const actions = {
     }, users) {
         firebase.auth().onAuthStateChanged(async user => {
             if (user) {
+                console.log('users', users);
                 const usersToUse = users ? users : await getAllUsers()
                 const userObject = usersToUse[user.uid]
                 commit('setLoggedUser', userObject)
@@ -91,7 +92,7 @@ const actions = {
             title: "Admin",
             path: "/ffl-admin",
             isMyTeam: false,
-            toShow: loggedUser.uid === 'bPMzc3E7h6OnYOZQCzGJG4otli72' || loggedUser.uid === 'USEqk1zX3bg8saW9biddsDm9P4R2'
+            toShow: true
         }
         ]
         commit('setMenuLinks', tmp)

@@ -82,9 +82,9 @@ export default {
         }?`,
         accept: async () => {
           await updateStats()
-          this.fetchNewRound();
-          this.fetchNewRndDataToPlayers(editedPlayers);
-          this.fetchNewRndDataToUsers(editedUsers);
+          await this.fetchNewRound();
+          await this.fetchNewRndDataToPlayers(editedPlayers);
+          await this.fetchNewRndDataToUsers(editedUsers);
         },
       });
     },
@@ -133,8 +133,9 @@ export default {
         .then((response) => response.json())
         .then(async () => {
           this.players = await getAllPlayersDataNormal();
-          setLastUpdateDB();
-          updateLightPlayers();
+          this.$vs.loading();
+          await setLastUpdateDB();
+          await updateLightPlayers();
           this.success = true;
           this.$vs.loading.close();
         })

@@ -11,7 +11,7 @@ const getAllPlayersDataNormal = async () => {
     // const date = new Date()
     // await setLastUpdateDB(date)
     // const cache = await caches.open("ffl-cache");
-    // cache.add("https://ffl-3-new.firebaseio.com/lastUpdate.json");
+    // cache.add("https://ffl-project-2cce4-default-rtdb.europe-west1.firebasedatabase.app/lastUpdate.json");
     // const lastUpdate = undefined
 
 

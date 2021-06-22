@@ -51,6 +51,7 @@
   <table v-if="players" class="container">
     <tbody>
       <tr class="rounds">
+        <td>ID</td>
         <td>Name</td>
         <td>Position</td>
         <td>Club</td>
@@ -60,6 +61,7 @@
         <td v-for="i in currentRound" :key="i">{{ i }}</td>
       </tr>
       <tr v-for="p in Object.values(players)" :key="p.id" class="player">
+        <td>{{ p.id }}</td>
         <td>{{ p.name }}</td>
         <td>{{ p.position }}</td>
         <td>{{ p.club }}</td>

@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: "Last5Transfers",
+  name: 'Last5Transfers',
   props: {
     selectedLeagueObj: {
       type: Object,
@@ -53,54 +53,57 @@ export default {
       required: true
     }
   },
-  data() {
-    return {};
+  data () {
+    return {}
   },
   methods: {
-    ...mapActions(["fetchTransfers"])
+    ...mapActions(['fetchTransfers'])
   },
   computed: {
-    ...mapGetters(["transfers"]),
-    last5TransfersReady() {
+    ...mapGetters(['transfers']),
+    last5TransfersReady () {
       if (!this.transfers) {
-        return "";
+        return ''
       }
       const destructured = [...Object.values(this.transfers)]
         .map(x => {
-          const obj = Object.values(x);
-          return [...Object.values(obj)];
+          const obj = Object.values(x)
+          return [...Object.values(obj)]
         })
         .flat()
         .map(x => {
-          return [...Object.values(x)];
+          return [...Object.values(x)]
         })
         .flat()
         .filter(x => {
           if (this.selectedLeagueObj.teams.includes(x.team)) {
-            return x;
+            return x
           }
         })
         .filter(x => {
-          if (x.status !== "cancelled" && x.status !== "pending") {
-            return x;
+          if (x.status !== 'cancelled' && x.status !== 'pending') {
+            return x
           }
         })
         .sort((a, b) => {
-          return new Date(b.timeMade) - new Date(a.timeMade);
+          return new Date(b.timeMade) - new Date(a.timeMade)
+        })
+        .sort((a, b) => {
+          return b.round - a.round
         })
         .filter((x, i) => {
           if (i <= 4) {
-            return x;
+            return x
           }
-        });
+        })
 
-      return destructured;
+      return destructured
     }
   },
-  created() {
-    this.fetchTransfers();
+  created () {
+    this.fetchTransfers()
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -168,7 +171,7 @@ export default {
     > .arr {
       &::after {
         position: absolute;
-        content: "";
+        content: '';
         left: 20px;
         bottom: 0;
         width: 40px;
@@ -180,7 +183,7 @@ export default {
       }
       &::before {
         position: absolute;
-        content: "";
+        content: '';
         right: 20px;
         bottom: 0;
         width: 40px;
@@ -238,7 +241,7 @@ export default {
   padding: 0 0 0 5px;
   transition: all 0.3s;
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     right: -34px;
     top: -1px;

@@ -74,7 +74,7 @@ export default {
         // this.uploadSiteEnter(this.loggedUser, loadTime);
         // console.log("players", new Date());
         // const cache = await caches.open("ffl-cache");
-        // const playersRes = await cache.match("https://ffl-3-new.firebaseio.com/players.json")
+        // const playersRes = await cache.match("https://ffl-project-2cce4-default-rtdb.europe-west1.firebasedatabase.app/players.json")
         // const cacheNames = await caches.keys();
         // console.log(cacheNames);
         // if (playersRes) {
@@ -83,11 +83,11 @@ export default {
         //   console.log(1);
         // }
         // if (!playersRes) {
-        //   cache.add("https://ffl-3-new.firebaseio.com/players.json");
+        //   cache.add("https://ffl-project-2cce4-default-rtdb.europe-west1.firebasedatabase.app/players.json");
         //   console.log(2);
         // }
         // console.log("players", new Date());
-        // // const request = new Request("https://ffl-3-new.firebaseio.com/players.json")
+        // // const request = new Request("https://ffl-project-2cce4-default-rtdb.europe-west1.firebasedatabase.app/players.json")
         // // const response = await fetch(request)
       }
     },

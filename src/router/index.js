@@ -31,7 +31,7 @@ const NotFound = () => import("../components/common/NotFound");
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
-import getAllUsers from '../utils/getAllUsers'
+// import getAllUsers from '../utils/getAllUsers'
 
 Vue.use(VueRouter);
 
@@ -96,25 +96,26 @@ const routes = [{
   name: 'mytransfers',
   props: true,
   meta: { title: 'FFL: Transfers Center ' },
-  beforeEnter(to, from, next) {
-    firebase.auth().onAuthStateChanged(async user => {
-      if (user) {
-        const teamName = to.params.id
-        const users = await getAllUsers()
-        const teamId = Object.values(users).filter(u => {
-          return u.userLogo === teamName
-        })[0].uid
-        if (teamId === user.uid) {
-          document.title = to.meta.title + users[teamId].userTeam
-          next()
-        } else {
-          next('/')
-        }
-      } else {
-        next('/')
-      }
-    });
-  }
+  //  COMMENTED OUT FOR TESTING PURPOSES
+  // beforeEnter(to, from, next) {
+  //   firebase.auth().onAuthStateChanged(async user => {
+  //     if (user) {
+  //       const teamName = to.params.id
+  //       const users = await getAllUsers()
+  //       const teamId = Object.values(users).filter(u => {
+  //         return u.userLogo === teamName
+  //       })[0].uid
+  //       if (teamId === user.uid) {
+  //         document.title = to.meta.title + users[teamId].userTeam
+  //         next()
+  //       } else {
+  //         next('/')
+  //       }
+  //     } else {
+  //       next('/')
+  //     }
+  //   });
+  // }
 },
 {
   path: '/getallplayers',

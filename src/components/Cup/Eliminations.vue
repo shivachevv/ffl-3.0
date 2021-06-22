@@ -1,5 +1,5 @@
 <template>
-  <section class="elimination">
+  <section class="elimination" v-if="players">
     <!-- POPUP -->
 
     <vs-popup
@@ -114,7 +114,12 @@
           :class="`sha up quarterfinal quarter${i + 1}`"
         >
           <div class="label qf-label">QF{{ i + 1 }}</div>
-          <div :class="['row1']">
+          <div
+            :class="[
+              'row1',
+              { eliminated: isLoser('home', match, quarterfinals2, i) }
+            ]"
+          >
             <img
               :src="
                 require(`@/assets/images/team-logos/${
@@ -158,7 +163,12 @@
               >0 - 0</span
             >
           </div>
-          <div class="row3">
+          <div
+            :class="[
+              'row3',
+              { eliminated: isLoser('away', match, quarterfinals2, i) }
+            ]"
+          >
             <img
               :src="
                 require(`@/assets/images/team-logos/${
@@ -178,7 +188,12 @@
           :class="`sha up semifinal semi${i + 1}`"
         >
           <div class="label sf-label">SF{{ i + 1 }}</div>
-          <div :class="['row1']">
+          <div
+            :class="[
+              'row1',
+              { eliminated: isLoser('home', match, semifinals2, i) }
+            ]"
+          >
             <img
               :src="
                 require(`@/assets/images/team-logos/${
@@ -207,9 +222,7 @@
 
             <!-- SF TEAM 2 -->
             <span
-              v-if="
-                semifinals2[i].team1.squad && semifinals2[i].team2.squad
-              "
+              v-if="semifinals2[i].team1.squad && semifinals2[i].team2.squad"
               @click="openMatchPopupHandler(semifinals2[i])"
               class="elimination-score match"
               >{{ calculateTeamPts(semifinals2[i].team2.squad) }} -
@@ -218,6 +231,52 @@
             <span
               v-else
               @click="openMatchPopupHandler(semifinals2[i])"
+              class="elimination-score match"
+              >0 - 0</span
+            >
+          </div>
+          <div
+            :class="[
+              'row3',
+              { eliminated: isLoser('away', match, quarterfinals2, i) }
+            ]"
+          >
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team2.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team2.id].userTeam }}</span>
+          </div>
+        </div>
+
+        <!-- FINAL -->
+        <div v-for="(match, i) in final" :key="`f${i}`" class="sha up final">
+          <div class="row1">
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team1.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team1.id].userTeam }}</span>
+          </div>
+          <div class="row2">
+            <span
+              v-if="match.team1.squad && match.team2.squad"
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >{{ calculateTeamPts(match.team1.squad) }} -
+              {{ calculateTeamPts(match.team2.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(match)"
               class="elimination-score match"
               >0 - 0</span
             >
@@ -235,35 +294,63 @@
           </div>
         </div>
 
-        <!-- FINAL -->
-        <div class="sha up final">
+        <!-- SMALL-FINAL -->
+        <div
+          v-for="(match, i) in smallFinal"
+          :key="`smallf${i}`"
+          class="sha up littlefinal"
+        >
           <div class="row1">
-            <!-- <img src="images/teamlogos/foolosophy-wanderers.png" alt="" /> -->
-            <span class="team1-name">SF1 Winner</span>
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team1.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team1.id].userTeam }}</span>
           </div>
-          <div class="row2 final-match">
-            <span class="elimination-score match">0 - 0</span>
+          <div class="row2">
+            <span
+              v-if="match.team1.squad && match.team2.squad"
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >{{ calculateTeamPts(match.team1.squad) }} -
+              {{ calculateTeamPts(match.team2.squad) }}</span
+            >
+            <span
+              v-else
+              @click="openMatchPopupHandler(match)"
+              class="elimination-score match"
+              >0 - 0</span
+            >
           </div>
           <div class="row3">
-            <!-- <img src="images/teamlogos/kar6iaka-pedestrians.png" alt="" /> -->
-            <span class="team1-name">SF2 Winner</span>
+            <img
+              :src="
+                require(`@/assets/images/team-logos/${
+                  users[match.team2.id].userLogo
+                }.webp`)
+              "
+              alt=""
+            />
+            <span class="team1-name">{{ users[match.team2.id].userTeam }}</span>
           </div>
         </div>
 
         <!-- 3/4 FINAL -->
-        <div class="sha up littlefinal">
+        <!-- <div class="sha up littlefinal">
           <div class="row1">
-            <!-- <img src="images/teamlogos/cocky-caucasians.png" alt="" /> -->
             <span class="team1-name">SF1 Defeated</span>
           </div>
           <div class="row2 little-final-match">
             <span class="elimination-score match">0 - 0</span>
           </div>
           <div class="row3">
-            <!-- <img src="images/teamlogos/cheloprachene.png" alt="" /> -->
             <span class="team1-name">SF2 Defeated</span>
           </div>
-        </div>
+        </div> -->
 
         <!-- <div class="winner up">
             <img src="images/cup-winner.png" alt="" srcset="" />
@@ -303,40 +390,7 @@ export default {
     }
   },
   data () {
-    return {
-      // quarterfinals: {
-      //   qf1: {
-      //     m1: 'EF1',
-      //     m2: 'EF5'
-      //   },
-      //   qf2: {
-      //     m1: 'EF2',
-      //     m2: 'EF6'
-      //   },
-      //   qf3: {
-      //     m1: 'EF3',
-      //     m2: 'EF7'
-      //   },
-      //   qf4: {
-      //     m1: 'EF4',
-      //     m2: 'EF8'
-      //   }
-      // },
-      // semifinals: {
-      //   sf1: {
-      //     m1: 'QF1',
-      //     m2: 'QF2'
-      //   },
-      //   sf2: {
-      //     m1: 'QF3',
-      //     m2: 'QF4'
-      //   }
-      // },
-      // selectedGroup: undefined,
-      //   cupStandings: undefined,
-      matchPopup: false,
-      selectedMatch: undefined
-    }
+    return { matchPopup: false, selectedMatch: undefined }
   },
   computed: {
     // ...mapGetters(["cup", "users"]),
@@ -405,15 +459,29 @@ export default {
       } else {
         return undefined
       }
+    },
+    final () {
+      if (this.cup) {
+        return Object.values(this.cup.F.rounds.r1).filter(x => {
+          if (typeof x !== 'string') {
+            return x
+          }
+        })
+      } else {
+        return undefined
+      }
+    },
+    smallFinal () {
+      if (this.cup) {
+        return Object.values(this.cup.SmallFinal.rounds.r1).filter(x => {
+          if (typeof x !== 'string') {
+            return x
+          }
+        })
+      } else {
+        return undefined
+      }
     }
-    // isThereBye() {
-    //   return Object.keys(this.selectedGroup.teams).length % 2 === 1;
-    // },
-    // playingTeams(){
-    //   if (this.isThereBye) {
-    //     return this.
-    //   }
-    // }
   },
   methods: {
     isLoser (type, ef1, ef2, i) {
@@ -426,42 +494,11 @@ export default {
 
       return type === 'home' ? scoreHome < scoreAway : scoreAway < scoreHome
     },
-    // ...mapActions(["fetchCup"]),
-    // roundIntoArray(target) {
-    //   return Object.values(target).slice(0, -1);
-    // },
-    // showByeTeam(i) {
-    //   const roundNum = `r${i + 1}`;
-    //   const round = this.selectedGroup.rounds[roundNum];
-    //   const matches = Object.values(round).slice(0, -1);
-    // console.log(round, matches);
-    //   return this.selectedGroup.teams.filter((x) => {
-    //     let teamsPlayed = [];
-    //     matches.forEach((match) => {
-    //       teamsPlayed.push(match.team1.      teamsPlayed.push(match.team2.    });
-    //     if (!teamsPlayed.includes(x)) {
-    //       return x;
-    //     }
-    //   })[0];
-    // },
-    // groupSelectionHandler(v) {
-    //   return (this.selectedGroup = v);
-    // },
     calculateTeamPts (team) {
-      // console.log("team", team);
       return Object.values(team).reduce((acc, player) => {
         return player.pts + acc
       }, 0)
     },
-    // sortStandingsTeams(teams) {
-    //   return Object.entries(teams)
-    //     .sort((a, b) => {
-    //       return b[1].goaldiff - a[1].goaldiff;
-    //     })
-    //     .sort((a, b) => {
-    //       return b[1].pts - a[1].pts;
-    //     });
-    // },
     openMatchPopupHandler (match) {
       this.deselectMatch()
       this.selectedMatch = match
@@ -470,20 +507,7 @@ export default {
     deselectMatch () {
       this.selectedMatch = undefined
     }
-  },
-  watch: {
-    // cup(nv) {
-    //   if (nv) {
-    //     this.cupStandings = cupStandingsHelper(nv);
-    //   }
-    // },
-  },
-  async created () {
-    // await this.fetchCup();
-    // this.$vs.loading.close();
-    // this.selectedGroup = Object.values(this.cup)[0];
-  },
-  mounted () {}
+  }
 }
 </script>
 

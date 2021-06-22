@@ -98,6 +98,7 @@ export default {
   computed: {
     ...mapGetters(["users", "loggedUser", "currentRound", "players"]),
     isThisLoggedTeam() {
+      console.log(this.user, this.loggedUser);
       return this.user.uid === this.loggedUser.uid;
     },
     user() {
