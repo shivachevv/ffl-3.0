@@ -19,19 +19,20 @@
 
         <!---------------- MATCH PREPARATION -------------------------------------->
 
+         <!-- isAdminLogged is true for testing purposes-->
         <MatchPrep
           :isThisLoggedTeam="isThisLoggedTeam"
           :owner="user.userTeam"
           :user="user"
           :currentRound="currentRound"
           :players="players"
-          :isAdminLogged="loggedUser.isAdmin"
+          :isAdminLogged="true"
         ></MatchPrep>
 
         <!-- TRANSFERS INFORMATION -->
 
         <TeamTransfers
-          v-if="isThisLoggedTeam || loggedUser.isAdmin"
+          v-if="true"
           :user="user"
           :currentRound="currentRound"
         ></TeamTransfers>
@@ -98,8 +99,9 @@ export default {
   computed: {
     ...mapGetters(["users", "loggedUser", "currentRound", "players"]),
     isThisLoggedTeam() {
-      console.log(this.user, this.loggedUser);
-      return this.user.uid === this.loggedUser.uid;
+      // console.log(this.user, this.loggedUser);
+      // return this.user.uid === this.loggedUser.uid;
+      return true
     },
     user() {
       if (this.users) {

@@ -1,4 +1,4 @@
-export const DATA_URL = "https://ffl-project-2cce4-default-rtdb.europe-west1.firebasedatabase.app/"
+export const DATA_URL = "https://ff-legends4-default-rtdb.europe-west1.firebasedatabase.app/"
 
 export const API_URL = "https://arcane-crag-66483.herokuapp.com/api/"
 
